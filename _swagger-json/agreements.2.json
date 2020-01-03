@@ -1,0 +1,4378 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "6.0.0",
+    "title": "AdobeSign Aggreements APIs"
+  },
+  "basePath": "/api/rest/v6",
+  "paths": {
+    "/agreements": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Case-sensitive ExternalID for which you would like to retrieve agreement information. ExternalId is passed in the call to the agreement creation API",
+            "in": "query",
+            "name": "externalId",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "A query parameter to fetch all the hidden agreements along with the visible agreements.",
+            "in": "query",
+            "name": "showHiddenAgreements",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "description": "Used to navigate through the pages. If not provided, returns the first page.",
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Number of intended items in the response page.",
+            "in": "query",
+            "name": "pageSize",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/UserAgreements"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getAgreements",
+        "summary": "Retrieves agreements for the user."
+      },
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\" oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\">agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Information about the agreement that you want to create.",
+            "in": "body",
+            "name": "AgreementInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AgreementInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/AgreementCreationResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_write"
+            ]
+          }
+        ],
+        "description": "This is a primary endpoint which is used to create a new agreement. An agreement can be created using transientDocument, libraryDocument or a URL. You can create an agreement in one of the 3 mentioned states: a) <b>DRAFT</b> - to incrementally build the agreement before sending out, b) <b>AUTHORING</b> - to add/edit form fields in the agreement, c) <b>IN_PROCESS</b> - to immediately send the agreement. You can use the PUT /agreements/{agreementId}/state endpoint to transition an agreement between the above mentioned states. An allowed transition would follow the following sequence: DRAFT -> AUTHORING -> IN_PROCESS -> CANCELLED.",
+        "operationId": "createAgreement",
+        "summary": "Creates an agreement. Sends it out for signatures, and returns the agreementID in the response to the client."
+      }
+    },
+    "/agreements/{agreementId}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/AgreementInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getAgreementInfo",
+        "summary": "Retrieves the current status of an agreement."
+      },
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\" oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\">agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The server will only update the resource if it matches the listed ETag otherwise error RESOURCE_MODIFIED(412) is returned.",
+            "in": "header",
+            "name": "If-Match",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Information necessary to update a modifiable agreement that is presently out for signature.",
+            "in": "body",
+            "name": "AgreementInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AgreementInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_write"
+            ]
+          }
+        ],
+        "operationId": "updateAgreement",
+        "summary": "Updates the agreement in draft state."
+      }
+    },
+    "/agreements/{agreementId}/auditTrail": {
+      "get": {
+        "produces": [
+          "application/pdf",
+          "application/pdf;encoding=base64"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "format": "byte",
+              "type": "string"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "description": "PDF file stream containing audit trail information",
+        "operationId": "getAuditTrail",
+        "summary": "Retrieves the audit trail of an agreement identified by agreementId."
+      }
+    },
+    "/agreements/{agreementId}/combinedDocument": {
+      "get": {
+        "produces": [
+          "application/pdf",
+          "application/pdf;encoding=base64"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The version identifier of agreement as provided by the API which retrieves information of a specific agreement. If not provided then latest version will be used.",
+            "in": "query",
+            "name": "versionId",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The participant identifier to be used to retrieve documents.",
+            "in": "query",
+            "name": "participantId",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "When set to true, attach corresponding supporting documents to the signed agreement PDF. Default value of this parameter is true.",
+            "in": "query",
+            "name": "attachSupportingDocuments",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "description": "When set to true, attach an audit report to the signed agreement PDF. Default value is false",
+            "in": "query",
+            "name": "attachAuditReport",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "format": "byte",
+              "type": "string"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getCombinedDocument",
+        "summary": "Retrieves a single combined PDF document for the documents associated with an agreement."
+      }
+    },
+    "/agreements/{agreementId}/combinedDocument/pagesInfo": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "When set to true, returns info of all pages of supporting documents as well. Else, return the info of pages of only the original document.",
+            "in": "query",
+            "name": "includeSupportingDocumentsPagesInfo",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/CombinedDocumentPagesInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getCombinedDocumentPagesInfo",
+        "summary": "Retrieves info of all pages of a combined PDF document for the documents associated with an agreement."
+      }
+    },
+    "/agreements/{agreementId}/documents": {
+      "delete": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_retention')\" oncontextmenu=\"this.href=oauthDoc('agreement_retention')\" target=\"oauthDoc\">agreement_retention</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The server will only update the resource if it matches the listed ETag otherwise error RESOURCE_MODIFIED(412) is returned.",
+            "in": "header",
+            "name": "If-Match",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_retention"
+            ]
+          }
+        ],
+        "operationId": "deleteDocuments",
+        "summary": "Deletes all the documents of an agreement."
+      },
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The version identifier of agreement as provided by the API which retrieves information of a specific agreement. If not provided then latest version will be used.",
+            "in": "query",
+            "name": "versionId",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The participant identifier to be used to retrieve documents.",
+            "in": "query",
+            "name": "participantId",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Content format of the supported documents. It can have two possible values ORIGINAL or CONVERTED_PDF.",
+            "enum": [
+              "ORIGINAL",
+              "CONVERTED_PDF"
+            ],
+            "in": "query",
+            "name": "supportingDocumentContentFormat",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/AgreementDocuments"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getAllDocuments",
+        "summary": "Retrieves the IDs of the documents of an agreement identified by agreementId."
+      }
+    },
+    "/agreements/{agreementId}/documents/imageUrls": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The version identifier of agreement as provided by the API which retrieves information of a specific agreement. If not provided then latest version will be used.",
+            "in": "query",
+            "name": "versionId",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The participant identifier to be used to retrieve documents.",
+            "in": "query",
+            "name": "participantId",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "A comma separated list of image sizes i.e. {FIXED_WIDTH_50px, FIXED_WIDTH_250px, FIXED_WIDTH_675px, ZOOM_50_PERCENT, ZOOM_75_PERCENT, ZOOM_100_PERCENT, ZOOM_125_PERCENT, ZOOM_150_PERCENT, ZOOM_200_PERCENT}. Default sizes returned are {FIXED_WIDTH_50px, FIXED_WIDTH_250px, FIXED_WIDTH_675px, ZOOM_100_PERCENT}. ",
+            "in": "query",
+            "name": "imageSizes",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "When set to true, returns image urls of supporting documents as well. Else, returns image urls of only the original documents.",
+            "in": "query",
+            "name": "includeSupportingDocumentsImageUrls",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "description": "When set to true, returns only image availability. Else, returns both image urls and its availability.",
+            "in": "query",
+            "name": "showImageAvailabilityOnly",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/DocumentsImageUrlsInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getAllDocumentsImageUrls",
+        "summary": "Retrieves image urls of all visible pages of all the documents associated with an agreement."
+      }
+    },
+    "/agreements/{agreementId}/documents/{documentId}": {
+      "get": {
+        "produces": [
+          "*/*",
+          "*/*;encoding=base64"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The document identifier, as retrieved from the API which fetches the documents of a specified agreement",
+            "in": "path",
+            "name": "documentId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "format": "byte",
+              "type": "string"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getDocument",
+        "summary": "Retrieves the file stream of a document of an agreement."
+      }
+    },
+    "/agreements/{agreementId}/documents/{documentId}/imageUrls": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The document identifier, as retrieved from the API which fetches the documents of a specified agreement",
+            "in": "path",
+            "name": "documentId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "A comma separated list of image sizes i.e. {FIXED_WIDTH_50px, FIXED_WIDTH_250px, FIXED_WIDTH_675px, ZOOM_50_PERCENT, ZOOM_75_PERCENT, ZOOM_100_PERCENT, ZOOM_125_PERCENT, ZOOM_150_PERCENT, ZOOM_200_PERCENT}. Default sizes returned are {FIXED_WIDTH_50px, FIXED_WIDTH_250px, FIXED_WIDTH_675px, ZOOM_100_PERCENT}. ",
+            "in": "query",
+            "name": "imageSizes",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "When set to true, returns only image availability. Else, returns both image urls and its availability.",
+            "in": "query",
+            "name": "showImageAvailabilityOnly",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "description": "Start of page number range for which imageUrls are requested. Starting page number should be greater than 0.",
+            "in": "query",
+            "name": "startPage",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "description": "End of page number range for which imageUrls are requested.",
+            "in": "query",
+            "name": "endPage",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/AgreementDocumentImageUrlsInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getDocumentImageUrls",
+        "summary": "Retrieves image urls of all visible pages of a document associated with an agreement."
+      }
+    },
+    "/agreements/{agreementId}/events": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/AgreementEventList"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getEvents",
+        "summary": "Retrieves the events information for an agreement."
+      }
+    },
+    "/agreements/{agreementId}/formData": {
+      "get": {
+        "produces": [
+          "text/csv"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "format": "byte",
+              "type": "string"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "description": "This API can only be called by the creator of the agreement",
+        "operationId": "getFormData",
+        "summary": "Retrieves data entered into the interactive form fields of the agreement."
+      }
+    },
+    "/agreements/{agreementId}/formFields": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The email address of the participant to be used to retrieve its associated form fields.",
+            "in": "query",
+            "name": "participantEmail",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/AgreementFormFields"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getFormFields",
+        "summary": "Retrieves details of form fields of an agreement."
+      },
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\" oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\">agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The server will only update the resource if it matches the listed ETag otherwise error RESOURCE_MODIFIED(412) is returned.",
+            "in": "header",
+            "name": "If-Match",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "List of form fields to add or replace",
+            "in": "body",
+            "name": "FormFieldPostInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FormFieldPostInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/AgreementFormFields"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_write"
+            ]
+          }
+        ],
+        "operationId": "addTemplateFieldsToAgreement",
+        "summary": "Adds template fields to an agreement"
+      },
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\" oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\">agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The server will only update the resource if it matches the listed ETag otherwise error RESOURCE_MODIFIED(412) is returned.",
+            "in": "header",
+            "name": "If-Match",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "List of form fields to add or replace",
+            "in": "body",
+            "name": "FormFieldPutInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FormFieldPutInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/AgreementFormFields"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_write"
+            ]
+          }
+        ],
+        "operationId": "updateFormFields",
+        "summary": "Updates form fields of an agreement."
+      }
+    },
+    "/agreements/{agreementId}/formFields/mergeInfo": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/FormFieldMergeInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getMergeInfo",
+        "summary": "Retrieves the merge info stored with an agreement."
+      },
+      "put": {
+        "produces": [
+          "application/json",
+          "application/pdf",
+          "text/csv"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\" oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\">agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The server will only update the resource if it matches the listed ETag otherwise error RESOURCE_MODIFIED(412) is returned.",
+            "in": "header",
+            "name": "If-Match",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "A mapping indicating the default values to set for form fields",
+            "in": "body",
+            "name": "FormFieldMergeInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FormFieldMergeInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_write"
+            ]
+          }
+        ],
+        "operationId": "updateAgreementMergeInfo",
+        "summary": "Set the merge info for an agreement."
+      }
+    },
+    "/agreements/{agreementId}/me/note": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/Note"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getAgreementNoteForApiUser",
+        "summary": "Retrieves the latest note associated with an agreement."
+      }
+    },
+    "/agreements/{agreementId}/me/visibility": {
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\" oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\">agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Information to update visibility of agreement",
+            "in": "body",
+            "name": "VisibilityInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/VisibilityInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_write"
+            ]
+          }
+        ],
+        "operationId": "updateAgreementVisibility",
+        "summary": "Updates the visibility of an agreement."
+      }
+    },
+    "/agreements/{agreementId}/members": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "A query parameter to fetch next active participation members",
+            "in": "query",
+            "name": "includeNextParticipantSet",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/MembersInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getAllMembers",
+        "summary": "Retrieves information of members of the agreement."
+      }
+    },
+    "/agreements/{agreementId}/members/participantSets/{participantSetId}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The participant set identifier",
+            "in": "path",
+            "name": "participantSetId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/DetailedParticipantSetInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getParticipantSet",
+        "summary": "Retrieves the participant set of an agreement identified by agreementId in the path."
+      },
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\" oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\">agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The server will only update the resource if it matches the listed ETag otherwise error RESOURCE_MODIFIED(412) is returned.",
+            "in": "header",
+            "name": "If-Match",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The participant set identifier",
+            "in": "path",
+            "name": "participantSetId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The new participant set info.",
+            "in": "body",
+            "name": "DetailedParticipantSetInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DetailedParticipantSetInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_write"
+            ]
+          }
+        ],
+        "operationId": "updateParticipantSet",
+        "summary": "Updates the participant set of an agreement identified by agreementId in the path."
+      }
+    },
+    "/agreements/{agreementId}/members/participantSets/{participantSetId}/delegatedParticipantSets": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\" oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\">agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The participant set identifier",
+            "in": "path",
+            "name": "participantSetId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Information about the delegate participant Set",
+            "in": "body",
+            "name": "DelegatedParticipantSetInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DelegatedParticipantSetInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/DelegationResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_write"
+            ]
+          }
+        ],
+        "description": "Participants marked as delegator can call this API endpoint.",
+        "operationId": "createDelegatedParticipantSets",
+        "summary": "Creates a participantSet to which the agreement is forwarded for taking appropriate action."
+      }
+    },
+    "/agreements/{agreementId}/members/participantSets/{participantSetId}/participants/{participantId}/reject": {
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\" oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\">agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The server will only update the resource if it matches the listed ETag otherwise error RESOURCE_MODIFIED(412) is returned.",
+            "in": "header",
+            "name": "If-Match",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The participant set identifier",
+            "in": "path",
+            "name": "participantSetId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The participant identifier",
+            "in": "path",
+            "name": "participantId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Participant rejection information required for rejecting the agreement",
+            "in": "body",
+            "name": "AgreementRejectionInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AgreementRejectionInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_write"
+            ]
+          }
+        ],
+        "operationId": "rejectAgreementForParticipation",
+        "summary": "Rejects the agreement for a participant."
+      }
+    },
+    "/agreements/{agreementId}/members/share": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\" oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\">agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "List of agreement share creation information objects.",
+            "in": "body",
+            "name": "ShareCreationInfoList",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ShareCreationInfoList"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/ShareCreationResponseList"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_write"
+            ]
+          }
+        ],
+        "operationId": "createShareOnAgreement",
+        "summary": "Share an agreement with someone."
+      }
+    },
+    "/agreements/{agreementId}/reminders": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "A comma-separated list of reminder statuses of the reminders which should be returned in the response. Currently supported values are ACTIVE, CANCELED, COMPLETE",
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/RemindersResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getAgreementReminders",
+        "summary": "Retrieves the reminders of an agreement, identified by agreementId in the path."
+      },
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\" oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\">agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The information about the reminder that you want to create on the participantSet of the agreement.",
+            "in": "body",
+            "name": "ReminderInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReminderInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/ReminderCreationResult"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_write"
+            ]
+          }
+        ],
+        "operationId": "createReminderOnParticipant",
+        "summary": "Creates a reminder on the specified participants of an agreement identified by agreementId in the path."
+      }
+    },
+    "/agreements/{agreementId}/signingUrls": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\" oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\">agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/SigningUrlResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_write"
+            ]
+          }
+        ],
+        "operationId": "getSigningUrl",
+        "summary": "Retrieves the URL for the e-sign page for the current signer(s) of an agreement."
+      }
+    },
+    "/agreements/{agreementId}/state": {
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\" oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\">agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The server will only update the resource if it matches the listed ETag otherwise error RESOURCE_MODIFIED(412) is returned.",
+            "in": "header",
+            "name": "If-Match",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "AgreementStateInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AgreementStateInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_write"
+            ]
+          }
+        ],
+        "description": "This endpoint can be used by originator/sender of an agreement to transition between the states of agreement. An allowed transition would follow the following sequence: DRAFT -> AUTHORING -> IN_PROCESS -> CANCELLED.",
+        "operationId": "updateAgreementState",
+        "summary": "Updates the state of an agreement identified by agreementId in the path."
+      }
+    },
+    "/agreements/{agreementId}/views": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a> - agreement read is always required</li><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_login')\" oncontextmenu=\"this.href=oauthDoc('user_login')\" target=\"oauthDoc\">user_login</a> - Required additionally if the autoLoginUser parameter is set to true</li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The agreement identifier, as returned by the agreement creation API or retrieved from the API to fetch agreements.",
+            "in": "path",
+            "name": "agreementId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Name of the required view and its desired configuration.",
+            "in": "body",
+            "name": "AgreementViewInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AgreementViewInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/AgreementViews"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read",
+              "user_login"
+            ]
+          }
+        ],
+        "operationId": "createAgreementView",
+        "summary": "Retrieves the latest state view url of agreement."
+      }
+    }
+  },
+  "definitions": {
+    "AgreementCancellationInfo": {
+      "properties": {
+        "comment": {
+          "description": "An optional comment describing to the recipients why you want to cancel the transaction",
+          "type": "string"
+        },
+        "notifyOthers": {
+          "description": "Whether or not you would like the recipients to be notified that the transaction has been cancelled. The default value is false",
+          "type": "boolean"
+        }
+      }
+    },
+    "AgreementCcInfo": {
+      "properties": {
+        "email": {
+          "description": "Email of the CC participant of the agreement",
+          "type": "string"
+        },
+        "label": {
+          "description": "Label of the CC list as returned in workflow description",
+          "type": "string"
+        },
+        "visiblePages": {
+          "description": "When you enable limited document visibility (documentVisibilityEnabled), you can specify which file (fileInfo) should be made visible to which specific participant set.<br>Specify one or more label values of a fileInfos element.<br>Each signer participant sets must contain at least one required signature field in at least one visible file included in this API call; if not a page with a signature field is automatically appended for any missing participant sets. If there is a possibility that one or more participant sets do not have a required signature field in the files included in the API call, all signer participant sets should include a special index value of '0' to make this automatically appended signature page visible to the signer. Not doing so may result in an error. For all other roles, you may omit this value to exclude this page.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "email"
+      ]
+    },
+    "AgreementCreationResponse": {
+      "description": "A JSON  that contains both the id of the newly created agreement and URL / embedded code to direct the user to tne next step in the creation process.",
+      "properties": {
+        "id": {
+          "description": "The unique identifier of the agreement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "AgreementDocumentImageUrlsInfo": {
+      "properties": {
+        "documentId": {
+          "description": "Id of the document",
+          "type": "string"
+        },
+        "documentImageUrlsList": {
+          "description": "A list of documents image URLs.",
+          "items": {
+            "$ref": "#/definitions/DocumentImageUrls"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "documentId",
+        "documentImageUrlsList"
+      ]
+    },
+    "AgreementDocuments": {
+      "properties": {
+        "documents": {
+          "description": "A list of documents",
+          "items": {
+            "$ref": "#/definitions/Document"
+          },
+          "type": "array"
+        },
+        "supportingDocuments": {
+          "description": "A list of supporting documents",
+          "items": {
+            "$ref": "#/definitions/SupportingDocument"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "documents"
+      ]
+    },
+    "AgreementEvent": {
+      "properties": {
+        "actingUserEmail": {
+          "description": "Email address of the user that created the event",
+          "type": "string"
+        },
+        "actingUserIpAddress": {
+          "description": "The IP address of the user that created the event",
+          "type": "string"
+        },
+        "actingUserName": {
+          "description": "The name of the acting user",
+          "type": "string"
+        },
+        "comment": {
+          "description": "The event comment. For RECALLED or REJECTED, the reason given by the user that initiates the event. For DELEGATE or SHARE, the message from the acting user to the participant",
+          "type": "string"
+        },
+        "date": {
+          "description": "The date of the audit event. Format would be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time",
+          "format": "date",
+          "type": "string"
+        },
+        "description": {
+          "description": "A description of the audit event",
+          "type": "string"
+        },
+        "deviceLocation": {
+          "$ref": "#/definitions/DeviceLocation",
+          "description": "Location of the device that generated the event (This value may be null due to limited privileges)",
+          "items": {
+            "$ref": "#/definitions/DeviceLocation"
+          }
+        },
+        "devicePhoneNumber": {
+          "description": "Phone number from the device used when the participation is completed on a mobile phone",
+          "type": "string"
+        },
+        "digitalSignatureInfo": {
+          "$ref": "#/definitions/DigitalSignatureInfo",
+          "description": "This is present for ESIGNED events when the participation is signed digitally",
+          "items": {
+            "$ref": "#/definitions/DigitalSignatureInfo"
+          }
+        },
+        "initiatingUserEmail": {
+          "description": "Email address of the user that initiated the event on behalf of the acting user when the account is shared. Will be empty if there is no account sharing in effect",
+          "type": "string"
+        },
+        "initiatingUserName": {
+          "description": "Full name of the user that initiated the event on behalf of the acting user when the account is shared. Will be empty if there is no account sharing in effect",
+          "type": "string"
+        },
+        "participantEmail": {
+          "description": "Email address of the user that is the participant for the event. This may be different than the acting user for certain event types. For example, for a DELEGATION event, this is the user who was delegated to",
+          "type": "string"
+        },
+        "participantId": {
+          "description": "The unique identifier of the participant for the event. This may be different than the acting user for certain event types. For example, for a DELEGATION event, this is the user who was delegated to",
+          "type": "string"
+        },
+        "participantRole": {
+          "description": "Role assumed by all participants in the participant set the participant belongs to (signer, approver etc.).",
+          "enum": [
+            "SIGNER",
+            "DELEGATE_TO_SIGNER",
+            "APPROVER",
+            "DELEGATE_TO_APPROVER",
+            "ACCEPTOR",
+            "DELEGATE_TO_ACCEPTOR",
+            "FORM_FILLER",
+            "DELEGATE_TO_FORM_FILLER",
+            "CERTIFIED_RECIPIENT",
+            "DELEGATE_TO_CERTIFIED_RECIPIENT",
+            "SHARE",
+            "SENDER"
+          ],
+          "type": "string"
+        },
+        "synchronizationId": {
+          "description": "A unique identifier linking offline events to synchronization events (specified for offline signing events and synchronization events, else null)",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of agreement event",
+          "enum": [
+            "ACCESS_CODE_GENERATED",
+            "ACCESS_CODE_CONSUMED",
+            "AUTO_CANCELLED_CONVERSION_PROBLEM",
+            "ACTION_AUTO_DELEGATED",
+            "ACTION_COMPLETED",
+            "ACTION_COMPLETED_HOSTED",
+            "ACTION_COMPLETED_OFFLINE",
+            "ACTION_COMPLETED_OFFLINE_HOSTED",
+            "ACTION_COMPLETED_WIDGET_VERIFIED",
+            "ACTION_COMPLETED_WIDGET_VERIFIED_API_TOKEN",
+            "ACTION_COMPLETED_WIDGET_VERIFICATION_WAIVED",
+            "ACTION_DELEGATED",
+            "ACTION_REPLACED_SIGNER",
+            "ACTION_REQUESTED",
+            "CREATED",
+            "CREATED_FROM_WIDGET",
+            "CREATED_OFFLINE",
+            "CREATED_VIA_UPLOAD",
+            "CREATED_VIA_ACROBAT",
+            "CREATED_VIA_READER",
+            "ACTIVATED",
+            "DIGITAL_SIGN_UIDAI_SIGNER_CONSENT",
+            "DIGSIGNED",
+            "DEACTIVATED",
+            "DOCUMENTS_DELETED",
+            "DOWNLOADED",
+            "EMAIL_BOUNCED",
+            "EMAIL_VIEWED",
+            "EXPIRED",
+            "EXPIRED_AUTOMATICALLY",
+            "FAXED_BY_SENDER",
+            "FAXIN_RECEIVED",
+            "KBA_AUTHENTICATED",
+            "MODIFIED",
+            "OFFLINE_SYNC",
+            "OTHER",
+            "PAID",
+            "PRESIGNED",
+            "RECALLED",
+            "RECALLED_MAX_SIGNING_KBA_ATTEMPTS",
+            "RECALLED_MAX_SIGNING_PASSWORD_ATTEMPTS",
+            "RECALLED_MAX_SIGNING_PHONE_ATTEMPTS",
+            "REJECTED",
+            "SENDER_CREATED_NEW_REVISION",
+            "SHARED",
+            "SIGNED",
+            "SIGNING_URL_REQUESTED",
+            "UPLOADED_BY_SENDER",
+            "USER_ACK_AGREEMENT_MODIFIED",
+            "VAULTED",
+            "WEB_IDENTITY_AUTHENTICATED",
+            "WEB_IDENTITY_SPECIFIED",
+            "WRITTEN_DOWNLOAD",
+            "WRITTEN_SIGNED"
+          ],
+          "type": "string"
+        },
+        "vaultEventId": {
+          "description": "The identifier assigned by the vault provider for the vault event (if vaulted, otherwise null)",
+          "type": "string"
+        },
+        "vaultProviderName": {
+          "description": "Name of the vault provider for the vault event (if vaulted, otherwise null)",
+          "type": "string"
+        },
+        "versionId": {
+          "description": "An ID which uniquely identifies the version of the document associated with this audit event",
+          "type": "string"
+        }
+      },
+      "required": [
+        "actingUserEmail",
+        "actingUserIpAddress",
+        "actingUserName",
+        "date",
+        "description",
+        "deviceLocation",
+        "devicePhoneNumber",
+        "digitalSignatureInfo",
+        "initiatingUserEmail",
+        "initiatingUserName",
+        "participantEmail",
+        "participantId",
+        "participantRole",
+        "synchronizationId",
+        "type",
+        "vaultEventId",
+        "vaultProviderName",
+        "versionId"
+      ]
+    },
+    "AgreementEventList": {
+      "properties": {
+        "events": {
+          "description": "An array of event objects.",
+          "items": {
+            "$ref": "#/definitions/AgreementEvent"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "events"
+      ]
+    },
+    "AgreementFormFields": {
+      "description": "A JSON list of all of the fields for a form",
+      "properties": {
+        "fields": {
+          "description": "List of the form fields in an agreement",
+          "items": {
+            "$ref": "#/definitions/FormField"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "fields"
+      ]
+    },
+    "AgreementInfo": {
+      "properties": {
+        "ccs": {
+          "description": "A list of one or more CCs that will be copied in the agreement transaction. The CCs will each receive an email at the beginning of the transaction and also when the final document is signed. The email addresses will also receive a copy of the document, attached as a PDF file. Should not be provided in offline agreement creation.",
+          "items": {
+            "$ref": "#/definitions/AgreementCcInfo"
+          },
+          "type": "array"
+        },
+        "createdDate": {
+          "description": "Date when agreement was created. This is a server generated attributed and can not be provided in POST/PUT calls. Format would be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time",
+          "format": "date",
+          "type": "string"
+        },
+        "deviceInfo": {
+          "$ref": "#/definitions/OfflineDeviceInfo",
+          "description": "Device info of the offline device. It should only be provided in case of offline agreement creation.",
+          "items": {
+            "$ref": "#/definitions/OfflineDeviceInfo"
+          }
+        },
+        "documentVisibilityEnabled": {
+          "description": "If set to true, enable limited document visibility. Should not be provided in offline agreement creation.",
+          "type": "boolean"
+        },
+        "emailOption": {
+          "$ref": "#/definitions/EmailOption",
+          "description": "Email configurations for the agreement. Should not be provided in offline agreement creation.",
+          "items": {
+            "$ref": "#/definitions/EmailOption"
+          }
+        },
+        "expirationTime": {
+          "description": "Time after which Agreement expires and needs to be signed before it. Format should be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time. Should not be provided in offline agreement creation.",
+          "format": "date",
+          "type": "string"
+        },
+        "externalId": {
+          "$ref": "#/definitions/ExternalId",
+          "description": "An arbitrary value from your system, which can be specified at sending time and then later returned or queried. Should not be provided in offline agreement creation.",
+          "items": {
+            "$ref": "#/definitions/ExternalId"
+          }
+        },
+        "fileInfos": {
+          "description": "A list of one or more files (or references to files) that will be sent out for signature. If more than one file is provided, they will be combined into one PDF before being sent out. Note: Only one of the four parameters in every FileInfo object must be specified",
+          "items": {
+            "$ref": "#/definitions/FileInfo"
+          },
+          "type": "array"
+        },
+        "firstReminderDelay": {
+          "description": "Integer which specifies the delay in hours before sending the first reminder.<br>This is an optional field. The minimum value allowed is 1 hour and the maximum value can’t be more than the difference of agreement creation and expiry time of the agreement in hours.<br>If this is not specified but the reminder frequency is specified, then the first reminder will be sent based on frequency.<br>i.e. if the reminder is created with frequency specified as daily, the firstReminderDelay will be 24 hours. Should not be provided in offline agreement creation.",
+          "type": "integer"
+        },
+        "id": {
+          "description": "The unique identifier of the agreement.If provided in POST, it will simply be ignored",
+          "type": "string"
+        },
+        "locale": {
+          "description": "The locale associated with this agreement - specifies the language for the signing page and emails, for example en_US or fr_FR. If none specified, defaults to the language configured for the agreement sender",
+          "type": "string"
+        },
+        "message": {
+          "description": "An optional message to the participants, describing what is being sent or why their signature is required",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the agreement that will be used to identify it, in emails, website and other places",
+          "type": "string"
+        },
+        "participantSetsInfo": {
+          "description": "A list of one or more participant set. A participant set may have one or more participant. If any member of the participant set takes the action that has been assigned to the set(Sign/Approve/Acknowledge etc ), the action is considered as the action taken by whole participation set. For regular (non-MegaSign) documents, there is no limit on the number of electronic signatures in a single document. Written signatures are limited to four per document",
+          "items": {
+            "$ref": "#/definitions/ParticipantSetInfo"
+          },
+          "type": "array"
+        },
+        "postSignOption": {
+          "$ref": "#/definitions/PostSignOption",
+          "description": "URL and associated properties for the success page the user will be taken to after completing the signing process. Should not be provided in offline agreement creation.",
+          "items": {
+            "$ref": "#/definitions/PostSignOption"
+          }
+        },
+        "reminderFrequency": {
+          "description": "Optional parameter that sets how often you want to send reminders to the participants. If it is not specified, the default frequency set for the account will be used. Should not be provided in offline agreement creation.",
+          "enum": [
+            "DAILY_UNTIL_SIGNED",
+            "WEEKLY_UNTIL_SIGNED"
+          ],
+          "type": "string"
+        },
+        "securityOption": {
+          "$ref": "#/definitions/SecurityOption",
+          "description": "Optional secondary security parameters for the agreement. Should not be provided in offline agreement creation.",
+          "items": {
+            "$ref": "#/definitions/SecurityOption"
+          }
+        },
+        "senderEmail": {
+          "description": "Email of agreement sender. Only provided in GET. Can not be provided in POST/PUT request. If provided in POST/PUT, it will be ignored",
+          "type": "string"
+        },
+        "signatureType": {
+          "description": "Specifies the type of signature you would like to request - written or e-signature. The possible values are <br> ESIGN : Agreement needs to be signed electronically <br>,\nWRITTEN : Agreement will be signed using handwritten signature and signed document will be uploaded into the system",
+          "enum": [
+            "ESIGN",
+            "WRITTEN"
+          ],
+          "type": "string"
+        },
+        "state": {
+          "description": "The state in which the agreement should land. The state field can only be provided in POST calls, will never get returned in GET /agreements/{ID} and will be ignored if provided in PUT /agreements/{ID} call. The eventual status of the agreement can be obtained from GET /agreements/ID",
+          "enum": [
+            "AUTHORING",
+            "DRAFT",
+            "IN_PROCESS"
+          ],
+          "type": "string"
+        },
+        "status": {
+          "description": "This is a server generated attribute which provides the detailed status of an agreement.",
+          "enum": [
+            "OUT_FOR_SIGNATURE",
+            "OUT_FOR_DELIVERY",
+            "OUT_FOR_ACCEPTANCE",
+            "OUT_FOR_FORM_FILLING",
+            "OUT_FOR_APPROVAL",
+            "AUTHORING",
+            "CANCELLED",
+            "SIGNED",
+            "APPROVED",
+            "DELIVERED",
+            "ACCEPTED",
+            "FORM_FILLED",
+            "EXPIRED",
+            "ARCHIVED",
+            "PREFILL",
+            "WIDGET_WAITING_FOR_VERIFICATION",
+            "DRAFT",
+            "DOCUMENTS_NOT_YET_PROCESSED",
+            "WAITING_FOR_FAXIN",
+            "WAITING_FOR_VERIFICATION"
+          ],
+          "type": "string"
+        },
+        "vaultingInfo": {
+          "$ref": "#/definitions/VaultingInfo",
+          "description": "Vaulting properties that allows Adobe Sign to securely store documents with a vault provider",
+          "items": {
+            "$ref": "#/definitions/VaultingInfo"
+          }
+        },
+        "workflowId": {
+          "description": "The identifier of custom workflow which defines the routing path of an agreement. Should not be provided in offline agreement creation.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "fileInfos",
+        "name",
+        "participantSetsInfo",
+        "signatureType",
+        "state"
+      ]
+    },
+    "AgreementRejectionInfo": {
+      "properties": {
+        "comment": {
+          "description": "Comment describing the reason to reject this agreement.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "comment"
+      ]
+    },
+    "AgreementStateInfo": {
+      "properties": {
+        "agreementCancellationInfo": {
+          "$ref": "#/definitions/AgreementCancellationInfo",
+          "description": "Cancellation information for the agreement",
+          "items": {
+            "$ref": "#/definitions/AgreementCancellationInfo"
+          }
+        },
+        "state": {
+          "description": "The state in which the agreement should land",
+          "enum": [
+            "AUTHORING",
+            "CANCELLED",
+            "IN_PROCESS"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "state"
+      ]
+    },
+    "AgreementView": {
+      "properties": {
+        "embeddedCode": {
+          "description": "Embedded code of url of resource ",
+          "type": "string"
+        },
+        "expiration": {
+          "description": "Expiration of user url ",
+          "format": "date",
+          "type": "string"
+        },
+        "isCurrent": {
+          "description": "True if this view is the current view",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name of the requested agreement view",
+          "enum": [
+            "COMPOSE",
+            "PREFILL",
+            "AUTHORING",
+            "SEND_PROGRESS",
+            "POST_CREATE",
+            "DOCUMENT",
+            "MANAGE",
+            "SIGNING",
+            "ALL"
+          ],
+          "type": "string"
+        },
+        "url": {
+          "description": "Url of resource location",
+          "type": "string"
+        }
+      },
+      "required": [
+        "isCurrent",
+        "name"
+      ]
+    },
+    "AgreementViewInfo": {
+      "properties": {
+        "commonViewConfiguration": {
+          "$ref": "#/definitions/CommonViewConfiguration",
+          "description": "Common view configuration for all the available views",
+          "items": {
+            "$ref": "#/definitions/CommonViewConfiguration"
+          }
+        },
+        "composeViewConfiguration": {
+          "$ref": "#/definitions/ComposeViewConfiguration",
+          "description": "Compose page view configuration",
+          "items": {
+            "$ref": "#/definitions/ComposeViewConfiguration"
+          }
+        },
+        "name": {
+          "description": "Name of the requested agreement view",
+          "enum": [
+            "COMPOSE",
+            "PREFILL",
+            "AUTHORING",
+            "SEND_PROGRESS",
+            "POST_CREATE",
+            "DOCUMENT",
+            "MANAGE",
+            "SIGNING",
+            "ALL"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "AgreementViews": {
+      "properties": {
+        "agreementViewList": {
+          "description": "List of agreement views",
+          "items": {
+            "$ref": "#/definitions/AgreementView"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "agreementViewList"
+      ]
+    },
+    "CCParticipantInfo": {
+      "properties": {
+        "company": {
+          "description": "Company of the CC participant, if available.",
+          "type": "string"
+        },
+        "email": {
+          "description": "Email of the CC participant of the agreement",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the CC participant, if available.",
+          "type": "string"
+        },
+        "participantId": {
+          "description": " The unique identifier of the CC participant of the agreement.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "company",
+        "email",
+        "name",
+        "participantId"
+      ]
+    },
+    "CombinedDocumentPagesInfo": {
+      "properties": {
+        "documentPagesInfo": {
+          "description": "List of basic information of all pages of the combined document of an Agreement.",
+          "items": {
+            "$ref": "#/definitions/DocumentPageInfo"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "documentPagesInfo"
+      ]
+    },
+    "CommonViewConfiguration": {
+      "properties": {
+        "autoLoginUser": {
+          "description": "Auto LogIn Flag. If true, the URL returned will automatically log the user in. If false, the URL returned will require the credentials. By default its value is false",
+          "type": "boolean"
+        },
+        "locale": {
+          "description": "Message template locale",
+          "type": "string"
+        },
+        "noChrome": {
+          "description": "No Chrome Flag. If true, the embedded page is shown without a navigation header or footer. If false, the standard page header and footer will be present. By default its value is false",
+          "type": "boolean"
+        }
+      }
+    },
+    "ComposeViewConfiguration": {
+      "properties": {
+        "fileUploadOptions": {
+          "$ref": "#/definitions/FileUploadOptions",
+          "description": "Controls various file upload options available on the send page",
+          "items": {
+            "$ref": "#/definitions/FileUploadOptions"
+          }
+        },
+        "isPreviewSelected": {
+          "description": "Should the COMPOSE page be provided with authoring mode selected?",
+          "type": "boolean"
+        }
+      }
+    },
+    "DelegatedParticipantInfo": {
+      "properties": {
+        "email": {
+          "description": "Email of the participant. In case of modifying a participant set (PUT) this is a required field. In case of GET, this is the required field and will always be returned unless it is a fax workflow (legacy agreements) that were created using fax as input",
+          "type": "string"
+        },
+        "securityOption": {
+          "$ref": "#/definitions/DelegatedParticipantSecurityOption",
+          "description": "Security options that apply to the participant. This cannot be changed as part of the PUT call",
+          "items": {
+            "$ref": "#/definitions/DelegatedParticipantSecurityOption"
+          }
+        }
+      },
+      "required": [
+        "email",
+        "securityOption"
+      ]
+    },
+    "DelegatedParticipantSecurityOption": {
+      "properties": {
+        "phoneInfo": {
+          "$ref": "#/definitions/PhoneInfo",
+          "description": "The phoneInfo required for the participant to view and sign the document",
+          "items": {
+            "$ref": "#/definitions/PhoneInfo"
+          }
+        }
+      }
+    },
+    "DelegatedParticipantSetInfo": {
+      "properties": {
+        "memberInfos": {
+          "description": "Array of ParticipantInfo objects, containing participant-specific data (e.g. email). All participants in the array belong to the same set",
+          "items": {
+            "$ref": "#/definitions/DelegatedParticipantInfo"
+          },
+          "type": "array"
+        },
+        "privateMessage": {
+          "description": "Participant set's private message - all participants in the set will receive the same message. This cannot be changed as part of the PUT call.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "memberInfos"
+      ]
+    },
+    "DelegationResponse": {
+      "description": "A JSON that contains the id of newly created delegated participant set",
+      "properties": {
+        "id": {
+          "description": "The unique identifier of the participant set to which the agreement was forwarded.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "DetailedParticipantInfo": {
+      "properties": {
+        "company": {
+          "description": "The company of the participant, if available. This cannot be changed as part of the PUT call.",
+          "type": "string"
+        },
+        "email": {
+          "description": "Email of the participant. In case of modifying a participant set (PUT) this is a required field. In case of GET, this is the required field and will always be returned unless it is a fax workflow (legacy agreements) that were created using fax as input",
+          "type": "string"
+        },
+        "fax": {
+          "description": "Fax of the participant. New Agreements can not be created with fax option. This is only returned for legacy agreements created with fax as participants",
+          "type": "string"
+        },
+        "id": {
+          "description": "The unique identifier of the participant. This will be returned as part of Get call but is not mandatory to be passed as part of PUT call for agreements/{id}/members/participantSets/{id}.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the participant, if available. This cannot be changed as part of the PUT call.",
+          "type": "string"
+        },
+        "privateMessage": {
+          "description": "The private message of the participant, if available. This cannot be changed as part of the PUT call.",
+          "type": "string"
+        },
+        "securityOption": {
+          "$ref": "#/definitions/ParticipantSecurityOption",
+          "description": "Security options that apply to the participant. This cannot be changed as part of the PUT call",
+          "items": {
+            "$ref": "#/definitions/ParticipantSecurityOption"
+          }
+        },
+        "self": {
+          "description": "True if this participant is the same user that is calling the API. Returned as part of Get. Ignored (not required) if modifying a participant set (PUT).",
+          "type": "boolean"
+        },
+        "status": {
+          "description": "The status of the participant. This cannot be changed as part of the PUT call.",
+          "enum": [
+            "REPLACED",
+            "ACTIVE"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "securityOption"
+      ]
+    },
+    "DetailedParticipantSetInfo": {
+      "properties": {
+        "id": {
+          "description": "The unique identifier of the participant set. This cannot be changed as part of the PUT call.",
+          "type": "string"
+        },
+        "memberInfos": {
+          "description": "Array of ParticipantInfo objects, containing participant-specific data (e.g. email). All participants in the array belong to the same set",
+          "items": {
+            "$ref": "#/definitions/DetailedParticipantInfo"
+          },
+          "type": "array"
+        },
+        "name": {
+          "description": "Name of ParticipantSet (it can be empty, but needs not to be unique in a single agreement). Maximum no of characters in participant set name is restricted to 255. This cannot be changed as part of the PUT call.",
+          "type": "string"
+        },
+        "order": {
+          "description": "Index indicating sequential signing group (specified for hybrid routing). This cannot be changed as part of the PUT call.",
+          "type": "integer"
+        },
+        "privateMessage": {
+          "description": "Participant set's private message - all participants in the set will receive the same message. This cannot be changed as part of the PUT call.",
+          "type": "string"
+        },
+        "role": {
+          "description": "Role assumed by all participants in the set (signer, approver etc.). This cannot be changed as part of the PUT call.",
+          "enum": [
+            "SIGNER",
+            "SENDER",
+            "APPROVER",
+            "ACCEPTOR",
+            "CERTIFIED_RECIPIENT",
+            "FORM_FILLER",
+            "DELEGATE_TO_SIGNER",
+            "DELEGATE_TO_APPROVER",
+            "DELEGATE_TO_ACCEPTOR",
+            "DELEGATE_TO_CERTIFIED_RECIPIENT",
+            "DELEGATE_TO_FORM_FILLER",
+            "SHARE"
+          ],
+          "type": "string"
+        },
+        "status": {
+          "description": "The agreement status with respect to the participant set. This cannot be changed as part of the PUT call.",
+          "enum": [
+            "CANCELLED",
+            "COMPLETED",
+            "EXPIRED",
+            "NOT_YET_VISIBLE",
+            "WAITING_FOR_OTHERS",
+            "WAITING_FOR_MY_APPROVAL",
+            "WAITING_FOR_AUTHORING",
+            "WAITING_FOR_MY_ACKNOWLEDGEMENT",
+            "WAITING_FOR_MY_ACCEPTANCE",
+            "WAITING_FOR_MY_FORM_FILLING",
+            "WAITING_FOR_MY_DELEGATION",
+            "WAITING_FOR_MY_SIGNATURE",
+            "WAITING_FOR_MY_VERIFICATION",
+            "WAITING_FOR_PREFILL"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "memberInfos",
+        "order",
+        "role"
+      ]
+    },
+    "DeviceLocation": {
+      "properties": {
+        "latitude": {
+          "description": "Latitude coordinate",
+          "format": "float",
+          "type": "number"
+        },
+        "longitude": {
+          "description": "Longitude coordinate",
+          "format": "float",
+          "type": "number"
+        }
+      },
+      "required": [
+        "latitude",
+        "longitude"
+      ]
+    },
+    "DigitalSignatureInfo": {
+      "properties": {
+        "company": {
+          "description": "Company name captured during digital signing",
+          "type": "string"
+        },
+        "email": {
+          "description": "Email captured during digital signing",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name captured during digital signing",
+          "type": "string"
+        }
+      },
+      "required": [
+        "company",
+        "email",
+        "name"
+      ]
+    },
+    "DisplayParticipantInfo": {
+      "properties": {
+        "company": {
+          "description": "Displays the name of the company of the user, if available",
+          "type": "string"
+        },
+        "email": {
+          "description": "Displays the email of the user",
+          "type": "string"
+        },
+        "fullName": {
+          "description": "Displays the full name of the user, if available. ",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email"
+      ]
+    },
+    "DisplayParticipantSetInfo": {
+      "properties": {
+        "displayUserSetMemberInfos": {
+          "description": "Displays the info about user set",
+          "items": {
+            "$ref": "#/definitions/DisplayParticipantInfo"
+          },
+          "type": "array"
+        },
+        "displayUserSetName": {
+          "description": "The name of the display user set. Returned only, if the API caller is the sender of agreement. ",
+          "type": "string"
+        }
+      },
+      "required": [
+        "displayUserSetMemberInfos"
+      ]
+    },
+    "Document": {
+      "properties": {
+        "id": {
+          "description": "ID of the document. In case of PUT call, this is the only field that is accepted in Document structure. Name and mimeType are ignored in case of PUT call",
+          "type": "string"
+        },
+        "label": {
+          "description": "Label of the document",
+          "type": "string"
+        },
+        "mimeType": {
+          "description": "mimeType of the original file. This is returned in GET but not accepted back in PUT",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the original document uploaded. This is returned in GET but not accepted back in PUT",
+          "type": "string"
+        },
+        "numPages": {
+          "description": "Number of pages in the document",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "numPages"
+      ]
+    },
+    "DocumentImageUrls": {
+      "properties": {
+        "imageSize": {
+          "description": "ImageSize corresponding to the imageUrl returned ",
+          "enum": [
+            "FIXED_WIDTH_50px",
+            "FIXED_WIDTH_250px",
+            "FIXED_WIDTH_675px",
+            "ZOOM_50_PERCENT",
+            "ZOOM_75_PERCENT",
+            "ZOOM_100_PERCENT",
+            "ZOOM_125_PERCENT",
+            "ZOOM_150_PERCENT",
+            "ZOOM_200_PERCENT"
+          ],
+          "type": "string"
+        },
+        "imageURLs": {
+          "description": "A list of image url (one per page).",
+          "items": {
+            "$ref": "#/definitions/PageImageUrl"
+          },
+          "type": "array"
+        },
+        "imagesAvailable": {
+          "description": "true if images for the associated image size is available, else false.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "imageURLs"
+      ]
+    },
+    "DocumentImageUrlsInfo": {
+      "properties": {
+        "documentId": {
+          "description": "Id of the document",
+          "type": "string"
+        },
+        "documentImageUrlsList": {
+          "description": "A list of documents image URLs.",
+          "items": {
+            "$ref": "#/definitions/DocumentImageUrls"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "documentId",
+        "documentImageUrlsList"
+      ]
+    },
+    "DocumentPageInfo": {
+      "properties": {
+        "height": {
+          "description": "Height of the page",
+          "format": "double",
+          "type": "number"
+        },
+        "index": {
+          "description": "Index of the page in combined document starting from 1",
+          "format": "int32",
+          "type": "integer"
+        },
+        "rotation": {
+          "description": "Rotation angle of the page in clockwise direction in degree",
+          "format": "double",
+          "type": "number"
+        },
+        "width": {
+          "description": "Width of the page",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "height",
+        "index",
+        "rotation",
+        "width"
+      ]
+    },
+    "DocumentsImageUrlsInfo": {
+      "properties": {
+        "originalDocumentsImageUrlsInfo": {
+          "description": "A list of original document image URLs info.",
+          "items": {
+            "$ref": "#/definitions/DocumentImageUrlsInfo"
+          },
+          "type": "array"
+        },
+        "supportingDocumentsImageUrlsInfo": {
+          "description": "A list of supporting document image URLs info.",
+          "items": {
+            "$ref": "#/definitions/DocumentImageUrlsInfo"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "originalDocumentsImageUrlsInfo"
+      ]
+    },
+    "EmailOption": {
+      "properties": {
+        "sendOptions": {
+          "$ref": "#/definitions/SendOptions",
+          "description": "Specify emails to be sent to different participants at different steps of the agreement process. Note: ALL means  emails for the events will be sent to all participants. NONE means emails for the events will not be sent to any participant",
+          "items": {
+            "$ref": "#/definitions/SendOptions"
+          }
+        }
+      }
+    },
+    "ExternalId": {
+      "properties": {
+        "id": {
+          "description": "An arbitrary value from your system, which can be specified at sending time and then later returned or queried",
+          "type": "string"
+        }
+      }
+    },
+    "FileInfo": {
+      "properties": {
+        "document": {
+          "$ref": "#/definitions/Document",
+          "description": "A document that is associated with the agreement. This field cannot be provided in POST call. In case of GET call, this is the only field returned in the response",
+          "items": {
+            "$ref": "#/definitions/Document"
+          }
+        },
+        "label": {
+          "description": "The unique label value of a file info element. In case of custom workflow this will map a file to corresponding file element in workflow definition. This must be specified in case of custom workflow agreement creation request ",
+          "type": "string"
+        },
+        "libraryDocumentId": {
+          "description": "ID for an existing Library document that will be added to the agreement",
+          "type": "string"
+        },
+        "transientDocumentId": {
+          "description": "ID for a transient document that will be added to the agreement",
+          "type": "string"
+        },
+        "urlFileInfo": {
+          "$ref": "#/definitions/URLFileInfo",
+          "description": "URL for an external document to add to the agreement",
+          "items": {
+            "$ref": "#/definitions/URLFileInfo"
+          }
+        }
+      }
+    },
+    "FileUploadOptions": {
+      "properties": {
+        "libraryDocument": {
+          "description": "Whether library documents link should appear or not. Default value is taken as true",
+          "type": "boolean"
+        },
+        "localFile": {
+          "description": "Whether local file upload button should appear or not. Default value is taken as true",
+          "type": "boolean"
+        },
+        "webConnectors": {
+          "description": "Whether link to attach documents from web sources like Dropbox should appear or not. Default value is taken as true",
+          "type": "boolean"
+        }
+      }
+    },
+    "FormField": {
+      "description": "A form field for an agreement.",
+      "properties": {
+        "alignment": {
+          "description": "Alignment of the text.",
+          "enum": [
+            "LEFT",
+            "RIGHT",
+            "CENTER"
+          ],
+          "type": "string"
+        },
+        "assignee": {
+          "description": "Who the field is assigned to.  Either a participant set id, null, NOBODY or PREFILL.",
+          "type": "string"
+        },
+        "backgroundColor": {
+          "description": "Background color of the form field in RGB or HEX format",
+          "type": "string"
+        },
+        "borderColor": {
+          "description": "Color of the border of the field in RGB or HEX format",
+          "type": "string"
+        },
+        "borderStyle": {
+          "description": "Style of the border of the field.",
+          "enum": [
+            "SOLID",
+            "DASHED",
+            "BEVELED",
+            "INSET",
+            "UNDERLINE"
+          ],
+          "type": "string"
+        },
+        "borderWidth": {
+          "description": "Width of the border of the field in pixels",
+          "format": "double",
+          "type": "number"
+        },
+        "calculated": {
+          "description": "true if this field's value is calculated from an expression, else false",
+          "type": "boolean"
+        },
+        "conditionalAction": {
+          "$ref": "#/definitions/FormFieldConditionalAction",
+          "description": "A predicate (or set of predicates) that determines whether this field is visible and enabled.",
+          "items": {
+            "$ref": "#/definitions/FormFieldConditionalAction"
+          }
+        },
+        "contentType": {
+          "description": "Content Type of the form field.",
+          "enum": [
+            "DATA",
+            "SIGNATURE_BLOCK",
+            "SIGNATURE",
+            "SIGNER_NAME",
+            "SIGNER_FIRST_NAME",
+            "SIGNER_LAST_NAME",
+            "SIGNER_INITIALS",
+            "SIGNER_EMAIL",
+            "SIGNER_TITLE",
+            "SIGNER_COMPANY",
+            "SIGNATURE_DATE",
+            "AGREEMENT_NAME",
+            "AGREEMENT_MESSAGE",
+            "TRANSACTION_ID",
+            "SIGNATURE_STAMP",
+            "PAYMENT",
+            "DIGITAL_SIGNATURE"
+          ],
+          "type": "string"
+        },
+        "defaultValue": {
+          "description": "Default value of the form field",
+          "type": "string"
+        },
+        "displayFormat": {
+          "description": "Format of the value of the field to be displayed based on the displayFormatType property.",
+          "type": "string"
+        },
+        "displayFormatType": {
+          "description": "Format type of the text field.",
+          "enum": [
+            "DEFAULT",
+            "DATE",
+            "NUMBER"
+          ],
+          "type": "string"
+        },
+        "displayLabel": {
+          "description": "Display label attached to the field",
+          "type": "string"
+        },
+        "fontColor": {
+          "description": "Font color of the form field in RGB or HEX format",
+          "type": "string"
+        },
+        "fontName": {
+          "description": "Font name of the form field",
+          "type": "string"
+        },
+        "fontSize": {
+          "description": "Font size of the form field in points",
+          "format": "double",
+          "type": "number"
+        },
+        "hiddenOptions": {
+          "description": "Text values which are hidden in a drop down form field",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "hyperlink": {
+          "$ref": "#/definitions/FormFieldHyperlink",
+          "description": "Hyperlink-specific data (e.g. as url, link type)",
+          "items": {
+            "$ref": "#/definitions/FormFieldHyperlink"
+          }
+        },
+        "inputType": {
+          "description": "Input type of the form field",
+          "enum": [
+            "TEXT_FIELD",
+            "MULTILINE",
+            "PASSWORD",
+            "RADIO",
+            "CHECKBOX",
+            "DROP_DOWN",
+            "LISTBOX",
+            "SIGNATURE",
+            "PDF_SIGNATURE",
+            "BUTTON",
+            "BLOCK",
+            "FILE_CHOOSER",
+            "COMB",
+            "INLINE_IMAGE",
+            "UNSUPPORTED"
+          ],
+          "type": "string"
+        },
+        "locations": {
+          "description": "All locations in a document where the form field is placed",
+          "items": {
+            "$ref": "#/definitions/FormFieldLocation"
+          },
+          "type": "array"
+        },
+        "masked": {
+          "description": "true if the input entered by the signer has to be masked (like password), false if it shouldn't be",
+          "type": "boolean"
+        },
+        "maskingText": {
+          "description": "Text to mask the masked form field",
+          "type": "string"
+        },
+        "maxLength": {
+          "description": "Maximum length of the input text field in terms of no. of characters",
+          "format": "int32",
+          "type": "integer"
+        },
+        "maxValue": {
+          "description": "Upper bound of the number that can be entered by the signer",
+          "format": "double",
+          "type": "number"
+        },
+        "minLength": {
+          "description": "Minimum length of the input text field in terms of no. of characters",
+          "format": "int32",
+          "type": "integer"
+        },
+        "minValue": {
+          "description": "Lower bound of the number that can be entered by the signer",
+          "format": "double",
+          "type": "number"
+        },
+        "name": {
+          "description": "The name of the form field",
+          "type": "string"
+        },
+        "origin": {
+          "description": "Origin of Form Field",
+          "enum": [
+            "AUTHORED",
+            "GENERATED",
+            "IMPORTED"
+          ],
+          "type": "string"
+        },
+        "radioCheckType": {
+          "description": "The type of radio button (if field is radio button, identified by inputType).",
+          "enum": [
+            "CIRCLE",
+            "CHECK",
+            "CROSS",
+            "DIAMOND",
+            "SQUARE",
+            "STAR"
+          ],
+          "type": "string"
+        },
+        "readOnly": {
+          "description": "true if it is a read-only field, else false",
+          "type": "boolean"
+        },
+        "required": {
+          "description": "true if it is a mandatory field to be filled by the signer, else false",
+          "type": "boolean"
+        },
+        "tooltip": {
+          "description": "Text that appears while hovering over the field",
+          "type": "string"
+        },
+        "validation": {
+          "description": "Rule for validating the field value.",
+          "enum": [
+            "NONE",
+            "STRING",
+            "NUMBER",
+            "DATE",
+            "DATE_CUSTOM",
+            "TIME",
+            "ZIP",
+            "PHONE",
+            "SOCIAL_SEC",
+            "EMAIL",
+            "CURRENCY",
+            "PERCENT",
+            "FORMULA",
+            "CUSTOM",
+            "XFA_PICTURE"
+          ],
+          "type": "string"
+        },
+        "validationData": {
+          "description": "Further data for validating input with regards to the field's specified format. The contents and interpretation of formatData depends on the value of validation.",
+          "type": "string"
+        },
+        "validationErrMsg": {
+          "description": "Error message to be shown to the signer if filled value doesn't match the validations of the form field",
+          "type": "string"
+        },
+        "valueExpression": {
+          "description": "Expression to calculate value of the form field",
+          "type": "string"
+        },
+        "visible": {
+          "description": "If set to false, then the form field is hidden.  Otherwise, it is visible.",
+          "type": "boolean"
+        },
+        "visibleOptions": {
+          "description": "Text values which are visible in a drop down form field",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "locations",
+        "name"
+      ]
+    },
+    "FormFieldConditionPredicate": {
+      "description": "A predicate used to determine whether the condtion succeeds",
+      "properties": {
+        "fieldLocationIndex": {
+          "description": "Index of the location of the form field used in the predicate",
+          "format": "int32",
+          "type": "integer"
+        },
+        "fieldName": {
+          "description": "Name of the field whose value is the basis of predicate",
+          "type": "string"
+        },
+        "operator": {
+          "description": "Operator to be applied on the value of the predicate field.",
+          "enum": [
+            "EQUALS",
+            "NOT_EQUALS",
+            "LESS_THAN",
+            "LESS_THAN_EQUALS",
+            "GREATER_THAN",
+            "GREATER_THAN_EQUALS",
+            "IN",
+            "NOT_IN",
+            "CONTAINS",
+            "NOT_CONTAINS"
+          ],
+          "type": "string"
+        },
+        "value": {
+          "description": "Value to compare against the value of the predicate's form field, using the specified operator",
+          "type": "string"
+        }
+      }
+    },
+    "FormFieldConditionalAction": {
+      "description": "Conditional actions to perfom on this form field.",
+      "properties": {
+        "action": {
+          "description": "Action to show/hide the form field is to be taken on the basis of evaluation of conditions.",
+          "enum": [
+            "SHOW",
+            "HIDE",
+            "DISABLE",
+            "ENABLE"
+          ],
+          "type": "string"
+        },
+        "anyOrAll": {
+          "description": "It indicates if any one of the conditions or all of them have to be true.",
+          "enum": [
+            "ALL",
+            "ANY"
+          ],
+          "type": "string"
+        },
+        "predicates": {
+          "description": "The predicates to be evaluated in order to determine whether this condition is true",
+          "items": {
+            "$ref": "#/definitions/FormFieldConditionPredicate"
+          },
+          "type": "array"
+        }
+      }
+    },
+    "FormFieldHyperlink": {
+      "description": "Hyperlink-specific data for hyperlink form fields",
+      "properties": {
+        "documentLocation": {
+          "$ref": "#/definitions/FormFieldLocation",
+          "description": "Location on the document pointed by the link in case of INTERNAL type link",
+          "items": {
+            "$ref": "#/definitions/FormFieldLocation"
+          }
+        },
+        "linkType": {
+          "description": "Type of link in an agreement.",
+          "enum": [
+            "INTERNAL",
+            "EXTERNAL",
+            "FROM_TEXT"
+          ],
+          "type": "string"
+        },
+        "url": {
+          "description": "URL, in case of EXTERNAL type link",
+          "type": "string"
+        }
+      }
+    },
+    "FormFieldLocation": {
+      "description": "Location information for form fields",
+      "properties": {
+        "height": {
+          "description": "Height of the form field in pixels",
+          "format": "double",
+          "type": "number"
+        },
+        "left": {
+          "description": "No. of pixels from left of the page for form field placement",
+          "format": "double",
+          "type": "number"
+        },
+        "pageNumber": {
+          "description": "Number of the page where form field has to be placed, starting from 1.",
+          "type": "integer"
+        },
+        "top": {
+          "description": "No. of pixels from bottom of the page for form field placement",
+          "format": "double",
+          "type": "number"
+        },
+        "width": {
+          "description": "Width of the form field in pixels",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "height",
+        "left",
+        "pageNumber",
+        "top",
+        "width"
+      ]
+    },
+    "FormFieldMergeInfo": {
+      "description": "Data for updating the default values of existing form fields",
+      "properties": {
+        "fieldMergeInfos": {
+          "description": "A mapping of field names to default values",
+          "items": {
+            "$ref": "#/definitions/MergefieldInfo"
+          },
+          "type": "array"
+        }
+      }
+    },
+    "FormFieldPostInfo": {
+      "description": "Information required to add or update agreement form fields",
+      "properties": {
+        "templateId": {
+          "description": "The ID of the template from which to add new fields",
+          "type": "string"
+        }
+      },
+      "required": [
+        "templateId"
+      ]
+    },
+    "FormFieldPutInfo": {
+      "description": "Information required to add or replace agreement form fields",
+      "properties": {
+        "fields": {
+          "description": "The list of fields to update or replace. PDF_SIGNATURE inputType field is currently not supported.",
+          "items": {
+            "$ref": "#/definitions/FormField"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "fields"
+      ]
+    },
+    "MembersInfo": {
+      "properties": {
+        "ccsInfo": {
+          "description": "Information of CC participants of the agreement.",
+          "items": {
+            "$ref": "#/definitions/CCParticipantInfo"
+          },
+          "type": "array"
+        },
+        "nextParticipantSets": {
+          "description": "Information of next participant sets.",
+          "items": {
+            "$ref": "#/definitions/DetailedParticipantSetInfo"
+          },
+          "type": "array"
+        },
+        "participantSets": {
+          "description": "Information about the participant Sets.",
+          "items": {
+            "$ref": "#/definitions/DetailedParticipantSetInfo"
+          },
+          "type": "array"
+        },
+        "senderInfo": {
+          "$ref": "#/definitions/SenderInfo",
+          "description": "Information of the sender of the agreement.",
+          "items": {
+            "$ref": "#/definitions/SenderInfo"
+          }
+        },
+        "sharesInfo": {
+          "description": "Information of the participants with whom the agreement has been shared.",
+          "items": {
+            "$ref": "#/definitions/ShareParticipantInfo"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "ccsInfo",
+        "nextParticipantSets",
+        "participantSets",
+        "senderInfo",
+        "sharesInfo"
+      ]
+    },
+    "MergefieldInfo": {
+      "properties": {
+        "defaultValue": {
+          "description": "The default value of the field",
+          "type": "string"
+        },
+        "fieldName": {
+          "description": "The name of the field",
+          "type": "string"
+        }
+      },
+      "required": [
+        "defaultValue",
+        "fieldName"
+      ]
+    },
+    "Note": {
+      "properties": {
+        "note": {
+          "description": "Content of Note field",
+          "type": "string"
+        }
+      },
+      "required": [
+        "note"
+      ]
+    },
+    "OfflineDeviceInfo": {
+      "properties": {
+        "applicationDescription": {
+          "description": "Application Description",
+          "type": "string"
+        },
+        "deviceDescription": {
+          "description": "Device Description",
+          "type": "string"
+        },
+        "deviceTime": {
+          "description": "The device local time. The device time provided should not be before 30 days of current date.Format should be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time",
+          "format": "date",
+          "type": "string"
+        }
+      },
+      "required": [
+        "applicationDescription",
+        "deviceDescription"
+      ]
+    },
+    "PageImageUrl": {
+      "properties": {
+        "pageNumber": {
+          "description": "Page number within the document.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "url": {
+          "description": "An image url.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pageNumber",
+        "url"
+      ]
+    },
+    "PageInfo": {
+      "properties": {
+        "nextCursor": {
+          "description": "Used to navigate to the next page. If not returned, there are no further pages.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "nextCursor"
+      ]
+    },
+    "ParticipantSecurityOption": {
+      "properties": {
+        "authenticationMethod": {
+          "description": "The authentication method for the participants to have access to view and sign the document",
+          "enum": [
+            "NONE",
+            "PASSWORD",
+            "PHONE",
+            "KBA",
+            "WEB_IDENTITY",
+            "ADOBE_SIGN"
+          ],
+          "type": "string"
+        },
+        "password": {
+          "description": "The password required for the participant to view and sign the document. Note that AdobeSign will never show this password to anyone, so you will need to separately communicate it to any relevant parties. The password will not be returned in GET call. In case of PUT call, password associated with Agreement resource will remain unchanged if no password is specified but authentication method is provided as PASSWORD",
+          "type": "string"
+        },
+        "phoneInfo": {
+          "$ref": "#/definitions/PhoneInfo",
+          "description": "The phoneInfo required for the participant to view and sign the document",
+          "items": {
+            "$ref": "#/definitions/PhoneInfo"
+          }
+        }
+      },
+      "required": [
+        "authenticationMethod"
+      ]
+    },
+    "ParticipantSetInfo": {
+      "properties": {
+        "label": {
+          "description": "The unique label of a participant set.<br>For custom workflows, label specified in the participation set should map it to the participation step in the custom workflow.",
+          "type": "string"
+        },
+        "memberInfos": {
+          "description": "Array of ParticipantInfo objects, containing participant-specific data (e.g. email). All participants in the array belong to the same set",
+          "items": {
+            "$ref": "#/definitions/ParticipantSetMemberInfo"
+          },
+          "type": "array"
+        },
+        "name": {
+          "description": "Name of the participant set (it can be empty, but needs not to be unique in a single agreement). Maximum no of characters in participant set name is restricted to 255",
+          "type": "string"
+        },
+        "order": {
+          "description": "Index indicating position at which signing group needs to sign. Signing group to sign at first place is assigned a 1 index. Different signingOrder specified in input should form a valid consecutive increasing sequence of integers. Otherwise signingOrder will be considered invalid. No signingOrder should be specified for SHARE role",
+          "type": "integer"
+        },
+        "privateMessage": {
+          "description": "Participant set's private message - all participants in the set will receive the same message",
+          "type": "string"
+        },
+        "role": {
+          "description": "Role assumed by all participants in the set (signer, approver etc.)",
+          "enum": [
+            "SIGNER",
+            "APPROVER",
+            "ACCEPTOR",
+            "CERTIFIED_RECIPIENT",
+            "FORM_FILLER",
+            "DELEGATE_TO_SIGNER",
+            "DELEGATE_TO_APPROVER",
+            "DELEGATE_TO_ACCEPTOR",
+            "DELEGATE_TO_CERTIFIED_RECIPIENT",
+            "DELEGATE_TO_FORM_FILLER",
+            "SHARE"
+          ],
+          "type": "string"
+        },
+        "visiblePages": {
+          "description": "When you enable limited document visibility (documentVisibilityEnabled), you can specify which file (fileInfo) should be made visible to which specific participant set.<br>Specify one or more label values of a fileInfos element.<br>Each signer participant sets must contain at least one required signature field in at least one visible file included in this API call; if not a page with a signature field is automatically appended for any missing participant sets. If there is a possibility that one or more participant sets do not have a required signature field in the files included in the API call, all signer participant sets should include a special index value of '0' to make this automatically appended signature page visible to the signer. Not doing so may result in an error. For all other roles, you may omit this value to exclude this page.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "memberInfos",
+        "order",
+        "role"
+      ]
+    },
+    "ParticipantSetMemberInfo": {
+      "properties": {
+        "email": {
+          "description": "Email of the particpant. In case of creating new Agreements(POST/PUT), this is a required field. In case of GET, this is the required field and will always be returned unless it is a fax workflow( legacy agreements) that were created using fax as input",
+          "type": "string"
+        },
+        "securityOption": {
+          "$ref": "#/definitions/ParticipantSecurityOption",
+          "description": "Security options that apply to the participant",
+          "items": {
+            "$ref": "#/definitions/ParticipantSecurityOption"
+          }
+        }
+      },
+      "required": [
+        "email"
+      ]
+    },
+    "PhoneInfo": {
+      "properties": {
+        "countryCode": {
+          "description": "The phone Info country code required for the participant to view and sign the document if authentication method is PHONE",
+          "type": "string"
+        },
+        "phone": {
+          "description": "The phone number required for the participant to view and sign the document if authentication method is PHONE",
+          "type": "string"
+        }
+      }
+    },
+    "PostSignOption": {
+      "properties": {
+        "redirectDelay": {
+          "description": "The delay (in seconds) before the user is taken to the success page. If this value is greater than 0, the user will first see the standard Adobe Sign success message, and then after a delay will be redirected to your success page",
+          "type": "integer"
+        },
+        "redirectUrl": {
+          "description": "A publicly accessible url to which the user will be sent after successfully completing the signing process",
+          "type": "string"
+        }
+      }
+    },
+    "ReminderCreationResult": {
+      "properties": {
+        "id": {
+          "description": "An identifier of the reminder resource created on the server. Only provided in GET. Cannot be provided in POST request. If provided in POST, it will be ignored",
+          "type": "string"
+        }
+      }
+    },
+    "ReminderInfo": {
+      "properties": {
+        "firstReminderDelay": {
+          "description": "Integer which specifies the delay in hours before sending the first reminder.<br>This is an optional field. The minimum value allowed is 1 hour and the maximum value can’t be more than the difference of agreement creation and expiry time of the agreement in hours.<br>If this is not specified but the reminder frequency is specified, then the first reminder will be sent based on frequency.<br>i.e. if the reminder is created with frequency specified as daily, the firstReminderDelay will be 24 hours",
+          "type": "integer"
+        },
+        "frequency": {
+          "description": "The frequency at which reminder will be sent until the agreement is signed.<br>If frequency is not provided, the reminder will be sent once (if the agreement is available at the specified time) with the delay based on the firstReminderDelay field and will never repeat again. If the agreement is not available at that time, reminder will not be sent",
+          "enum": [
+            "DAILY_UNTIL_SIGNED",
+            "WEEKLY_UNTIL_SIGNED",
+            "ONCE"
+          ],
+          "type": "string"
+        },
+        "lastSentDate": {
+          "description": "The date when the reminder was last sent. Only provided in GET. Cannot be provided in POST request. If provided in POST, it will be ignored. Format would be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time",
+          "format": "date",
+          "type": "string"
+        },
+        "nextSentDate": {
+          "description": "The date when the reminder is scheduled to be sent next. Only provided in GET. Cannot be provided in POST request. If provided in POST, it will be ignored. Format would be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time",
+          "format": "date",
+          "type": "string"
+        },
+        "note": {
+          "description": "An optional message sent to the recipients, describing why their signatures are required",
+          "type": "string"
+        },
+        "recipientParticipantIds": {
+          "description": "A list of one or more participant IDs to create the reminder on. The reminder will be sent to all the participants specified by the list of participant IDs.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "reminderId": {
+          "description": "An identifier of the reminder resource created on the server. Only provided in GET. Cannot be provided in POST request. If provided in POST, it will be ignored",
+          "type": "string"
+        },
+        "startReminderCounterFrom": {
+          "description": "Reminder can be sent based on when the agreement becomes available or when the reminder is created<br><b>AGREEMENT_AVAILABILITY :</b><br>If the agreement is not available to the participantSet at the time of reminder creation, the reminder will be sent for the first time, only when the agreement becomes available to the participantSet taking the firstReminderDelay into account. Subsequent reminders will be sent based on the frequency specified.<br>If the agreement is already available to the participantSet at the time of reminder creation, the first reminder will be sent after the delay specified by firstReminderDelay from the reminder creation time.<br><br><b>REMINDER_CREATION :</b><br>The first reminder will be sent after the delay specified by firstReminderDelay from the reminder creation time only if the agreement is available at that time. Subsequent reminders will be triggered based on the frequency specified and will be sent only if the agreement is available at that time.<br>For agreements in authoring state, creating reminder with startReminderCounterFrom as REMINDER_CREATION is not allowed.<br>Note : If firstReminderDelay, frequency and startReminderCounterFrom fields are not specified, reminder will be sent right now if the agreement is available. If agreement is not available, an error will be thrown.",
+          "enum": [
+            "AGREEMENT_AVAILABILITY",
+            "REMINDER_CREATION"
+          ],
+          "type": "string"
+        },
+        "status": {
+          "description": "Current status of the reminder",
+          "enum": [
+            "ACTIVE"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "recipientParticipantIds",
+        "status"
+      ]
+    },
+    "RemindersResponse": {
+      "properties": {
+        "reminderInfoList": {
+          "description": "A list of one or more reminders created on the agreement specified by the unique identifier agreementId by the user invoking the API.",
+          "items": {
+            "$ref": "#/definitions/ReminderInfo"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "reminderInfoList"
+      ]
+    },
+    "SecurityOption": {
+      "properties": {
+        "openPassword": {
+          "description": "The secondary password that will be used to secure the PDF document. Note that AdobeSign will never show this password to anyone, so you will need to separately communicate it to any relevant parties",
+          "type": "string"
+        }
+      }
+    },
+    "SendOptions": {
+      "properties": {
+        "completionEmails": {
+          "description": "Control notification mails for agreement completion events - COMPLETED, CANCELLED, EXPIRED and REJECTED",
+          "enum": [
+            "ALL",
+            "NONE"
+          ],
+          "type": "string"
+        },
+        "inFlightEmails": {
+          "description": "Control notification mails for agreement-in-process events - DELEGATED, REPLACED",
+          "enum": [
+            "ALL",
+            "NONE"
+          ],
+          "type": "string"
+        },
+        "initEmails": {
+          "description": "Control notification mails for Agreement initiation events - ACTION_REQUESTED and CREATED",
+          "enum": [
+            "ALL",
+            "NONE"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "SenderInfo": {
+      "properties": {
+        "company": {
+          "description": "Company of the sender, if available.",
+          "type": "string"
+        },
+        "email": {
+          "description": "Email of the sender of the agreement.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the sender, if available.",
+          "type": "string"
+        },
+        "participantId": {
+          "description": " The unique identifier of the sender of the agreement.",
+          "type": "string"
+        },
+        "self": {
+          "description": "True if the sender is the same user that is calling the API.",
+          "type": "boolean"
+        },
+        "status": {
+          "description": "The agreement status with respect to the participant set. This cannot be changed as part of the PUT call.",
+          "enum": [
+            "CANCELLED",
+            "COMPLETED",
+            "EXPIRED",
+            "NOT_YET_VISIBLE",
+            "WAITING_FOR_AUTHORING",
+            "WAITING_FOR_MY_DELEGATION",
+            "WAITING_FOR_MY_ACCEPTANCE",
+            "WAITING_FOR_MY_ACKNOWLEDGEMENT",
+            "WAITING_FOR_MY_APPROVAL",
+            "WAITING_FOR_MY_FORM_FILLING",
+            "WAITING_FOR_MY_SIGNATURE",
+            "WAITING_FOR_OTHERS"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "company",
+        "email",
+        "name",
+        "participantId",
+        "self",
+        "status"
+      ]
+    },
+    "ShareCreationInfo": {
+      "properties": {
+        "email": {
+          "description": "The email address of the member with whom the agreement will be shared",
+          "type": "string"
+        },
+        "message": {
+          "description": "Optional message to the sharee",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email"
+      ]
+    },
+    "ShareCreationInfoList": {
+      "properties": {
+        "shareCreationInfo": {
+          "description": "List of ShareCreationInfo",
+          "items": {
+            "$ref": "#/definitions/ShareCreationInfo"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "shareCreationInfo"
+      ]
+    },
+    "ShareCreationResponse": {
+      "properties": {
+        "email": {
+          "description": "The email address that was requested",
+          "type": "string"
+        },
+        "participantId": {
+          "description": "The unique identifier of the participant",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "participantId"
+      ]
+    },
+    "ShareCreationResponseList": {
+      "properties": {
+        "shareCreationResponseList": {
+          "description": "List of ShareCreationResponse",
+          "items": {
+            "$ref": "#/definitions/ShareCreationResponse"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "shareCreationResponseList"
+      ]
+    },
+    "ShareParticipantInfo": {
+      "properties": {
+        "company": {
+          "description": "Company of the sharee participant, if available.",
+          "type": "string"
+        },
+        "email": {
+          "description": "Email of the sharee participant of the agreement.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the sharee participant, if available.",
+          "type": "string"
+        },
+        "participantId": {
+          "description": "The unique identifier of the sharee participant of the agreement.",
+          "type": "string"
+        },
+        "sharerParticipantId": {
+          "description": "The unique identifier of the participant who shared the agreement.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "company",
+        "email",
+        "name",
+        "participantId",
+        "sharerParticipantId"
+      ]
+    },
+    "SigningUrl": {
+      "properties": {
+        "email": {
+          "description": "The email address of the signer associated with this signing url",
+          "type": "string"
+        },
+        "esignUrl": {
+          "description": "The email address of the signer associated with this signing url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "esignUrl"
+      ]
+    },
+    "SigningUrlResponse": {
+      "properties": {
+        "signingUrlSetInfos": {
+          "description": "An array of urls for signer sets involved in this agreement.",
+          "items": {
+            "$ref": "#/definitions/SigningUrlSetInfo"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "signingUrlSetInfos"
+      ]
+    },
+    "SigningUrlSetInfo": {
+      "properties": {
+        "signingUrlSetName": {
+          "description": "The name of the current signer set. Returned only, if the API caller is the sender of agreement",
+          "type": "string"
+        },
+        "signingUrls": {
+          "description": "An array of urls for current signer set.",
+          "items": {
+            "$ref": "#/definitions/SigningUrl"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "signingUrls"
+      ]
+    },
+    "SupportingDocument": {
+      "properties": {
+        "displayLabel": {
+          "description": "Display name of the document",
+          "type": "string"
+        },
+        "fieldName": {
+          "description": "The name of the supporting document field",
+          "type": "string"
+        },
+        "id": {
+          "description": "Id representing the document",
+          "type": "string"
+        },
+        "mimeType": {
+          "description": "Mime-type of the document",
+          "type": "string"
+        },
+        "numPages": {
+          "description": "Number of pages in the document",
+          "format": "int32",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "displayLabel",
+        "fieldName",
+        "id",
+        "mimeType",
+        "numPages"
+      ]
+    },
+    "URLFileInfo": {
+      "properties": {
+        "mimeType": {
+          "description": "The mime type of the referenced file, used to determine if the file can be accepted and the necessary conversion steps can be performed",
+          "type": "string"
+        },
+        "name": {
+          "description": "The original system file name of the document being sent",
+          "type": "string"
+        },
+        "url": {
+          "description": "A publicly accessible URL for retrieving the raw file content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "mimeType",
+        "name",
+        "url"
+      ]
+    },
+    "UserAgreement": {
+      "properties": {
+        "displayDate": {
+          "description": "The display date for the agreement. Format would be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time",
+          "format": "date",
+          "type": "string"
+        },
+        "displayParticipantSetInfos": {
+          "description": "The most relevant current user set for the agreement. It is typically the next signer if the agreement is from the current user, or the sender if received from another user",
+          "items": {
+            "$ref": "#/definitions/DisplayParticipantSetInfo"
+          },
+          "type": "array"
+        },
+        "esign": {
+          "description": "True if this is an e-sign document",
+          "type": "boolean"
+        },
+        "hidden": {
+          "description": "True if agreement is hidden for the user",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "The unique identifier of the agreement.If provided in POST, it will simply be ignored",
+          "type": "string"
+        },
+        "latestVersionId": {
+          "description": "A version ID which uniquely identifies the current version of the agreement",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the Agreement",
+          "type": "string"
+        },
+        "status": {
+          "description": "This is a server generated attribute which provides the detailed status of an agreement with respect to the apiCaller",
+          "enum": [
+            "WAITING_FOR_MY_SIGNATURE",
+            "WAITING_FOR_MY_APPROVAL",
+            "WAITING_FOR_MY_DELEGATION",
+            "WAITING_FOR_MY_ACKNOWLEDGEMENT",
+            "WAITING_FOR_MY_ACCEPTANCE",
+            "WAITING_FOR_MY_FORM_FILLING",
+            "OUT_FOR_SIGNATURE",
+            "OUT_FOR_APPROVAL",
+            "OUT_FOR_DELIVERY",
+            "OUT_FOR_ACCEPTANCE",
+            "OUT_FOR_FORM_FILLING",
+            "SIGNED",
+            "APPROVED",
+            "FORM_FILLED",
+            "DELIVERED",
+            "ACCEPTED",
+            "ARCHIVED",
+            "CANCELLED",
+            "EXPIRED",
+            "WAITING_FOR_AUTHORING",
+            "WAITING_FOR_PREFILL",
+            "DRAFT",
+            "DOCUMENTS_NOT_YET_PROCESSED",
+            "WAITING_FOR_MY_VERIFICATION",
+            "WAITING_FOR_VERIFICATION"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "displayDate",
+        "displayParticipantSetInfos",
+        "esign",
+        "hidden",
+        "latestVersionId",
+        "name"
+      ]
+    },
+    "UserAgreements": {
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageInfo",
+          "description": "Pagination information for navigating through the response",
+          "items": {
+            "$ref": "#/definitions/PageInfo"
+          }
+        },
+        "userAgreementList": {
+          "description": "An array of UserAgreement items",
+          "items": {
+            "$ref": "#/definitions/UserAgreement"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "page",
+        "userAgreementList"
+      ]
+    },
+    "VaultingInfo": {
+      "properties": {
+        "enabled": {
+          "description": "For accounts set up for document vaulting and the option to enable per agreement, this determines whether the document is to be vaulted",
+          "type": "boolean"
+        }
+      }
+    },
+    "VisibilityInfo": {
+      "properties": {
+        "visibility": {
+          "description": "Specifies the visibility. The possible values are HIDE or SHOW",
+          "enum": [
+            "SHOW",
+            "HIDE"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "visibility"
+      ]
+    }
+  }
+}

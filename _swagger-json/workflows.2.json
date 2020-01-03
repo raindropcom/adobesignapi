@@ -1,0 +1,142 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "6.0.0",
+    "title": "AdobeSign Workflows APIs"
+  },
+  "basePath": "/api/rest/v6",
+  "paths": {
+    "/workflows": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('workflow_read')\" oncontextmenu=\"this.href=oauthDoc('workflow_read')\" target=\"oauthDoc\">workflow_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Include draft workflows",
+            "in": "query",
+            "name": "includeDraftWorkflows",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "description": "Include inactive workflows",
+            "in": "query",
+            "name": "includeInactiveWorkflows",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "description": "The group identifier for which the workflows will be fetched",
+            "in": "query",
+            "name": "groupId",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/UserWorkflows"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "workflow_read"
+            ]
+          }
+        ],
+        "operationId": "getWorkflows",
+        "summary": "Retrieves workflows for a user."
+      }
+    }
+  },
+  "definitions": {
+    "UserWorkflow": {
+      "properties": {
+        "created": {
+          "description": "The date on which the workflow was created. Format would be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time",
+          "format": "date",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description provided for this workflow at the time of its creation",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "The display name of the workflow.",
+          "type": "string"
+        },
+        "id": {
+          "description": "The unique identifier of a workflow",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the workflow.",
+          "type": "string"
+        },
+        "scope": {
+          "description": "The workflow scope (ACCOUNT or GROUP or OTHER)",
+          "enum": [
+            "ACCOUNT",
+            "GROUP"
+          ],
+          "type": "string"
+        },
+        "scopeId": {
+          "description": "Identifier of scope. Currently it is applicable for scope GROUP only and the value will be groupId.",
+          "type": "string"
+        },
+        "status": {
+          "description": "The workflow status (ACTIVE or DRAFT or INACTIVE or OTHER)",
+          "enum": [
+            "ACTIVE",
+            "DRAFT",
+            "HIDDEN"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "created",
+        "description",
+        "displayName",
+        "id",
+        "name",
+        "scope",
+        "status"
+      ]
+    },
+    "UserWorkflows": {
+      "properties": {
+        "userWorkflowList": {
+          "description": "An array of workflows",
+          "items": {
+            "$ref": "#/definitions/UserWorkflow"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "userWorkflowList"
+      ]
+    }
+  }
+}

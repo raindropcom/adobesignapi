@@ -1,0 +1,282 @@
+---
+swagger: "2.0"
+info:
+  version: "6.0.0"
+  title: "AdobeSign Group URIs"
+basePath: "/api/rest/v6"
+paths:
+  /groups:
+    get:
+      summary: "Retrieves all the groups in an account."
+      operationId: "getGroups"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('user_read')\" target=\"oauthDoc\"\
+          >user_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "cursor"
+        in: "query"
+        description: "Used to navigate through the pages. If not provided, returns\
+          \ the first page."
+        required: false
+        type: "string"
+        x-exportParamName: "Cursor"
+        x-optionalDataType: "String"
+      - name: "pageSize"
+        in: "query"
+        description: "Number of intended items in the response page."
+        required: false
+        type: "integer"
+        x-exportParamName: "PageSize"
+        x-optionalDataType: "Int32"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/GroupsInfo"
+      security:
+      - oauth2:
+        - "user_read"
+  /groups/{groupId}:
+    get:
+      summary: "Retrieves detailed information about the group."
+      operationId: "getGroupDetails"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('user_read')\" target=\"oauthDoc\"\
+          >user_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "groupId"
+        in: "path"
+        description: "The group identifier, as returned by the group creation API\
+          \ or retrieved from the API to fetch groups"
+        required: true
+        type: "string"
+        x-exportParamName: "GroupId"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/DetailedGroupInfo"
+      security:
+      - oauth2:
+        - "user_read"
+  /groups/{groupId}/users:
+    get:
+      summary: "Retrieves all the users in a group."
+      operationId: "getUsersInGroup"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('user_read')\" target=\"oauthDoc\"\
+          >user_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "cursor"
+        in: "query"
+        description: "Used to navigate through the pages. If not provided, returns\
+          \ the first page."
+        required: false
+        type: "string"
+        x-exportParamName: "Cursor"
+        x-optionalDataType: "String"
+      - name: "pageSize"
+        in: "query"
+        description: "Number of intended items in the response page."
+        required: false
+        type: "integer"
+        x-exportParamName: "PageSize"
+        x-optionalDataType: "Int32"
+      - name: "groupId"
+        in: "path"
+        description: "The group identifier, as returned by the group creation API\
+          \ or retrieved from the API to fetch groups"
+        required: true
+        type: "string"
+        x-exportParamName: "GroupId"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/GroupUsersInfo"
+      security:
+      - oauth2:
+        - "user_read"
+definitions:
+  DetailedGroupInfo:
+    required:
+    - "created"
+    - "name"
+    properties:
+      created:
+        type: "string"
+        format: "date"
+        description: "Date of creation of the group. Format would be yyyy-MM-dd'T'HH:mm:ssZ.\
+          \ For example, e.g 2016-02-25T18:46:19Z represents UTC time"
+      id:
+        type: "string"
+        description: "The unique identifier of the Group. This will be returned as\
+          \ part of GET call but is not mandatory to be passed as part of PUT/POST\
+          \ call for groups/{groupId}"
+      name:
+        type: "string"
+        description: "Name of the group"
+    example:
+      created: "2000-01-23"
+      name: "name"
+      id: "id"
+  GroupInfo:
+    required:
+    - "groupId"
+    - "groupName"
+    properties:
+      groupId:
+        type: "string"
+        description: "Unique identifier of the group"
+      groupName:
+        type: "string"
+        description: "Name of the group"
+    example:
+      groupName: "groupName"
+      groupId: "groupId"
+  GroupUserInfo:
+    required:
+    - "email"
+    - "id"
+    - "isGroupAdmin"
+    properties:
+      company:
+        type: "string"
+        description: "The name of company of the user"
+      email:
+        type: "string"
+        description: "The email address of the user"
+      firstName:
+        type: "string"
+        description: "The first name of the user"
+      id:
+        type: "string"
+        description: "A unique identifier of the user resource for REST APIs. This\
+          \ identifier can not be used in SOAP APIs"
+      isGroupAdmin:
+        type: "boolean"
+        description: "True if user is group admin"
+      lastName:
+        type: "string"
+        description: "The last name of the user"
+    example:
+      firstName: "firstName"
+      lastName: "lastName"
+      isGroupAdmin: true
+      company: "company"
+      id: "id"
+      email: "email"
+  GroupUsersInfo:
+    required:
+    - "page"
+    - "userInfoList"
+    properties:
+      page:
+        description: "Pagination information for navigating through the response"
+        $ref: "#/definitions/PageInfo"
+      userInfoList:
+        type: "array"
+        description: "The list of users in the account."
+        items:
+          $ref: "#/definitions/GroupUserInfo"
+    example:
+      userInfoList:
+      - firstName: "firstName"
+        lastName: "lastName"
+        isGroupAdmin: true
+        company: "company"
+        id: "id"
+        email: "email"
+      - firstName: "firstName"
+        lastName: "lastName"
+        isGroupAdmin: true
+        company: "company"
+        id: "id"
+        email: "email"
+      page:
+        nextCursor: "nextCursor"
+  GroupsInfo:
+    required:
+    - "groupInfoList"
+    - "page"
+    properties:
+      groupInfoList:
+        type: "array"
+        description: "The list of groups in the account."
+        items:
+          $ref: "#/definitions/GroupInfo"
+      page:
+        description: "Pagination information for navigating through the response"
+        $ref: "#/definitions/PageInfo"
+    example:
+      groupInfoList:
+      - groupName: "groupName"
+        groupId: "groupId"
+      - groupName: "groupName"
+        groupId: "groupId"
+      page:
+        nextCursor: "nextCursor"
+  PageInfo:
+    required:
+    - "nextCursor"
+    properties:
+      nextCursor:
+        type: "string"
+        description: "Used to navigate to the next page. If not\_returned, there are\
+          \ no further pages."
+    example:
+      nextCursor: "nextCursor"

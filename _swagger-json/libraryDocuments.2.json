@@ -1,0 +1,1561 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "6.0.0",
+    "title": "AdobeSign Library Documents APIs"
+  },
+  "basePath": "/api/rest/v6",
+  "paths": {
+    "/libraryDocuments": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('library_read')\" oncontextmenu=\"this.href=oauthDoc('library_read')\" target=\"oauthDoc\">library_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "A query parameter to fetch all the hidden library documents along with the visible library documents.",
+            "in": "query",
+            "name": "showHiddenLibraryDocuments",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "description": "Used to navigate through the pages. If not provided, returns the first page.",
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Number of intended items in the response page.",
+            "in": "query",
+            "name": "pageSize",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/LibraryDocuments"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "library_read"
+            ]
+          }
+        ],
+        "operationId": "getLibraryDocuments",
+        "summary": "Retrieves library documents for a user."
+      },
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('library_write')\" oncontextmenu=\"this.href=oauthDoc('library_write')\" target=\"oauthDoc\">library_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Information about the library document that you want to create.",
+            "in": "body",
+            "name": "LibraryDocumentInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LibraryDocumentInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/LibraryDocumentCreationResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "library_write"
+            ]
+          }
+        ],
+        "operationId": "createLibraryDocument",
+        "summary": "Creates a template that is placed in the library of the user for reuse."
+      }
+    },
+    "/libraryDocuments/{libraryDocumentId}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('library_read')\" oncontextmenu=\"this.href=oauthDoc('library_read')\" target=\"oauthDoc\">library_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The document identifier, as retrieved from the API to fetch library documents.",
+            "in": "path",
+            "name": "libraryDocumentId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/LibraryDocumentInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "library_read"
+            ]
+          }
+        ],
+        "operationId": "getLibraryDocumentInfo",
+        "summary": "Retrieves the details of a library document."
+      },
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('library_write')\" oncontextmenu=\"this.href=oauthDoc('library_write')\" target=\"oauthDoc\">library_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The server will only update the resource if it matches the listed ETag otherwise error RESOURCE_MODIFIED(412) is returned.",
+            "in": "header",
+            "name": "If-Match",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The document identifier, as retrieved from the API to fetch library documents.",
+            "in": "path",
+            "name": "libraryDocumentId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Information about the library document that you want to create.",
+            "in": "body",
+            "name": "LibraryDocumentInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LibraryDocumentInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "library_write"
+            ]
+          }
+        ],
+        "description": "Currently status, name, sharingMode and templateTypes of the library document can only be updated.",
+        "operationId": "updateLibraryDocument",
+        "summary": "Updates the library document."
+      }
+    },
+    "/libraryDocuments/{libraryDocumentId}/auditTrail": {
+      "get": {
+        "produces": [
+          "application/pdf",
+          "application/pdf;encoding=base64"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('library_read')\" oncontextmenu=\"this.href=oauthDoc('library_read')\" target=\"oauthDoc\">library_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The document identifier, as retrieved from the API to fetch library documents.",
+            "in": "path",
+            "name": "libraryDocumentId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "format": "byte",
+              "type": "string"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "library_read"
+            ]
+          }
+        ],
+        "operationId": "getLibraryDocumentAuditTrail",
+        "summary": "Retrieves the audit trail associated with a library document."
+      }
+    },
+    "/libraryDocuments/{libraryDocumentId}/combinedDocument": {
+      "get": {
+        "produces": [
+          "application/pdf",
+          "application/pdf;encoding=base64"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('library_read')\" oncontextmenu=\"this.href=oauthDoc('library_read')\" target=\"oauthDoc\">library_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The document identifier, as retrieved from the API to fetch library documents.",
+            "in": "path",
+            "name": "libraryDocumentId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "When set to YES attach an audit report to the library document PDF. Default value will be false.",
+            "in": "query",
+            "name": "attachAuditReport",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "format": "byte",
+              "type": "string"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "library_read"
+            ]
+          }
+        ],
+        "operationId": "getCombinedDocument",
+        "summary": "Retrieves the combined document associated with a library document."
+      }
+    },
+    "/libraryDocuments/{libraryDocumentId}/documents": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('library_read')\" oncontextmenu=\"this.href=oauthDoc('library_read')\" target=\"oauthDoc\">library_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The document identifier, as retrieved from the API to fetch library documents.",
+            "in": "path",
+            "name": "libraryDocumentId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The version identifier of library_document as provided by the API which retrieves information of a specific library document. If not provided then latest version will be used.",
+            "in": "query",
+            "name": "versionId",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/Documents"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "library_read"
+            ]
+          }
+        ],
+        "operationId": "getDocuments",
+        "summary": "Retrieves the IDs of the documents associated with library document."
+      }
+    },
+    "/libraryDocuments/{libraryDocumentId}/documents/{documentId}": {
+      "get": {
+        "produces": [
+          "application/pdf",
+          "application/pdf;encoding=base64"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('library_read')\" oncontextmenu=\"this.href=oauthDoc('library_read')\" target=\"oauthDoc\">library_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The document identifier, as retrieved from the API to fetch library documents.",
+            "in": "path",
+            "name": "libraryDocumentId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The document identifier, as retrieved from the API which fetches the documents of a specified library document",
+            "in": "path",
+            "name": "documentId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "format": "byte",
+              "type": "string"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "library_read"
+            ]
+          }
+        ],
+        "operationId": "getLibraryDocument",
+        "summary": "Retrieves the file stream of a document of library document."
+      }
+    },
+    "/libraryDocuments/{libraryDocumentId}/documents/{documentId}/imageUrls": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('library_read')\" oncontextmenu=\"this.href=oauthDoc('library_read')\" target=\"oauthDoc\">library_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The document identifier, as retrieved from the API to fetch library documents.",
+            "in": "path",
+            "name": "libraryDocumentId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The document identifier, as retrieved from the API which fetches the documents of a specified library document",
+            "in": "path",
+            "name": "documentId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "A comma separated list of image sizes i.e. {FIXED_WIDTH_50px, FIXED_WIDTH_250px, FIXED_WIDTH_675px, ZOOM_50_PERCENT, ZOOM_75_PERCENT, ZOOM_100_PERCENT, ZOOM_125_PERCENT, ZOOM_150_PERCENT, ZOOM_200_PERCENT}. Default sizes returned are {FIXED_WIDTH_50px, FIXED_WIDTH_250px, FIXED_WIDTH_675px, ZOOM_100_PERCENT}. ",
+            "in": "query",
+            "name": "imageSizes",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Start of page number range for which imageUrls are requested. Starting page number should be greater than 0.",
+            "in": "query",
+            "name": "startPage",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "description": "End of page number range for which imageUrls are requested.",
+            "in": "query",
+            "name": "endPage",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/DocumentImageUrlsInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "library_read"
+            ]
+          }
+        ],
+        "operationId": "getLibraryDocumentImageUrls",
+        "summary": "Retrieves image urls of all visible pages of a document associated with a library document."
+      }
+    },
+    "/libraryDocuments/{libraryDocumentId}/events": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('library_read')\" oncontextmenu=\"this.href=oauthDoc('library_read')\" target=\"oauthDoc\">library_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The document identifier, as retrieved from the API to fetch library documents.",
+            "in": "path",
+            "name": "libraryDocumentId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/LibraryDocumentEventList"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "library_read"
+            ]
+          }
+        ],
+        "operationId": "getEvents",
+        "summary": "Retrieves the events information for a library document."
+      }
+    },
+    "/libraryDocuments/{libraryDocumentId}/me/note": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('library_read')\" oncontextmenu=\"this.href=oauthDoc('library_read')\" target=\"oauthDoc\">library_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The document identifier, as retrieved from the API to fetch library documents.",
+            "in": "path",
+            "name": "libraryDocumentId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/Note"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "library_read"
+            ]
+          }
+        ],
+        "operationId": "getLibraryDocumentNoteForApiUser",
+        "summary": "Retrieves the latest note of a library document for the API user."
+      }
+    },
+    "/libraryDocuments/{libraryDocumentId}/me/visibility": {
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('library_write')\" oncontextmenu=\"this.href=oauthDoc('library_write')\" target=\"oauthDoc\">library_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The document identifier, as retrieved from the API to fetch library documents.",
+            "in": "path",
+            "name": "libraryDocumentId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Information to update visibility of agreement",
+            "in": "body",
+            "name": "VisibilityInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/VisibilityInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "library_write"
+            ]
+          }
+        ],
+        "operationId": "updateLibraryDocumentVisibility",
+        "summary": "Updates the visibility of library document."
+      }
+    },
+    "/libraryDocuments/{libraryDocumentId}/state": {
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('library_write')\" oncontextmenu=\"this.href=oauthDoc('library_write')\" target=\"oauthDoc\">library_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The server will only update the resource if it matches the listed ETag otherwise error RESOURCE_MODIFIED(412) is returned.",
+            "in": "header",
+            "name": "If-Match",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The document identifier, as retrieved from the API to fetch library documents.",
+            "in": "path",
+            "name": "libraryDocumentId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Information about the state of library document to which you want to update",
+            "in": "body",
+            "name": "LibraryDocumentStateInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LibraryDocumentStateInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "library_write"
+            ]
+          }
+        ],
+        "description": "Currently state can be changed from AUTHORING to ACTIVE.",
+        "operationId": "updateLibraryDocumentState",
+        "summary": "Updates the library document's state."
+      }
+    },
+    "/libraryDocuments/{libraryDocumentId}/views": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('library_read')\" oncontextmenu=\"this.href=oauthDoc('library_read')\" target=\"oauthDoc\">library_read</a> - library document read is always required</li><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_login')\" oncontextmenu=\"this.href=oauthDoc('user_login')\" target=\"oauthDoc\">user_login</a> - Required additionally if the autoLoginUser parameter is set to true</li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The document identifier, as retrieved from the API to fetch library documents.",
+            "in": "path",
+            "name": "libraryDocumentId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Name of the required view and its desired configuration.",
+            "in": "body",
+            "name": "LibraryViewInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LibraryViewInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/LibraryDocumentViewResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "library_read",
+              "user_login"
+            ]
+          }
+        ],
+        "operationId": "createLibraryDocumentView",
+        "summary": "Retrieves the latest state view url of a library document."
+      }
+    }
+  },
+  "definitions": {
+    "CommonViewConfiguration": {
+      "properties": {
+        "autoLoginUser": {
+          "description": "Auto LogIn Flag. If true, the URL returned will automatically log the user in. If false, the URL returned will require the credentials. By default its value is false",
+          "type": "boolean"
+        },
+        "locale": {
+          "description": "Message template locale",
+          "type": "string"
+        },
+        "noChrome": {
+          "description": "No Chrome Flag. If true, the embedded page is shown without a navigation header or footer. If false, the standard page header and footer will be present. By default its value is false",
+          "type": "boolean"
+        }
+      }
+    },
+    "DigitalSignatureInfo": {
+      "properties": {
+        "company": {
+          "description": "Company name captured during digital signing",
+          "type": "string"
+        },
+        "email": {
+          "description": "Email captured during digital signing",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name captured during digital signing",
+          "type": "string"
+        }
+      },
+      "required": [
+        "company",
+        "email",
+        "name"
+      ]
+    },
+    "Document": {
+      "properties": {
+        "id": {
+          "description": "ID of the document. In case of PUT call, this is the only field that is accepted in Document structure. Name and mimeType are ignored in case of PUT call",
+          "type": "string"
+        },
+        "label": {
+          "description": "Label of the document",
+          "type": "string"
+        },
+        "mimeType": {
+          "description": "mimeType of the original file. This is returned in GET but not accepted back in PUT",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the original document uploaded. This is returned in GET but not accepted back in PUT",
+          "type": "string"
+        },
+        "numPages": {
+          "description": "Number of pages in the document",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "numPages"
+      ]
+    },
+    "DocumentImageUrls": {
+      "properties": {
+        "imageSize": {
+          "description": "ImageSize corresponding to the imageUrl returned ",
+          "enum": [
+            "FIXED_WIDTH_50px",
+            "FIXED_WIDTH_250px",
+            "FIXED_WIDTH_675px",
+            "ZOOM_50_PERCENT",
+            "ZOOM_75_PERCENT",
+            "ZOOM_100_PERCENT",
+            "ZOOM_125_PERCENT",
+            "ZOOM_150_PERCENT",
+            "ZOOM_200_PERCENT"
+          ],
+          "type": "string"
+        },
+        "imageURLs": {
+          "description": "A list of image url (one per page).",
+          "items": {
+            "$ref": "#/definitions/PageImageUrl"
+          },
+          "type": "array"
+        },
+        "imagesAvailable": {
+          "description": "true if images for the associated image size is available, else false.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "imageURLs"
+      ]
+    },
+    "DocumentImageUrlsInfo": {
+      "properties": {
+        "documentId": {
+          "description": "Id of the document",
+          "type": "string"
+        },
+        "documentImageUrlsList": {
+          "description": "A list of documents image URLs.",
+          "items": {
+            "$ref": "#/definitions/DocumentImageUrls"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "documentId",
+        "documentImageUrlsList"
+      ]
+    },
+    "Documents": {
+      "properties": {
+        "documents": {
+          "description": "A list of documents",
+          "items": {
+            "$ref": "#/definitions/Document"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "documents"
+      ]
+    },
+    "FileInfo": {
+      "properties": {
+        "label": {
+          "description": "The unique label value of a file info element. In case of custom workflow this will map a file to corresponding file element in workflow definition. This must be specified in case of custom workflow agreement creation request ",
+          "type": "string"
+        },
+        "transientDocumentId": {
+          "description": "ID for a transient document that will be added to the library document",
+          "type": "string"
+        },
+        "urlFileInfo": {
+          "$ref": "#/definitions/URLFileInfo",
+          "description": "URL for an external document to add to the library document",
+          "items": {
+            "$ref": "#/definitions/URLFileInfo"
+          }
+        }
+      }
+    },
+    "LibDocEventDeviceLocation": {
+      "properties": {
+        "latitude": {
+          "description": "Latitude coordinate",
+          "format": "float",
+          "type": "number"
+        },
+        "longitude": {
+          "description": "Longitude coordinate",
+          "format": "float",
+          "type": "number"
+        }
+      },
+      "required": [
+        "latitude",
+        "longitude"
+      ]
+    },
+    "LibraryDocument": {
+      "properties": {
+        "creatorEmail": {
+          "description": "Email address of the library document creator. It will be ignored in POST call",
+          "type": "string"
+        },
+        "hidden": {
+          "description": "True if Library Document is hidden",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "The unique identifier that is used to refer to the library template",
+          "type": "string"
+        },
+        "modifiedDate": {
+          "description": "The date on which the library document was last modified. Format would be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time",
+          "format": "date",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the library document",
+          "type": "string"
+        },
+        "sharingMode": {
+          "description": "Specifies who should have access to this library document. GLOBAL sharing mode is not applicable in POST/PUT calls",
+          "enum": [
+            "USER",
+            "GROUP",
+            "ACCOUNT",
+            "GLOBAL"
+          ],
+          "type": "string"
+        },
+        "status": {
+          "description": "Status of the library document",
+          "enum": [
+            "AUTHORING",
+            "ACTIVE",
+            "REMOVED"
+          ],
+          "type": "string"
+        },
+        "templateTypes": {
+          "description": "A list of one or more library template types",
+          "items": {
+            "enum": [
+              "DOCUMENT",
+              "FORM_FIELD_LAYER"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "hidden",
+        "id",
+        "modifiedDate",
+        "name",
+        "sharingMode",
+        "templateTypes"
+      ]
+    },
+    "LibraryDocumentCreationResponse": {
+      "description": "A JSON object describing the library template",
+      "properties": {
+        "id": {
+          "description": "The unique identifier that is used to refer to the library template",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "LibraryDocumentEvent": {
+      "properties": {
+        "actingUserEmail": {
+          "description": "Email address of the user that created the event",
+          "type": "string"
+        },
+        "actingUserIpAddress": {
+          "description": "The IP address of the user that created the event",
+          "type": "string"
+        },
+        "actingUserName": {
+          "description": "The name of the acting user",
+          "type": "string"
+        },
+        "comment": {
+          "description": "The event comment. For RECALLED or REJECTED, the reason given by the user that initiates the event. For DELEGATE or SHARE, the message from the acting user to the participant",
+          "type": "string"
+        },
+        "date": {
+          "description": "The date of the audit event. Format would be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time",
+          "format": "date",
+          "type": "string"
+        },
+        "description": {
+          "description": "A description of the audit event",
+          "type": "string"
+        },
+        "deviceLocation": {
+          "$ref": "#/definitions/LibDocEventDeviceLocation",
+          "description": "Location of the device that generated the event (This value may be null due to limited privileges)",
+          "items": {
+            "$ref": "#/definitions/LibDocEventDeviceLocation"
+          }
+        },
+        "devicePhoneNumber": {
+          "description": "Phone number from the device used when the participation is completed on a mobile phone",
+          "type": "string"
+        },
+        "digitalSignatureInfo": {
+          "$ref": "#/definitions/DigitalSignatureInfo",
+          "description": "This is present for ESIGNED events when the participation is signed digitally",
+          "items": {
+            "$ref": "#/definitions/DigitalSignatureInfo"
+          }
+        },
+        "initiatingUserEmail": {
+          "description": "Email address of the user that initiated the event on behalf of the acting user when the account is shared. Will be empty if there is no account sharing in effect",
+          "type": "string"
+        },
+        "initiatingUserName": {
+          "description": "Full name of the user that initiated the event on behalf of the acting user when the account is shared. Will be empty if there is no account sharing in effect",
+          "type": "string"
+        },
+        "participantEmail": {
+          "description": "Email address of the user that is the participant for the event. This may be different than the acting user for certain event types. For example, for a DELEGATION event, this is the user who was delegated to",
+          "type": "string"
+        },
+        "participantId": {
+          "description": "The unique identifier of the participant for the event. This may be different than the acting user for certain event types. For example, for a DELEGATION event, this is the user who was delegated to",
+          "type": "string"
+        },
+        "participantRole": {
+          "description": "Role assumed by all participants in the participant set the participant belongs to (signer, approver etc.).",
+          "enum": [
+            "SIGNER",
+            "DELEGATE_TO_SIGNER",
+            "APPROVER",
+            "DELEGATE_TO_APPROVER",
+            "ACCEPTOR",
+            "DELEGATE_TO_ACCEPTOR",
+            "FORM_FILLER",
+            "DELEGATE_TO_FORM_FILLER",
+            "CERTIFIED_RECIPIENT",
+            "DELEGATE_TO_CERTIFIED_RECIPIENT",
+            "SHARE",
+            "SENDER"
+          ],
+          "type": "string"
+        },
+        "synchronizationId": {
+          "description": "A unique identifier linking offline events to synchronization events (specified for offline signing events and synchronization events, else null)",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of library document event",
+          "enum": [
+            "AUTO_CANCELLED_CONVERSION_PROBLEM",
+            "CREATED",
+            "MODIFIED",
+            "DOCUMENTS_DELETED"
+          ],
+          "type": "string"
+        },
+        "vaultEventId": {
+          "description": "The identifier assigned by the vault provider for the vault event (if vaulted, otherwise null)",
+          "type": "string"
+        },
+        "vaultProviderName": {
+          "description": "Name of the vault provider for the vault event (if vaulted, otherwise null)",
+          "type": "string"
+        },
+        "versionId": {
+          "description": "An ID which uniquely identifies the version of the document associated with this audit event",
+          "type": "string"
+        }
+      },
+      "required": [
+        "actingUserEmail",
+        "actingUserIpAddress",
+        "actingUserName",
+        "date",
+        "description",
+        "deviceLocation",
+        "devicePhoneNumber",
+        "digitalSignatureInfo",
+        "initiatingUserEmail",
+        "initiatingUserName",
+        "participantEmail",
+        "participantId",
+        "participantRole",
+        "synchronizationId",
+        "type",
+        "vaultEventId",
+        "vaultProviderName",
+        "versionId"
+      ]
+    },
+    "LibraryDocumentEventList": {
+      "properties": {
+        "events": {
+          "description": "An array of event objects.",
+          "items": {
+            "$ref": "#/definitions/LibraryDocumentEvent"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "events"
+      ]
+    },
+    "LibraryDocumentInfo": {
+      "properties": {
+        "createdDate": {
+          "description": "Date when library document was created. Format would be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time",
+          "format": "date",
+          "type": "string"
+        },
+        "creatorEmail": {
+          "description": "Email address of the library document creator. It will be ignored in POST call",
+          "type": "string"
+        },
+        "fileInfos": {
+          "description": "A list of one or more files (or references to files) that will be used to create the template. If more than one file is provided, they will be combined into one PDF. Note: Only a single parameter in every FileInfo object must be specified",
+          "items": {
+            "$ref": "#/definitions/FileInfo"
+          },
+          "type": "array"
+        },
+        "id": {
+          "description": "The unique identifier that is used to refer to the library template. It will be ignored in POST call",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the library template that will be used to identify it, in emails and on the website",
+          "type": "string"
+        },
+        "sharingMode": {
+          "description": "Specifies who should have access to this library document. GLOBAL sharing mode is not applicable in POST/PUT calls",
+          "enum": [
+            "USER",
+            "GROUP",
+            "ACCOUNT",
+            "GLOBAL"
+          ],
+          "type": "string"
+        },
+        "state": {
+          "description": "State of the library document.",
+          "enum": [
+            "AUTHORING",
+            "ACTIVE"
+          ],
+          "type": "string"
+        },
+        "status": {
+          "description": "Status of the library document",
+          "enum": [
+            "AUTHORING",
+            "ACTIVE",
+            "REMOVED"
+          ],
+          "type": "string"
+        },
+        "templateTypes": {
+          "description": "A list of one or more library template types",
+          "items": {
+            "enum": [
+              "DOCUMENT",
+              "FORM_FIELD_LAYER"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "fileInfos",
+        "name",
+        "sharingMode",
+        "state",
+        "templateTypes"
+      ]
+    },
+    "LibraryDocumentStateInfo": {
+      "properties": {
+        "state": {
+          "description": "State of the library document.",
+          "enum": [
+            "AUTHORING",
+            "ACTIVE"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "state"
+      ]
+    },
+    "LibraryDocumentViewResponse": {
+      "properties": {
+        "libraryViewList": {
+          "description": "List of library docuemnt views",
+          "items": {
+            "$ref": "#/definitions/LibraryView"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "libraryViewList"
+      ]
+    },
+    "LibraryDocuments": {
+      "properties": {
+        "libraryDocumentList": {
+          "description": "An array of document library items",
+          "items": {
+            "$ref": "#/definitions/LibraryDocument"
+          },
+          "type": "array"
+        },
+        "page": {
+          "$ref": "#/definitions/PageInfo",
+          "description": "Pagination information for navigating through the response",
+          "items": {
+            "$ref": "#/definitions/PageInfo"
+          }
+        }
+      },
+      "required": [
+        "libraryDocumentList",
+        "page"
+      ]
+    },
+    "LibraryView": {
+      "properties": {
+        "embeddedCode": {
+          "description": "Embedded code of url of resource ",
+          "type": "string"
+        },
+        "expiration": {
+          "description": "Expiration of user url ",
+          "format": "date",
+          "type": "string"
+        },
+        "isCurrent": {
+          "description": "True if this view is the current view",
+          "type": "boolean"
+        },
+        "url": {
+          "description": "Url of resource location",
+          "type": "string"
+        }
+      },
+      "required": [
+        "isCurrent"
+      ]
+    },
+    "LibraryViewInfo": {
+      "properties": {
+        "commonViewConfiguration": {
+          "$ref": "#/definitions/CommonViewConfiguration",
+          "description": "Common view configuration for all the available views",
+          "items": {
+            "$ref": "#/definitions/CommonViewConfiguration"
+          }
+        },
+        "name": {
+          "description": "Name of the requested libraryDocument view",
+          "enum": [
+            "EDIT",
+            "DOCUMENT",
+            "MANAGE",
+            "SEND",
+            "ALL"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "Note": {
+      "properties": {
+        "note": {
+          "description": "Content of Note field",
+          "type": "string"
+        }
+      },
+      "required": [
+        "note"
+      ]
+    },
+    "PageImageUrl": {
+      "properties": {
+        "pageNumber": {
+          "description": "Page number within the document.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "url": {
+          "description": "An image url.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pageNumber",
+        "url"
+      ]
+    },
+    "PageInfo": {
+      "properties": {
+        "nextCursor": {
+          "description": "Used to navigate to the next page. If not returned, there are no further pages.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "nextCursor"
+      ]
+    },
+    "URLFileInfo": {
+      "properties": {
+        "mimeType": {
+          "description": "The mime type of the referenced file, used to determine if the file can be accepted and the necessary conversion steps can be performed",
+          "type": "string"
+        },
+        "name": {
+          "description": "The original system file name of the document being sent",
+          "type": "string"
+        },
+        "url": {
+          "description": "A publicly accessible URL for retrieving the raw file content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "mimeType",
+        "name",
+        "url"
+      ]
+    },
+    "VisibilityInfo": {
+      "properties": {
+        "visibility": {
+          "description": "Specifies the visibility. The possible values are HIDE or SHOW",
+          "enum": [
+            "SHOW",
+            "HIDE"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "visibility"
+      ]
+    }
+  }
+}

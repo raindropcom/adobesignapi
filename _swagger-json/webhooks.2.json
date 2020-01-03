@@ -1,0 +1,787 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "6.0.0",
+    "title": "AdobeSign WebHooks APIs"
+  },
+  "basePath": "/api/rest/v6",
+  "paths": {
+    "/webhooks": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('webhook_read')\" oncontextmenu=\"this.href=oauthDoc('webhook_read')\" target=\"oauthDoc\">webhook_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "A query parameter to fetch all the inactive webhooks along with the active webhooks.",
+            "in": "query",
+            "name": "showInActiveWebhooks",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "description": "Scope of webhook. The possible values are ACCOUNT, GROUP, USER or RESOURCE",
+            "enum": [
+              "ACCOUNT",
+              "GROUP",
+              "USER",
+              "RESOURCE"
+            ],
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The type of resource on which webhook was created. The possible values are AGREEMENT, WIDGET and MEGASIGN.",
+            "enum": [
+              "AGREEMENT",
+              "WIDGET",
+              "MEGASIGN"
+            ],
+            "in": "query",
+            "name": "resourceType",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Used to navigate through the pages. If not provided, returns the first page.",
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Number of intended items in the response page.",
+            "in": "query",
+            "name": "pageSize",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/UserWebhooks"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "webhook_read"
+            ]
+          }
+        ],
+        "operationId": "getWebhooks",
+        "summary": "Retrieves webhooks for a user."
+      },
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('webhook_write')\" oncontextmenu=\"this.href=oauthDoc('webhook_write')\" target=\"oauthDoc\">webhook_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Information about the webhook that you want to create",
+            "in": "body",
+            "name": "WebhookInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WebhookInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/WebhookCreationResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "webhook_write"
+            ]
+          }
+        ],
+        "operationId": "createWebhook",
+        "summary": "Creates a webhook."
+      }
+    },
+    "/webhooks/{webhookId}": {
+      "delete": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('webhook_retention')\" oncontextmenu=\"this.href=oauthDoc('webhook_retention')\" target=\"oauthDoc\">webhook_retention</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The server will only update the resource if it matches the listed ETag otherwise error RESOURCE_MODIFIED(412) is returned.",
+            "in": "header",
+            "name": "If-Match",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The webhook identifier, as returned by the webhook creation API or retrieved from the API to fetch webhooks.",
+            "in": "path",
+            "name": "webhookId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "webhook_retention"
+            ]
+          }
+        ],
+        "operationId": "deleteWebhook",
+        "summary": "Deletes a webhook."
+      },
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('webhook_read')\" oncontextmenu=\"this.href=oauthDoc('webhook_read')\" target=\"oauthDoc\">webhook_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The webhook identifier, as returned by the webhook creation API or retrieved from the API to fetch webhooks.",
+            "in": "path",
+            "name": "webhookId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/WebhookInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "webhook_read"
+            ]
+          }
+        ],
+        "operationId": "getWebhookInfo",
+        "summary": "Retrieves the details of a webhook."
+      },
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('webhook_write')\" oncontextmenu=\"this.href=oauthDoc('webhook_write')\" target=\"oauthDoc\">webhook_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The server will only update the resource if it matches the listed ETag otherwise error RESOURCE_MODIFIED(412) is returned.",
+            "in": "header",
+            "name": "If-Match",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The webhook identifier, as returned by the webhook creation API or retrieved from the API to fetch webhooks.",
+            "in": "path",
+            "name": "webhookId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Information necessary to update a webhook",
+            "in": "body",
+            "name": "WebhookInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WebhookInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "webhook_write"
+            ]
+          }
+        ],
+        "operationId": "updateWebhook",
+        "summary": "Updates a webhook."
+      }
+    },
+    "/webhooks/{webhookId}/state": {
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('webhook_write')\" oncontextmenu=\"this.href=oauthDoc('webhook_write')\" target=\"oauthDoc\">webhook_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The server will only update the resource if it matches the listed ETag otherwise error RESOURCE_MODIFIED(412) is returned.",
+            "in": "header",
+            "name": "If-Match",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The webhook identifier, as returned by the webhook creation API or retrieved from the API to fetch webhooks.",
+            "in": "path",
+            "name": "webhookId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "WebhookStateInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WebhookStateInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "webhook_write"
+            ]
+          }
+        ],
+        "operationId": "updateWebhookState",
+        "summary": "Updates the state of a webhook identified by webhookId in the path."
+      }
+    }
+  },
+  "definitions": {
+    "PageInfo": {
+      "properties": {
+        "nextCursor": {
+          "description": "Used to navigate to the next page. If not returned, there are no further pages.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "nextCursor"
+      ]
+    },
+    "UserWebhook": {
+      "properties": {
+        "applicationDisplayName": {
+          "description": "The display name of the application through which webhook is created",
+          "type": "string"
+        },
+        "applicationName": {
+          "description": "The name of the application through which webhook is created",
+          "type": "string"
+        },
+        "id": {
+          "description": "The unique identifier of the webhook. Will only be returned in GET request. Can't be modified in PUT request",
+          "type": "string"
+        },
+        "lastModified": {
+          "description": "Timestamp when the webhook was last updated. Will only be returned in GET request. Can't be modified in PUT request",
+          "format": "date",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the webhook",
+          "type": "string"
+        },
+        "resourceId": {
+          "description": "Id of the resource type for which you want to create webhook. Provide agreementId if webhook needs to be created for an agreement. Similarly, widgetId if webhook needs to be created for a widget and megaSignId if webhook needs to be created for a megaSign. Need to specify only if scope is 'RESOURCE'. Can't be modified in PUT request",
+          "type": "string"
+        },
+        "resourceType": {
+          "description": "The resource for which you want to create webhook. Need to specify only if scope is 'RESOURCE'. Can't be modified in PUT request. The possible values are AGREEMENT, WIDGET and MEGASIGN.",
+          "enum": [
+            "AGREEMENT",
+            "WIDGET",
+            "MEGASIGN"
+          ],
+          "type": "string"
+        },
+        "scope": {
+          "description": "Scope of webhook. Can't be modified in PUT request. The possible values are ACCOUNT, GROUP, USER or RESOURCE",
+          "enum": [
+            "ACCOUNT",
+            "GROUP",
+            "USER",
+            "RESOURCE"
+          ],
+          "type": "string"
+        },
+        "status": {
+          "description": "Status of the webhook. Determines whether the webhook will be actually triggered. Default: ACTIVE, if ACTIVE, this webhook will receive event requests. If INACTIVE, this webhook will not receive event requests. Can't provide status in POST/PUT requests.",
+          "enum": [
+            "ACTIVE",
+            "INACTIVE"
+          ],
+          "type": "string"
+        },
+        "webhookSubscriptionEvents": {
+          "description": "Determines events for which the webhook is triggered. The possible values are <br> AGREEMENT_CREATED : When an agreement is created <br>,\nAGREEMENT_ACTION_DELEGATED : When an agreement is delegated <br>,\nAGREEMENT_RECALLED : When an agreement is recalled <br>,\nAGREEMENT_REJECTED : When an agreement is rejected <br>,\nAGREEMENT_EXPIRED : When an agreement expires <br>,\nAGREEMENT_ACTION_COMPLETED : When an agreement action is completed <br>,\nAGREEMENT_WORKFLOW_COMPLETED : When an agreement workflow is completed <br>,\nAGREEMENT_EMAIL_VIEWED : When an agreement's email is viewed <br>,\nAGREEMENT_MODIFIED : When an agreement is modified <br>,\nAGREEMENT_SHARED : When an agreement is shared <br>,\nAGREEMENT_VAULTED : When an agreement is vaulted <br>,\nAGREEMENT_ACTION_REQUESTED : When an agreement action is requested <br>,\nAGREEMENT_ACTION_REPLACED_SIGNER : When signer is replaced for an agreement <br>,\nAGREEMENT_AUTO_CANCELLED_CONVERSION_PROBLEM : When an agreement is auto-cancelled due to conversion problem <br>,\nAGREEMENT_DOCUMENTS_DELETED : When an agreement documents are deleted <br>,\nAGREEMENT_EMAIL_BOUNCED : When an agreement email gets bounced <br>,\nAGREEMENT_KBA_AUTHENTICATED : When an agreement KBA is authenticated <br>,\nAGREEMENT_OFFLINE_SYNC : When an agreement is synced offline <br>,\nAGREEMENT_USER_ACK_AGREEMENT_MODIFIED : User Acknowledgement when an agreement is modified <br>,\nAGREEMENT_UPLOADED_BY_SENDER : When an agreement is uploaded by sender <br>,\nAGREEMENT_WEB_IDENTITY_AUTHENTICATED : When an agreement web identity is authenticated <br>,\nAGREEMENT_ALL : All the supported agreement events for Webhooks <br>,\nMEGASIGN_CREATED : When a megaSign is created <br>,\nMEGASIGN_RECALLED : When a megaSign is recalled <br>,\nMEGASIGN_SHARED : When a megaSign is shared <br>,\nMEGASIGN_ALL : All the supported megaSign events for Webhooks <br>,\nWIDGET_CREATED : When a widget is created <br>,\nWIDGET_MODIFIED : When a widget is modified <br>,\nWIDGET_SHARED : When a widget is shared <br>,\nWIDGET_ENABLED : When a widget is enabled <br>,\nWIDGET_DISABLED : When a widget is disabled <br>,\nWIDGET_AUTO_CANCELLED_CONVERSION_PROBLEM : When a widget is auto-cancelled due to conversion problem <br>,\nWIDGET_ALL : All the supported widget events for Webhooks",
+          "items": {
+            "enum": [
+              "AGREEMENT_CREATED",
+              "AGREEMENT_ACTION_DELEGATED",
+              "AGREEMENT_RECALLED",
+              "AGREEMENT_REJECTED",
+              "AGREEMENT_EXPIRED",
+              "AGREEMENT_ACTION_COMPLETED",
+              "AGREEMENT_WORKFLOW_COMPLETED",
+              "AGREEMENT_EMAIL_VIEWED",
+              "AGREEMENT_MODIFIED",
+              "AGREEMENT_SHARED",
+              "AGREEMENT_VAULTED",
+              "AGREEMENT_ACTION_REQUESTED",
+              "AGREEMENT_ACTION_REPLACED_SIGNER",
+              "AGREEMENT_AUTO_CANCELLED_CONVERSION_PROBLEM",
+              "AGREEMENT_DOCUMENTS_DELETED",
+              "AGREEMENT_EMAIL_BOUNCED",
+              "AGREEMENT_KBA_AUTHENTICATED",
+              "AGREEMENT_OFFLINE_SYNC",
+              "AGREEMENT_USER_ACK_AGREEMENT_MODIFIED",
+              "AGREEMENT_UPLOADED_BY_SENDER",
+              "AGREEMENT_WEB_IDENTITY_AUTHENTICATED",
+              "AGREEMENT_ALL",
+              "MEGASIGN_CREATED",
+              "MEGASIGN_RECALLED",
+              "MEGASIGN_SHARED",
+              "MEGASIGN_ALL",
+              "WIDGET_CREATED",
+              "WIDGET_MODIFIED",
+              "WIDGET_SHARED",
+              "WIDGET_ENABLED",
+              "WIDGET_DISABLED",
+              "WIDGET_AUTO_CANCELLED_CONVERSION_PROBLEM",
+              "WIDGET_ALL"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "webhookUrlInfo": {
+          "$ref": "#/definitions/WebhookUrlInfo",
+          "description": "Info of webhook url",
+          "items": {
+            "$ref": "#/definitions/WebhookUrlInfo"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "scope",
+        "webhookSubscriptionEvents",
+        "webhookUrlInfo"
+      ]
+    },
+    "UserWebhooks": {
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageInfo",
+          "description": "Pagination information for navigating through the response",
+          "items": {
+            "$ref": "#/definitions/PageInfo"
+          }
+        },
+        "userWebhookList": {
+          "description": "An array of widget items",
+          "items": {
+            "$ref": "#/definitions/UserWebhook"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "page",
+        "userWebhookList"
+      ]
+    },
+    "WebhookAgreementEvents": {
+      "properties": {
+        "includeDetailedInfo": {
+          "description": "Determines whether agreement detailed info will be returned in the response payload",
+          "type": "boolean"
+        },
+        "includeDocumentsInfo": {
+          "description": "Determines whether document info will be returned in the response payload",
+          "type": "boolean"
+        },
+        "includeParticipantsInfo": {
+          "description": "Determines whether participants info will be returned in the response payload",
+          "type": "boolean"
+        },
+        "includeSignedDocuments": {
+          "description": "Determines whether documents will be returned in webhook response payload. If set to true, signed document will be returned in base 64 encoded format in JSON when signing is complete",
+          "type": "boolean"
+        }
+      }
+    },
+    "WebhookConditionalParams": {
+      "properties": {
+        "webhookAgreementEvents": {
+          "$ref": "#/definitions/WebhookAgreementEvents",
+          "description": "Conditional parameters for webhook agreement events",
+          "items": {
+            "$ref": "#/definitions/WebhookAgreementEvents"
+          }
+        },
+        "webhookMegaSignEvents": {
+          "$ref": "#/definitions/WebhookMegaSignEvents",
+          "description": "Conditional parameters for webhook megasign events",
+          "items": {
+            "$ref": "#/definitions/WebhookMegaSignEvents"
+          }
+        },
+        "webhookWidgetEvents": {
+          "$ref": "#/definitions/WebhookWidgetEvents",
+          "description": "Conditional parameters for webhook widget events",
+          "items": {
+            "$ref": "#/definitions/WebhookWidgetEvents"
+          }
+        }
+      }
+    },
+    "WebhookCreationResponse": {
+      "description": "A JSON  that contains the id of the newly created webhook",
+      "properties": {
+        "id": {
+          "description": "An identifier of the webhook resource created",
+          "type": "string"
+        }
+      }
+    },
+    "WebhookInfo": {
+      "properties": {
+        "applicationDisplayName": {
+          "description": "The display name of the application through which webhook is created",
+          "type": "string"
+        },
+        "applicationName": {
+          "description": "The name of the application through which webhook is created",
+          "type": "string"
+        },
+        "created": {
+          "description": "Timestamp when the webhook was created. Will only be returned in GET request. Can't be modified in PUT request",
+          "format": "date",
+          "type": "string"
+        },
+        "id": {
+          "description": "The unique identifier of the webhook. Will only be returned in GET request. Can't be modified in PUT request",
+          "type": "string"
+        },
+        "lastModified": {
+          "description": "Timestamp when the webhook was last updated. Will only be returned in GET request. Can't be modified in PUT request",
+          "format": "date",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the webhook",
+          "type": "string"
+        },
+        "resourceId": {
+          "description": "Id of the resource type for which you want to create webhook. Provide agreementId if webhook needs to be created for an agreement. Similarly, widgetId if webhook needs to be created for a widget and megaSignId if webhook needs to be created for a megaSign. Need to specify only if scope is 'RESOURCE'. Can't be modified in PUT request",
+          "type": "string"
+        },
+        "resourceType": {
+          "description": "The resource for which you want to create webhook. Need to specify only if scope is 'RESOURCE'. Can't be modified in PUT request. The possible values are AGREEMENT, WIDGET and MEGASIGN.",
+          "enum": [
+            "AGREEMENT",
+            "WIDGET",
+            "MEGASIGN"
+          ],
+          "type": "string"
+        },
+        "scope": {
+          "description": "Scope of webhook. Can't be modified in PUT request. The possible values are ACCOUNT, GROUP, USER or RESOURCE",
+          "enum": [
+            "ACCOUNT",
+            "GROUP",
+            "USER",
+            "RESOURCE"
+          ],
+          "type": "string"
+        },
+        "state": {
+          "description": "The state in which the webhook should be created",
+          "enum": [
+            "ACTIVE"
+          ],
+          "type": "string"
+        },
+        "status": {
+          "description": "Status of the webhook. Determines whether the webhook will be actually triggered. Default: ACTIVE, if ACTIVE, this webhook will receive event requests. If INACTIVE, this webhook will not receive event requests. Can't provide status in POST/PUT requests.",
+          "enum": [
+            "ACTIVE",
+            "INACTIVE"
+          ],
+          "type": "string"
+        },
+        "webhookConditionalParams": {
+          "$ref": "#/definitions/WebhookConditionalParams",
+          "description": "Conditions which webhook creator can specify for the payload while creating or updating a webhook",
+          "items": {
+            "$ref": "#/definitions/WebhookConditionalParams"
+          }
+        },
+        "webhookSubscriptionEvents": {
+          "description": "Determines events for which the webhook is triggered. The possible values are <br> AGREEMENT_CREATED : When an agreement is created <br>,\nAGREEMENT_ACTION_DELEGATED : When an agreement is delegated <br>,\nAGREEMENT_RECALLED : When an agreement is recalled <br>,\nAGREEMENT_REJECTED : When an agreement is rejected <br>,\nAGREEMENT_EXPIRED : When an agreement expires <br>,\nAGREEMENT_ACTION_COMPLETED : When an agreement action is completed <br>,\nAGREEMENT_WORKFLOW_COMPLETED : When an agreement workflow is completed <br>,\nAGREEMENT_EMAIL_VIEWED : When an agreement's email is viewed <br>,\nAGREEMENT_MODIFIED : When an agreement is modified <br>,\nAGREEMENT_SHARED : When an agreement is shared <br>,\nAGREEMENT_VAULTED : When an agreement is vaulted <br>,\nAGREEMENT_ACTION_REQUESTED : When an agreement action is requested <br>,\nAGREEMENT_ACTION_REPLACED_SIGNER : When signer is replaced for an agreement <br>,\nAGREEMENT_AUTO_CANCELLED_CONVERSION_PROBLEM : When an agreement is auto-cancelled due to conversion problem <br>,\nAGREEMENT_DOCUMENTS_DELETED : When an agreement documents are deleted <br>,\nAGREEMENT_EMAIL_BOUNCED : When an agreement email gets bounced <br>,\nAGREEMENT_KBA_AUTHENTICATED : When an agreement KBA is authenticated <br>,\nAGREEMENT_OFFLINE_SYNC : When an agreement is synced offline <br>,\nAGREEMENT_USER_ACK_AGREEMENT_MODIFIED : User Acknowledgement when an agreement is modified <br>,\nAGREEMENT_UPLOADED_BY_SENDER : When an agreement is uploaded by sender <br>,\nAGREEMENT_WEB_IDENTITY_AUTHENTICATED : When an agreement web identity is authenticated <br>,\nAGREEMENT_ALL : All the supported agreement events for Webhooks <br>,\nMEGASIGN_CREATED : When a megaSign is created <br>,\nMEGASIGN_RECALLED : When a megaSign is recalled <br>,\nMEGASIGN_SHARED : When a megaSign is shared <br>,\nMEGASIGN_ALL : All the supported megaSign events for Webhooks <br>,\nWIDGET_CREATED : When a widget is created <br>,\nWIDGET_MODIFIED : When a widget is modified <br>,\nWIDGET_SHARED : When a widget is shared <br>,\nWIDGET_ENABLED : When a widget is enabled <br>,\nWIDGET_DISABLED : When a widget is disabled <br>,\nWIDGET_AUTO_CANCELLED_CONVERSION_PROBLEM : When a widget is auto-cancelled due to conversion problem <br>,\nWIDGET_ALL : All the supported widget events for Webhooks",
+          "items": {
+            "enum": [
+              "AGREEMENT_CREATED",
+              "AGREEMENT_ACTION_DELEGATED",
+              "AGREEMENT_RECALLED",
+              "AGREEMENT_REJECTED",
+              "AGREEMENT_EXPIRED",
+              "AGREEMENT_ACTION_COMPLETED",
+              "AGREEMENT_WORKFLOW_COMPLETED",
+              "AGREEMENT_EMAIL_VIEWED",
+              "AGREEMENT_MODIFIED",
+              "AGREEMENT_SHARED",
+              "AGREEMENT_VAULTED",
+              "AGREEMENT_ACTION_REQUESTED",
+              "AGREEMENT_ACTION_REPLACED_SIGNER",
+              "AGREEMENT_AUTO_CANCELLED_CONVERSION_PROBLEM",
+              "AGREEMENT_DOCUMENTS_DELETED",
+              "AGREEMENT_EMAIL_BOUNCED",
+              "AGREEMENT_KBA_AUTHENTICATED",
+              "AGREEMENT_OFFLINE_SYNC",
+              "AGREEMENT_USER_ACK_AGREEMENT_MODIFIED",
+              "AGREEMENT_UPLOADED_BY_SENDER",
+              "AGREEMENT_WEB_IDENTITY_AUTHENTICATED",
+              "AGREEMENT_ALL",
+              "MEGASIGN_CREATED",
+              "MEGASIGN_RECALLED",
+              "MEGASIGN_SHARED",
+              "MEGASIGN_ALL",
+              "WIDGET_CREATED",
+              "WIDGET_MODIFIED",
+              "WIDGET_SHARED",
+              "WIDGET_ENABLED",
+              "WIDGET_DISABLED",
+              "WIDGET_AUTO_CANCELLED_CONVERSION_PROBLEM",
+              "WIDGET_ALL"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "webhookUrlInfo": {
+          "$ref": "#/definitions/WebhookUrlInfo",
+          "description": "Info of webhook url",
+          "items": {
+            "$ref": "#/definitions/WebhookUrlInfo"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "scope",
+        "state",
+        "webhookSubscriptionEvents",
+        "webhookUrlInfo"
+      ]
+    },
+    "WebhookMegaSignEvents": {
+      "properties": {
+        "includeDetailedInfo": {
+          "description": "Determines whether megaign detailed info will be returned in the response payload",
+          "type": "boolean"
+        }
+      }
+    },
+    "WebhookStateInfo": {
+      "properties": {
+        "state": {
+          "description": "The state to which the webhook should be changed to",
+          "enum": [
+            "ACTIVE",
+            "INACTIVE"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "state"
+      ]
+    },
+    "WebhookUrlInfo": {
+      "properties": {
+        "url": {
+          "description": "Info of webhook url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "url"
+      ]
+    },
+    "WebhookWidgetEvents": {
+      "properties": {
+        "includeDetailedInfo": {
+          "description": "Determines whether agreement detailed info will be returned in the response payload",
+          "type": "boolean"
+        },
+        "includeDocumentsInfo": {
+          "description": "Determines whether document info will be returned in the response payload",
+          "type": "boolean"
+        },
+        "includeParticipantsInfo": {
+          "description": "Determines whether participants info will be returned in the response payload",
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

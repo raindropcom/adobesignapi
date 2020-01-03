@@ -1,0 +1,635 @@
+---
+swagger: "2.0"
+info:
+  version: "6.0.0"
+  title: "AdobeSign Users APIs"
+basePath: "/api/rest/v6"
+paths:
+  /users:
+    get:
+      summary: "Retrieves all the users in an account."
+      operationId: "getUsers"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('user_read')\" target=\"oauthDoc\"\
+          >user_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "cursor"
+        in: "query"
+        description: "Used to navigate through the pages. If not provided, returns\
+          \ the first page."
+        required: false
+        type: "string"
+        x-exportParamName: "Cursor"
+        x-optionalDataType: "String"
+      - name: "pageSize"
+        in: "query"
+        description: "Number of intended items in the response page."
+        required: false
+        type: "integer"
+        x-exportParamName: "PageSize"
+        x-optionalDataType: "Int32"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/UsersInfo"
+      security:
+      - oauth2:
+        - "user_read"
+  /users/{userId}:
+    get:
+      summary: "Retrieves detailed information about the user in the caller account."
+      operationId: "getUserDetail"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('user_read')\" target=\"oauthDoc\"\
+          >user_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "userId"
+        in: "path"
+        description: "The user identifier, as returned by the user creation API or\
+          \ retrieved from the API to fetch users. To get the details for the token\
+          \ owner, UserId can be replaced by \"me\" without quotes."
+        required: true
+        type: "string"
+        x-exportParamName: "UserId"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/DetailedUserInfo"
+      security:
+      - oauth2:
+        - "user_read"
+    put:
+      summary: "Update an user."
+      operationId: "modifyUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_write')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('user_write')\" target=\"oauthDoc\"\
+          >user_write</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "userId"
+        in: "path"
+        description: "The user identifier, as provided by GET /users or POST /users"
+        required: true
+        type: "string"
+        x-exportParamName: "UserId"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - in: "body"
+        name: "DetailedUserInfo"
+        description: "Information necessary to update a user."
+        required: true
+        schema:
+          $ref: "#/definitions/DetailedUserInfo"
+        x-exportParamName: "DetailedUserInfo"
+      responses:
+        "200":
+          description: "No response was specified"
+      security:
+      - oauth2:
+        - "user_write"
+  /users/{userId}/groups:
+    get:
+      summary: "Retrieves the groups of the user."
+      operationId: "getGroupsOfUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('user_read')\" target=\"oauthDoc\"\
+          >user_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "userId"
+        in: "path"
+        description: "The user identifier, as returned by the user creation API or\
+          \ retrieved from the API to fetch users. To get the details for the token\
+          \ owner, UserId can be replaced by \"me\" without quotes."
+        required: true
+        type: "string"
+        x-exportParamName: "UserId"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/UserGroupsInfo"
+      security:
+      - oauth2:
+        - "user_read"
+    put:
+      summary: "Updates the groups of the user."
+      operationId: "updateGroupsOfUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_write')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('user_write')\" target=\"oauthDoc\"\
+          >user_write</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "userId"
+        in: "path"
+        description: "The user identifier, as returned by the user creation API or\
+          \ retrieved from the API to fetch users. To update the details for the token\
+          \ owner, UserId can be replaced by \"me\" without quotes."
+        required: true
+        type: "string"
+        x-exportParamName: "UserId"
+      - in: "body"
+        name: "UserGroupsInfo"
+        required: true
+        schema:
+          $ref: "#/definitions/UserGroupsInfo"
+        x-exportParamName: "UserGroupsInfo"
+      responses:
+        "200":
+          description: "No response was specified"
+      security:
+      - oauth2:
+        - "user_write"
+  /users/{userId}/state:
+    put:
+      summary: "Activate/Deactivate a given user."
+      operationId: "modifyUserState"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_write')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('user_write')\" target=\"oauthDoc\"\
+          >user_write</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "userId"
+        in: "path"
+        description: "The user identifier, as returned by the user creation API or\
+          \ retrieved from the API to fetch users. To update the details for the token\
+          \ owner, UserId can be replaced by \"me\" without quotes."
+        required: true
+        type: "string"
+        x-exportParamName: "UserId"
+      - in: "body"
+        name: "UserStateInfo"
+        required: true
+        schema:
+          $ref: "#/definitions/UserStateInfo"
+        x-exportParamName: "UserStateInfo"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/UserStatusUpdateResponse"
+      security:
+      - oauth2:
+        - "user_write"
+  /users/{userId}/views:
+    post:
+      summary: "Retrieves the URL of manage, account settings and user profile page."
+      operationId: "getUserViews"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('user_read')\" target=\"oauthDoc\"\
+          >user_read</a> - user read is always required</li><li style='list-style-type:\
+          \ square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_login')\" oncontextmenu=\"\
+          this.href=oauthDoc('user_login')\" target=\"oauthDoc\">user_login</a> -\
+          \ Required additionally if the autoLoginUser parameter is set to true</li></ul>in\
+          \ the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "userId"
+        in: "path"
+        description: "The user identifier, as returned by the user creation API or\
+          \ retrieved from the API to fetch users. To get the details for the token\
+          \ owner, UserId can be replaced by \"me\" without quotes."
+        required: true
+        type: "string"
+        x-exportParamName: "UserId"
+      - in: "body"
+        name: "UserViewInfo"
+        description: "Name of the required view and its desired configuration."
+        required: true
+        schema:
+          $ref: "#/definitions/UserViewInfo"
+        x-exportParamName: "UserViewInfo"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/UserViewResponse"
+      security:
+      - oauth2:
+        - "user_read"
+        - "user_login"
+definitions:
+  CommonViewConfiguration:
+    properties:
+      autoLoginUser:
+        type: "boolean"
+        description: "Auto LogIn Flag. If true, the URL returned will automatically\
+          \ log the user in. If false, the URL returned will require the credentials.\
+          \ By default its value is false"
+      noChrome:
+        type: "boolean"
+        description: "No Chrome Flag. If true, the embedded page is shown without\
+          \ a navigation header or footer. If false, the standard page header and\
+          \ footer will be present. By default its value is false"
+  DetailedUserInfo:
+    required:
+    - "email"
+    - "id"
+    - "isAccountAdmin"
+    - "status"
+    properties:
+      accountType:
+        type: "string"
+        description: "Type of account to which the user belongs (null if no account)"
+        enum:
+        - "FREE"
+        - "PRO"
+        - "TEAM"
+        - "TEAM_TRIAL"
+        - "ENTERPRISE"
+        - "ENTERPRISE_TRIAL"
+        - "GLOBAL"
+        - "GLOBAL_TRIAL"
+      company:
+        type: "string"
+        description: "The name of company of the user"
+      email:
+        type: "string"
+        description: "The email address of the user"
+      firstName:
+        type: "string"
+        description: "The first name of the user"
+      id:
+        type: "string"
+        description: "A unique identifier of the user resource for REST APIs as issued\
+          \ by Sign."
+      initials:
+        type: "string"
+        description: "The initials of the user"
+      isAccountAdmin:
+        type: "boolean"
+        description: "True if the user is account admin"
+      lastName:
+        type: "string"
+        description: "The last name of the user"
+      locale:
+        type: "string"
+        description: "The UI locale of the user"
+      phone:
+        type: "string"
+        description: "The phone number of the user"
+      status:
+        type: "string"
+        description: "Status of the user"
+        enum:
+        - "ACTIVE"
+        - "INACTIVE"
+        - "CREATED"
+        - "UNVERIFIED"
+      title:
+        type: "string"
+        description: "The job title of the user"
+    example:
+      firstName: "firstName"
+      lastName: "lastName"
+      isAccountAdmin: true
+      phone: "phone"
+      initials: "initials"
+      accountType: "FREE"
+      company: "company"
+      id: "id"
+      locale: "locale"
+      title: "title"
+      email: "email"
+      status: "ACTIVE"
+  PageInfo:
+    required:
+    - "nextCursor"
+    properties:
+      nextCursor:
+        type: "string"
+        description: "Used to navigate to the next page. If not\_returned, there are\
+          \ no further pages."
+    example:
+      nextCursor: "nextCursor"
+  UserGroupInfo:
+    required:
+    - "id"
+    - "isGroupAdmin"
+    properties:
+      id:
+        type: "string"
+        description: "Unique identifier of the group"
+      isGroupAdmin:
+        type: "boolean"
+        description: "True if user is group admin."
+      name:
+        type: "string"
+        description: "Name of the group. This will be ignored as part of PUT call."
+    example:
+      isGroupAdmin: true
+      name: "name"
+      id: "id"
+  UserGroupsInfo:
+    required:
+    - "groupInfoList"
+    properties:
+      groupInfoList:
+        type: "array"
+        description: "The list of groups for given user."
+        items:
+          $ref: "#/definitions/UserGroupInfo"
+    example:
+      groupInfoList:
+      - isGroupAdmin: true
+        name: "name"
+        id: "id"
+      - isGroupAdmin: true
+        name: "name"
+        id: "id"
+  UserInfo:
+    required:
+    - "email"
+    - "id"
+    - "isAccountAdmin"
+    properties:
+      company:
+        type: "string"
+        description: "The name of company of the user"
+      email:
+        type: "string"
+        description: "The email address of the user"
+      firstName:
+        type: "string"
+        description: "The first name of the user"
+      id:
+        type: "string"
+        description: "A unique identifier of the user resource for REST APIs as issued\
+          \ by Sign."
+      isAccountAdmin:
+        type: "boolean"
+        description: "True if user is account admin"
+      lastName:
+        type: "string"
+        description: "The last name of the user"
+    example:
+      firstName: "firstName"
+      lastName: "lastName"
+      isAccountAdmin: true
+      company: "company"
+      id: "id"
+      email: "email"
+  UserStateInfo:
+    required:
+    - "state"
+    properties:
+      comment:
+        type: "string"
+        description: "An optional comment describing why you want to activate/deactivate\
+          \ a given user"
+      state:
+        type: "string"
+        description: "The state to which the user is to be updated. The valid states\
+          \ for this variable is currently, ACTIVE and INACTIVE"
+        enum:
+        - "ACTIVE"
+        - "INACTIVE"
+  UserStatusUpdateResponse:
+    required:
+    - "code"
+    - "state"
+    properties:
+      code:
+        type: "string"
+        description: "The result of the attempt to activate or deactivate the user"
+        enum:
+        - "ALREADY_ACTIVE"
+        - "ALREADY_INACTIVE"
+        - "OK"
+        - "RESET_PASSWORD_WORKFLOW_INITIATED"
+        - "SET_PASSWORD_WORKFLOW_INITIATED"
+      message:
+        type: "string"
+        description: "String result message if there was no error"
+      state:
+        type: "string"
+        description: "A status value showing the result of this operation"
+        enum:
+        - "ACTIVE"
+        - "INACTIVE"
+        - "CREATED"
+        - "PENDING"
+        - "UNVERIFIED"
+    example:
+      code: "ALREADY_ACTIVE"
+      state: "ACTIVE"
+      message: "message"
+  UserView:
+    required:
+    - "name"
+    properties:
+      embeddedCode:
+        type: "string"
+        description: "Embedded code of url of resource "
+      expiration:
+        type: "string"
+        format: "date"
+        description: "Expiration of user url "
+      name:
+        type: "string"
+        description: "Name of the requested user view"
+        enum:
+        - "MANAGE"
+        - "ACCOUNT_SETTINGS"
+        - "USER_PROFILE"
+        - "ALL"
+      url:
+        type: "string"
+        description: "Url of resource location"
+    example:
+      embeddedCode: "embeddedCode"
+      name: "MANAGE"
+      expiration: "2000-01-23"
+      url: "url"
+  UserViewInfo:
+    required:
+    - "name"
+    properties:
+      commonViewConfiguration:
+        description: "Common view configuration for all the available views"
+        $ref: "#/definitions/CommonViewConfiguration"
+      name:
+        type: "string"
+        description: "Name of the requested user view"
+        enum:
+        - "MANAGE"
+        - "ACCOUNT_SETTINGS"
+        - "USER_PROFILE"
+        - "ALL"
+  UserViewResponse:
+    required:
+    - "userViewList"
+    properties:
+      userViewList:
+        type: "array"
+        description: "List of user views"
+        items:
+          $ref: "#/definitions/UserView"
+    example:
+      userViewList:
+      - embeddedCode: "embeddedCode"
+        name: "MANAGE"
+        expiration: "2000-01-23"
+        url: "url"
+      - embeddedCode: "embeddedCode"
+        name: "MANAGE"
+        expiration: "2000-01-23"
+        url: "url"
+  UsersInfo:
+    required:
+    - "page"
+    - "userInfoList"
+    properties:
+      page:
+        description: "Pagination information for navigating through the response"
+        $ref: "#/definitions/PageInfo"
+      userInfoList:
+        type: "array"
+        description: "The list of users in the account."
+        items:
+          $ref: "#/definitions/UserInfo"
+    example:
+      userInfoList:
+      - firstName: "firstName"
+        lastName: "lastName"
+        isAccountAdmin: true
+        company: "company"
+        id: "id"
+        email: "email"
+      - firstName: "firstName"
+        lastName: "lastName"
+        isAccountAdmin: true
+        company: "company"
+        id: "id"
+        email: "email"
+      page:
+        nextCursor: "nextCursor"

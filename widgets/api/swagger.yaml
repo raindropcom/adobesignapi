@@ -1,0 +1,2635 @@
+---
+swagger: "2.0"
+info:
+  version: "6.0.0"
+  title: "AdobeSign Widgets APIs"
+basePath: "/api/rest/v6"
+paths:
+  /widgets:
+    get:
+      summary: "Retrieves widgets for a user."
+      operationId: "getWidgets"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_read')\" target=\"oauthDoc\"\
+          >widget_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "showHiddenWidgets"
+        in: "query"
+        description: "A query parameter to fetch all the hidden widgets along with\
+          \ the visible widgets."
+        required: false
+        type: "boolean"
+        x-exportParamName: "ShowHiddenWidgets"
+        x-optionalDataType: "Bool"
+      - name: "cursor"
+        in: "query"
+        description: "Used to navigate through the pages. If not provided, returns\
+          \ the first page."
+        required: false
+        type: "string"
+        x-exportParamName: "Cursor"
+        x-optionalDataType: "String"
+      - name: "pageSize"
+        in: "query"
+        description: "Number of intended items in the response page."
+        required: false
+        type: "integer"
+        x-exportParamName: "PageSize"
+        x-optionalDataType: "Int32"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/UserWidgets"
+      security:
+      - oauth2:
+        - "widget_read"
+    post:
+      summary: "Creates a widget and and returns the widgetId in the response to the\
+        \ client."
+      description: "This is a primary endpoint which is used to create a new widget.\
+        \ You can create a widget in one of the 3 mentioned states: a) <b>DRAFT</b>\
+        \ - to incrementally build the widget, b) <b>AUTHORING</b> - to add/edit form\
+        \ fields in the widget, c) <b>ACTIVE</b> - to immediately host the widget.\
+        \ You can use the PUT /widgets/{widgetId}/state endpoint to transition a widget\
+        \ between the above mentioned states. An allowed transition would follow the\
+        \ any of the following sequences: DRAFT->AUTHORING->ACTIVE, ACTIVE<->INACTIVE,\
+        \ DRAFT->CANCELLED."
+      operationId: "createWidget"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_write')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_write')\" target=\"oauthDoc\"\
+          >widget_write</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - in: "body"
+        name: "WidgetInfo"
+        description: "Information about the widget that you want to create."
+        required: true
+        schema:
+          $ref: "#/definitions/WidgetInfo"
+        x-exportParamName: "WidgetInfo"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/WidgetCreationResponse"
+      security:
+      - oauth2:
+        - "widget_write"
+  /widgets/{widgetId}:
+    get:
+      summary: "Retrieves the details of a widget."
+      operationId: "getWidgetInfo"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_read')\" target=\"oauthDoc\"\
+          >widget_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "If-None-Match"
+        in: "header"
+        description: "Pass the value of the e-tag header obtained from the previous\
+          \ response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the\
+          \ resource hasn't changed."
+        required: false
+        type: "string"
+        x-exportParamName: "IfNoneMatch"
+        x-optionalDataType: "String"
+      - name: "widgetId"
+        in: "path"
+        description: "The widget identifier, as returned by the widget creation API\
+          \ or retrieved from the API to fetch widgets."
+        required: true
+        type: "string"
+        x-exportParamName: "WidgetId"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/WidgetInfo"
+      security:
+      - oauth2:
+        - "widget_read"
+    put:
+      summary: "Updates a widget."
+      operationId: "updateWidget"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_write')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_write')\" target=\"oauthDoc\"\
+          >widget_write</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "If-Match"
+        in: "header"
+        description: "The server will only update the resource if it matches the listed\
+          \ ETag otherwise error RESOURCE_MODIFIED(412) is returned."
+        required: true
+        type: "string"
+        x-exportParamName: "IfMatch"
+      - name: "widgetId"
+        in: "path"
+        description: "The widget identifier, as returned by the widget creation API\
+          \ or retrieved from the API to fetch widgets."
+        required: true
+        type: "string"
+        x-exportParamName: "WidgetId"
+      - in: "body"
+        name: "WidgetInfo"
+        description: "Widget update information object."
+        required: true
+        schema:
+          $ref: "#/definitions/WidgetInfo"
+        x-exportParamName: "WidgetInfo"
+      responses:
+        "200":
+          description: "No response was specified"
+      security:
+      - oauth2:
+        - "widget_write"
+  /widgets/{widgetId}/agreements:
+    get:
+      summary: "Retrieves agreements for the widget."
+      operationId: "getWidgetAgreements"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_read')\" target=\"oauthDoc\"\
+          >widget_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "widgetId"
+        in: "path"
+        description: "The widget identifier, as returned by the widget creation API\
+          \ or retrieved from the API to fetch widgets."
+        required: true
+        type: "string"
+        x-exportParamName: "WidgetId"
+      - name: "showHiddenAgreements"
+        in: "query"
+        description: "A query parameter to fetch all the hidden agreements along with\
+          \ the visible agreements."
+        required: false
+        type: "boolean"
+        x-exportParamName: "ShowHiddenAgreements"
+        x-optionalDataType: "Bool"
+      - name: "cursor"
+        in: "query"
+        description: "Used to navigate through the pages. If not provided, returns\
+          \ the first page."
+        required: false
+        type: "string"
+        x-exportParamName: "Cursor"
+        x-optionalDataType: "String"
+      - name: "pageSize"
+        in: "query"
+        description: "Number of intended items in the response page."
+        required: false
+        type: "integer"
+        x-exportParamName: "PageSize"
+        x-optionalDataType: "Int32"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/WidgetAgreements"
+      security:
+      - oauth2:
+        - "widget_read"
+  /widgets/{widgetId}/auditTrail:
+    get:
+      summary: "Retrieves the audit trail of a widget identified by widgetId."
+      operationId: "getWidgetAuditTrail"
+      produces:
+      - "application/pdf"
+      - "application/pdf;encoding=base64"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_read')\" target=\"oauthDoc\"\
+          >widget_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "widgetId"
+        in: "path"
+        description: "The widget identifier, as returned by the widget creation API\
+          \ or retrieved from the API to fetch widgets."
+        required: true
+        type: "string"
+        x-exportParamName: "WidgetId"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            type: "string"
+            format: "byte"
+      security:
+      - oauth2:
+        - "widget_read"
+  /widgets/{widgetId}/combinedDocument:
+    get:
+      summary: "Retrieves a single combined PDF document for the documents associated\
+        \ with a widget."
+      operationId: "getWidgetCombinedDocument"
+      produces:
+      - "application/pdf"
+      - "application/pdf;encoding=base64"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_read')\" target=\"oauthDoc\"\
+          >widget_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "If-None-Match"
+        in: "header"
+        description: "Pass the value of the e-tag header obtained from the previous\
+          \ response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the\
+          \ resource hasn't changed."
+        required: false
+        type: "string"
+        x-exportParamName: "IfNoneMatch"
+        x-optionalDataType: "String"
+      - name: "widgetId"
+        in: "path"
+        description: "The widget identifier, as returned by the widget creation API\
+          \ or retrieved from the API to fetch widgets."
+        required: true
+        type: "string"
+        x-exportParamName: "WidgetId"
+      - name: "versionId"
+        in: "query"
+        description: "The version identifier of widget as provided by the API which\
+          \ retrieves information of a specific widget. If not provided then latest\
+          \ version will be used."
+        required: false
+        type: "string"
+        x-exportParamName: "VersionId"
+        x-optionalDataType: "String"
+      - name: "participantId"
+        in: "query"
+        description: "The ID of the participant to be used to retrieve documents."
+        required: false
+        type: "string"
+        x-exportParamName: "ParticipantId"
+        x-optionalDataType: "String"
+      - name: "attachAuditReport"
+        in: "query"
+        description: "When set to YES, attach an audit report to the signed Widget\
+          \ PDF. Default value is false"
+        required: false
+        type: "boolean"
+        x-exportParamName: "AttachAuditReport"
+        x-optionalDataType: "Bool"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            type: "string"
+            format: "byte"
+      security:
+      - oauth2:
+        - "widget_read"
+  /widgets/{widgetId}/documents:
+    get:
+      summary: "Retrieves the IDs of the documents associated with widget."
+      operationId: "getWidgetDocuments"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_read')\" target=\"oauthDoc\"\
+          >widget_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "If-None-Match"
+        in: "header"
+        description: "Pass the value of the e-tag header obtained from the previous\
+          \ response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the\
+          \ resource hasn't changed."
+        required: false
+        type: "string"
+        x-exportParamName: "IfNoneMatch"
+        x-optionalDataType: "String"
+      - name: "widgetId"
+        in: "path"
+        description: "The widget identifier, as returned by the widget creation API\
+          \ or retrieved from the API to fetch widgets."
+        required: true
+        type: "string"
+        x-exportParamName: "WidgetId"
+      - name: "versionId"
+        in: "query"
+        description: "The version identifier of widget as provided by the API which\
+          \ retrieves information of a specific widget. If not provided then latest\
+          \ version will be used."
+        required: false
+        type: "string"
+        x-exportParamName: "VersionId"
+        x-optionalDataType: "String"
+      - name: "participantId"
+        in: "query"
+        description: "The ID of the participant to be used to retrieve documents."
+        required: false
+        type: "string"
+        x-exportParamName: "ParticipantId"
+        x-optionalDataType: "String"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/WidgetDocuments"
+      security:
+      - oauth2:
+        - "widget_read"
+  /widgets/{widgetId}/documents/{documentId}:
+    get:
+      summary: "Retrieves the file stream of a document of a widget."
+      operationId: "getWidgetDocumentInfo"
+      produces:
+      - "application/pdf"
+      - "application/pdf;encoding=base64"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_read')\" target=\"oauthDoc\"\
+          >widget_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "If-None-Match"
+        in: "header"
+        description: "Pass the value of the e-tag header obtained from the previous\
+          \ response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the\
+          \ resource hasn't changed."
+        required: false
+        type: "string"
+        x-exportParamName: "IfNoneMatch"
+        x-optionalDataType: "String"
+      - name: "widgetId"
+        in: "path"
+        description: "The widget identifier, as returned by the widget creation API\
+          \ or retrieved from the API to fetch widgets."
+        required: true
+        type: "string"
+        x-exportParamName: "WidgetId"
+      - name: "documentId"
+        in: "path"
+        description: "The document identifier, as retrieved from the API which fetches\
+          \ the documents of a specified widget"
+        required: true
+        type: "string"
+        x-exportParamName: "DocumentId"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            type: "string"
+            format: "byte"
+      security:
+      - oauth2:
+        - "widget_read"
+  /widgets/{widgetId}/events:
+    get:
+      summary: "Retrieves the events information for a widget."
+      operationId: "getEvents"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_read')\" target=\"oauthDoc\"\
+          >widget_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "If-None-Match"
+        in: "header"
+        description: "Pass the value of the e-tag header obtained from the previous\
+          \ response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the\
+          \ resource hasn't changed."
+        required: false
+        type: "string"
+        x-exportParamName: "IfNoneMatch"
+        x-optionalDataType: "String"
+      - name: "widgetId"
+        in: "path"
+        description: "The widget identifier, as returned by the widget creation API\
+          \ or retrieved from the API to fetch widgets."
+        required: true
+        type: "string"
+        x-exportParamName: "WidgetId"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/WidgetEventList"
+      security:
+      - oauth2:
+        - "widget_read"
+  /widgets/{widgetId}/formData:
+    get:
+      summary: "Retrieves data entered by the user into interactive form fields at\
+        \ the time they signed the widget"
+      description: "CSV file stream containing form data information"
+      operationId: "getWidgetFormData"
+      produces:
+      - "text/csv"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_read')\" target=\"oauthDoc\"\
+          >widget_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "If-None-Match"
+        in: "header"
+        description: "Pass the value of the e-tag header obtained from the previous\
+          \ response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the\
+          \ resource hasn't changed."
+        required: false
+        type: "string"
+        x-exportParamName: "IfNoneMatch"
+        x-optionalDataType: "String"
+      - name: "widgetId"
+        in: "path"
+        description: "The widget identifier, as returned by the widget creation API\
+          \ or retrieved from the API to fetch widgets."
+        required: true
+        type: "string"
+        x-exportParamName: "WidgetId"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            type: "string"
+            format: "byte"
+      security:
+      - oauth2:
+        - "widget_read"
+  /widgets/{widgetId}/me/note:
+    get:
+      summary: "Retrieves the latest note of a widget for the API user."
+      operationId: "getWidgetNoteForApiUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_read')\" target=\"oauthDoc\"\
+          >widget_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "widgetId"
+        in: "path"
+        description: "The widget identifier, as returned by the widget creation API\
+          \ or retrieved from the API to fetch widgets."
+        required: true
+        type: "string"
+        x-exportParamName: "WidgetId"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/Note"
+      security:
+      - oauth2:
+        - "widget_read"
+  /widgets/{widgetId}/me/visibility:
+    put:
+      summary: "Updates the visibility of widget."
+      operationId: "updateWidgetVisibility"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_write')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_write')\" target=\"oauthDoc\"\
+          >widget_write</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "widgetId"
+        in: "path"
+        description: "The widget identifier, as returned by the widget creation API\
+          \ or retrieved from the API to fetch widgets."
+        required: true
+        type: "string"
+        x-exportParamName: "WidgetId"
+      - in: "body"
+        name: "VisibilityInfo"
+        description: "Information to update visibility of widget"
+        required: true
+        schema:
+          $ref: "#/definitions/VisibilityInfo"
+        x-exportParamName: "VisibilityInfo"
+      responses:
+        "200":
+          description: "No response was specified"
+      security:
+      - oauth2:
+        - "widget_write"
+  /widgets/{widgetId}/members:
+    get:
+      summary: "Retrieves detailed member info along with IDs for different types\
+        \ of participants."
+      operationId: "getAllWidgetMembers"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_read')\" target=\"oauthDoc\"\
+          >widget_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "If-None-Match"
+        in: "header"
+        description: "Pass the value of the e-tag header obtained from the previous\
+          \ response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the\
+          \ resource hasn't changed."
+        required: false
+        type: "string"
+        x-exportParamName: "IfNoneMatch"
+        x-optionalDataType: "String"
+      - name: "widgetId"
+        in: "path"
+        description: "The widget identifier, as returned by the widget creation API\
+          \ or retrieved from the API to fetch widgets."
+        required: true
+        type: "string"
+        x-exportParamName: "WidgetId"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/WidgetMembersInfo"
+      security:
+      - oauth2:
+        - "widget_read"
+  /widgets/{widgetId}/members/participantSets/{participantSetId}:
+    get:
+      summary: "Retrieves the participant set of a widget identified by widgetId in\
+        \ the path."
+      operationId: "getParticipantSet"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_read')\" target=\"oauthDoc\"\
+          >widget_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "If-None-Match"
+        in: "header"
+        description: "Pass the value of the e-tag header obtained from the previous\
+          \ response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the\
+          \ resource hasn't changed."
+        required: false
+        type: "string"
+        x-exportParamName: "IfNoneMatch"
+        x-optionalDataType: "String"
+      - name: "widgetId"
+        in: "path"
+        description: "The widget identifier, as returned by the widget creation API\
+          \ or retrieved from the API to fetch widgets."
+        required: true
+        type: "string"
+        x-exportParamName: "WidgetId"
+      - name: "participantSetId"
+        in: "path"
+        description: "The participant set identifier"
+        required: true
+        type: "string"
+        x-exportParamName: "ParticipantSetId"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/DetailedWidgetParticipantSetInfo"
+      security:
+      - oauth2:
+        - "widget_read"
+  /widgets/{widgetId}/state:
+    put:
+      summary: "Updates the state of a widget identified by widgetId in the path."
+      description: "This endpoint can be used by creator of the widget to transition\
+        \ between the states of widget. An allowed transition would follow any of\
+        \ the following sequence :  DRAFT->AUTHORING->ACTIVE, ACTIVE<->INACTIVE, DRAFT->CANCELLED."
+      operationId: "updateWidgetState"
+      produces:
+      - "application/json"
+      - "text/csv"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_write')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_write')\" target=\"oauthDoc\"\
+          >widget_write</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "If-Match"
+        in: "header"
+        description: "The server will only update the resource if it matches the listed\
+          \ ETag otherwise error RESOURCE_MODIFIED(412) is returned."
+        required: true
+        type: "string"
+        x-exportParamName: "IfMatch"
+      - name: "widgetId"
+        in: "path"
+        description: "The widget identifier, as returned by the widget creation API\
+          \ or retrieved from the API to fetch widgets."
+        required: true
+        type: "string"
+        x-exportParamName: "WidgetId"
+      - in: "body"
+        name: "WidgetStateInfo"
+        required: true
+        schema:
+          $ref: "#/definitions/WidgetStateInfo"
+        x-exportParamName: "WidgetStateInfo"
+      responses:
+        "200":
+          description: "No response was specified"
+      security:
+      - oauth2:
+        - "widget_write"
+  /widgets/{widgetId}/views:
+    post:
+      summary: "Retrieves the requested views for a widget."
+      operationId: "getWidgetView"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('widget_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('widget_read')\" target=\"oauthDoc\"\
+          >widget_read</a> - widget read is always required</li><li style='list-style-type:\
+          \ square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_login')\" oncontextmenu=\"\
+          this.href=oauthDoc('user_login')\" target=\"oauthDoc\">user_login</a> -\
+          \ Required additionally if the autoLoginUser parameter is set to true</li></ul>in\
+          \ the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "widgetId"
+        in: "path"
+        description: "The widget identifier, as returned by the widget creation API\
+          \ or retrieved from the API to fetch widgets."
+        required: true
+        type: "string"
+        x-exportParamName: "WidgetId"
+      - in: "body"
+        name: "WidgetViewInfo"
+        description: "Name of the required view and its desired configuration."
+        required: true
+        schema:
+          $ref: "#/definitions/WidgetViewInfo"
+        x-exportParamName: "WidgetViewInfo"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/WidgetViews"
+      security:
+      - oauth2:
+        - "widget_read"
+        - "user_login"
+definitions:
+  CCParticipantInfo:
+    required:
+    - "company"
+    - "email"
+    - "name"
+    - "participantId"
+    properties:
+      company:
+        type: "string"
+        description: "Company of the CC participant, if available."
+      email:
+        type: "string"
+        description: "Email of the CC participant of the widget"
+      name:
+        type: "string"
+        description: "Name of the CC participant, if available."
+      participantId:
+        type: "string"
+        description: " The unique identifier of the CC participant of the widget."
+    example:
+      participantId: "participantId"
+      name: "name"
+      company: "company"
+      email: "email"
+  CommonViewConfiguration:
+    properties:
+      autoLoginUser:
+        type: "boolean"
+        description: "Auto LogIn Flag. If true, the URL returned will automatically\
+          \ log the user in. If false, the URL returned will require the credentials.\
+          \ By default its value is false"
+      locale:
+        type: "string"
+        description: "Message template locale"
+      noChrome:
+        type: "boolean"
+        description: "No Chrome Flag. If true, the embedded page is shown without\
+          \ a navigation header or footer. If false, the standard page header and\
+          \ footer will be present. By default its value is false"
+  DetailedParticipantInfo:
+    required:
+    - "email"
+    - "securityOption"
+    properties:
+      company:
+        type: "string"
+        description: "The company of the participant, if available. This cannot be\
+          \ changed as part of the PUT call."
+      email:
+        type: "string"
+        description: "Email of the participant. In case of modifying a participant\
+          \ set (PUT) this is a required field. In case of GET, this is the required\
+          \ field and will always be returned unless it is a fax workflow (legacy\
+          \ agreements) that were created using fax as input"
+      fax:
+        type: "string"
+        description: "Fax of the participant. New Agreements can not be created with\
+          \ fax option. This is only returned for legacy agreements created with fax\
+          \ as participants"
+      id:
+        type: "string"
+        description: "The unique identifier of the participant. This will be returned\
+          \ as part of Get call but is not mandatory to be passed as part of PUT call\
+          \ for agreements/{id}/members/participantSets/{id}."
+      name:
+        type: "string"
+        description: "The name of the participant, if available. This cannot be changed\
+          \ as part of the PUT call."
+      privateMessage:
+        type: "string"
+        description: "The private message of the participant, if available. This cannot\
+          \ be changed as part of the PUT call."
+      securityOption:
+        description: "Security options that apply to the participant. This cannot\
+          \ be changed as part of the PUT call"
+        $ref: "#/definitions/ParticipantSecurityOption"
+      self:
+        type: "boolean"
+        description: "True if this participant is the same user that is calling the\
+          \ API. Returned as part of Get. Ignored (not required) if modifying a participant\
+          \ set (PUT)."
+      status:
+        type: "string"
+        description: "The status of the participant. This cannot be changed as part\
+          \ of the PUT call."
+        enum:
+        - "REPLACED"
+        - "ACTIVE"
+    example:
+      name: "name"
+      self: true
+      company: "company"
+      id: "id"
+      fax: "fax"
+      privateMessage: "privateMessage"
+      email: "email"
+      securityOption:
+        password: "password"
+        authenticationMethod: "NONE"
+        phoneInfo:
+          phone: "phone"
+          countryCode: "countryCode"
+      status: "REPLACED"
+  DetailedWidgetParticipantSetInfo:
+    required:
+    - "memberInfos"
+    - "order"
+    - "role"
+    properties:
+      id:
+        type: "string"
+        description: "The unique identifier of the participant set. This cannot be\
+          \ changed as part of the PUT call."
+      memberInfos:
+        type: "array"
+        description: "Array of ParticipantInfo objects, containing participant-specific\
+          \ data (e.g. email). All participants in the array belong to the same set"
+        items:
+          $ref: "#/definitions/DetailedParticipantInfo"
+      order:
+        type: "integer"
+        description: "Index indicating sequential signing group (specified for hybrid\
+          \ routing). This cannot be changed as part of the PUT call."
+      role:
+        type: "string"
+        description: "Role assumed by all participants in the set (signer, approver\
+          \ etc.). This cannot be changed as part of the PUT call."
+        enum:
+        - "SIGNER"
+        - "SENDER"
+        - "APPROVER"
+        - "ACCEPTOR"
+        - "CERTIFIED_RECIPIENT"
+        - "FORM_FILLER"
+        - "DELEGATE_TO_SIGNER"
+        - "DELEGATE_TO_APPROVER"
+        - "DELEGATE_TO_ACCEPTOR"
+        - "DELEGATE_TO_CERTIFIED_RECIPIENT"
+        - "DELEGATE_TO_FORM_FILLER"
+        - "SHARE"
+    example:
+      role: "SIGNER"
+      id: "id"
+      memberInfos:
+      - name: "name"
+        self: true
+        company: "company"
+        id: "id"
+        fax: "fax"
+        privateMessage: "privateMessage"
+        email: "email"
+        securityOption:
+          password: "password"
+          authenticationMethod: "NONE"
+          phoneInfo:
+            phone: "phone"
+            countryCode: "countryCode"
+        status: "REPLACED"
+      - name: "name"
+        self: true
+        company: "company"
+        id: "id"
+        fax: "fax"
+        privateMessage: "privateMessage"
+        email: "email"
+        securityOption:
+          password: "password"
+          authenticationMethod: "NONE"
+          phoneInfo:
+            phone: "phone"
+            countryCode: "countryCode"
+        status: "REPLACED"
+      order: 0
+  DigitalSignatureInfo:
+    required:
+    - "company"
+    - "email"
+    - "name"
+    properties:
+      company:
+        type: "string"
+        description: "Company name captured during digital signing"
+      email:
+        type: "string"
+        description: "Email captured during digital signing"
+      name:
+        type: "string"
+        description: "Name captured during digital signing"
+    example:
+      name: "name"
+      company: "company"
+      email: "email"
+  DisplayParticipantInfo:
+    required:
+    - "email"
+    properties:
+      company:
+        type: "string"
+        description: "Displays the name of the company of the user, if available"
+      email:
+        type: "string"
+        description: "Displays the email of the user"
+      fullName:
+        type: "string"
+        description: "Displays the full name of the user, if available. "
+    example:
+      fullName: "fullName"
+      company: "company"
+      email: "email"
+  DisplayWidgetParticipantSetInfo:
+    required:
+    - "displayUserSetMemberInfos"
+    properties:
+      displayUserSetMemberInfos:
+        type: "array"
+        description: "Displays the info about user set"
+        items:
+          $ref: "#/definitions/DisplayParticipantInfo"
+    example:
+      displayUserSetMemberInfos:
+      - fullName: "fullName"
+        company: "company"
+        email: "email"
+      - fullName: "fullName"
+        company: "company"
+        email: "email"
+  Document:
+    required:
+    - "id"
+    - "label"
+    - "numPages"
+    properties:
+      id:
+        type: "string"
+        description: "ID of the document. In case of PUT call, this is the only field\
+          \ that is accepted in Document structure. Name and mimeType are ignored\
+          \ in case of PUT call"
+      label:
+        type: "string"
+        description: "Label of the document"
+      mimeType:
+        type: "string"
+        description: "mimeType of the original file. This is returned in GET but not\
+          \ accepted back in PUT"
+      name:
+        type: "string"
+        description: "Name of the original document uploaded. This is returned in\
+          \ GET but not accepted back in PUT"
+      numPages:
+        type: "integer"
+        description: "Number of pages in the document"
+    example:
+      numPages: 1
+      name: "name"
+      id: "id"
+      label: "label"
+      mimeType: "mimeType"
+  FileInfo:
+    properties:
+      document:
+        description: "A document that is associated with the widget. This field cannot\
+          \ be provided in POST call. In case of GET call, this is the only field\
+          \ returned in the response"
+        $ref: "#/definitions/Document"
+      label:
+        type: "string"
+        description: "The unique label value of a file info element. In case of custom\
+          \ workflow this will map a file to corresponding file element in workflow\
+          \ definition. This must be specified in case of custom workflow agreement\
+          \ creation request "
+      libraryDocumentId:
+        type: "string"
+        description: "ID for an existing Library document that will be added to the\
+          \ agreement"
+      transientDocumentId:
+        type: "string"
+        description: "ID for a transient document that will be added to the agreement"
+      urlFileInfo:
+        description: "URL for an external document to add to the agreement"
+        $ref: "#/definitions/URLFileInfo"
+    example:
+      transientDocumentId: "transientDocumentId"
+      document:
+        numPages: 1
+        name: "name"
+        id: "id"
+        label: "label"
+        mimeType: "mimeType"
+      libraryDocumentId: "libraryDocumentId"
+      label: "label"
+      urlFileInfo:
+        name: "name"
+        mimeType: "mimeType"
+        url: "url"
+  Note:
+    required:
+    - "note"
+    properties:
+      note:
+        type: "string"
+        description: "Content of Note field"
+    example:
+      note: "note"
+  PageInfo:
+    required:
+    - "nextCursor"
+    properties:
+      nextCursor:
+        type: "string"
+        description: "Used to navigate to the next page. If not\_returned, there are\
+          \ no further pages."
+    example:
+      nextCursor: "nextCursor"
+  ParticipantSecurityOption:
+    required:
+    - "authenticationMethod"
+    properties:
+      authenticationMethod:
+        type: "string"
+        description: "The authentication method for the participants to have access\
+          \ to view and sign the document"
+        enum:
+        - "NONE"
+        - "PASSWORD"
+        - "PHONE"
+        - "KBA"
+        - "WEB_IDENTITY"
+        - "ADOBE_SIGN"
+      password:
+        type: "string"
+        description: "The password required for the participant to view and sign the\
+          \ document. Note that AdobeSign will never show this password to anyone,\
+          \ so you will need to separately communicate it to any relevant parties.\
+          \ The password will not be returned in GET call. In case of PUT call, password\
+          \ associated with Agreement resource will remain unchanged if no password\
+          \ is specified but authentication method is provided as PASSWORD"
+      phoneInfo:
+        description: "The phoneInfo required for the participant to view and sign\
+          \ the document"
+        $ref: "#/definitions/PhoneInfo"
+    example:
+      password: "password"
+      authenticationMethod: "NONE"
+      phoneInfo:
+        phone: "phone"
+        countryCode: "countryCode"
+  ParticipantSetMemberInfo:
+    required:
+    - "email"
+    properties:
+      email:
+        type: "string"
+        description: "Email of the particpant. In case of creating new Agreements(POST/PUT),\
+          \ this is a required field. In case of GET, this is the required field and\
+          \ will always be returned unless it is a fax workflow( legacy agreements)\
+          \ that were created using fax as input"
+      securityOption:
+        description: "Security options that apply to the participant"
+        $ref: "#/definitions/ParticipantSecurityOption"
+    example:
+      email: "email"
+      securityOption:
+        password: "password"
+        authenticationMethod: "NONE"
+        phoneInfo:
+          phone: "phone"
+          countryCode: "countryCode"
+  PhoneInfo:
+    properties:
+      countryCode:
+        type: "string"
+        description: "The phone Info country code required for the participant to\
+          \ view and sign the document if authentication method is PHONE"
+      phone:
+        type: "string"
+        description: "The phone number required for the participant to view and sign\
+          \ the document if authentication method is PHONE"
+    example:
+      phone: "phone"
+      countryCode: "countryCode"
+  SecurityOption:
+    properties:
+      openPassword:
+        type: "string"
+        description: "The secondary password that will be used to secure the PDF document.\
+          \ Note that AdobeSign will never show this password to anyone, so you will\
+          \ need to separately communicate it to any relevant parties"
+    example:
+      openPassword: "openPassword"
+  SenderInfo:
+    required:
+    - "company"
+    - "email"
+    - "name"
+    - "participantId"
+    - "self"
+    properties:
+      company:
+        type: "string"
+        description: "Company of the creator, if available."
+      email:
+        type: "string"
+        description: "Email of the creator of the widget."
+      name:
+        type: "string"
+        description: "Name of the creator, if available."
+      participantId:
+        type: "string"
+        description: " The unique identifier of the creator of the widget."
+      self:
+        type: "boolean"
+        description: "True if the creator of the widget is the same user that is calling\
+          \ the API."
+    example:
+      participantId: "participantId"
+      name: "name"
+      self: true
+      company: "company"
+      email: "email"
+  ShareParticipantInfo:
+    required:
+    - "company"
+    - "email"
+    - "name"
+    - "participantId"
+    - "sharerParticipantId"
+    properties:
+      company:
+        type: "string"
+        description: "Company of the sharee participant of the widget, if available."
+      email:
+        type: "string"
+        description: "Email of the sharee participant of the widget."
+      name:
+        type: "string"
+        description: "Name of the sharee participant of the widget, if available."
+      participantId:
+        type: "string"
+        description: "The unique identifier of the sharee participant of the widget."
+      sharerParticipantId:
+        type: "string"
+        description: "The unique identifier of the participant who shared the widget."
+    example:
+      participantId: "participantId"
+      name: "name"
+      sharerParticipantId: "sharerParticipantId"
+      company: "company"
+      email: "email"
+  URLFileInfo:
+    required:
+    - "mimeType"
+    - "name"
+    - "url"
+    properties:
+      mimeType:
+        type: "string"
+        description: "The mime type of the referenced file, used to determine if the\
+          \ file can be accepted and the necessary conversion steps can be performed"
+      name:
+        type: "string"
+        description: "The original system file name of the document being sent"
+      url:
+        type: "string"
+        description: "A publicly accessible URL for retrieving the raw file content"
+    example:
+      name: "name"
+      mimeType: "mimeType"
+      url: "url"
+  UserWidget:
+    required:
+    - "hidden"
+    - "id"
+    - "javascript"
+    - "modifiedDate"
+    - "name"
+    - "status"
+    - "url"
+    properties:
+      hidden:
+        type: "boolean"
+        description: "True if agreement is hidden for the user"
+      id:
+        type: "string"
+        description: "The unique identifier of a widget"
+      javascript:
+        type: "string"
+        description: "The embedded javascript code of the widget"
+      modifiedDate:
+        type: "string"
+        format: "date"
+        description: "The date on which the widget was last modified. Format would\
+          \ be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents\
+          \ UTC time"
+      name:
+        type: "string"
+        description: "The name of the widget."
+      status:
+        type: "string"
+        description: "The widget status (AUTHORING, ACTIVE, DRAFT, DISABLED)"
+        enum:
+        - "AUTHORING"
+        - "ACTIVE"
+        - "DRAFT"
+        - "DISABLED"
+      url:
+        type: "string"
+        description: "The hosted url of the widget"
+    example:
+      hidden: true
+      modifiedDate: "2000-01-23"
+      name: "name"
+      id: "id"
+      javascript: "javascript"
+      url: "url"
+      status: "AUTHORING"
+  UserWidgets:
+    required:
+    - "page"
+    - "userWidgetList"
+    properties:
+      page:
+        description: "Pagination information for navigating through the response"
+        $ref: "#/definitions/PageInfo"
+      userWidgetList:
+        type: "array"
+        description: "An array of widget items"
+        items:
+          $ref: "#/definitions/UserWidget"
+    example:
+      userWidgetList:
+      - hidden: true
+        modifiedDate: "2000-01-23"
+        name: "name"
+        id: "id"
+        javascript: "javascript"
+        url: "url"
+        status: "AUTHORING"
+      - hidden: true
+        modifiedDate: "2000-01-23"
+        name: "name"
+        id: "id"
+        javascript: "javascript"
+        url: "url"
+        status: "AUTHORING"
+      page:
+        nextCursor: "nextCursor"
+  VaultingInfo:
+    properties:
+      enabled:
+        type: "boolean"
+        description: "For accounts set up for document vaulting and the option to\
+          \ enable per agreement, this determines whether the document is to be vaulted"
+    example:
+      enabled: true
+  VisibilityInfo:
+    required:
+    - "visibility"
+    properties:
+      visibility:
+        type: "string"
+        description: "Specifies the visibility. The possible values are HIDE or SHOW"
+        enum:
+        - "SHOW"
+        - "HIDE"
+  WidgetAdditionalParticipationSetInfo:
+    required:
+    - "memberInfos"
+    - "role"
+    properties:
+      memberInfos:
+        type: "array"
+        description: "Array of ParticipantInfo objects, containing participant - specific\
+          \ data (email, e.g.). All participants in the array belong to the same set.\
+          \ Currently we are supporting only one member in the set. Since the email\
+          \ of the widget signer is unknown at the time of widget creation, the email\
+          \ should be left empty and its optional security options should be provided. "
+        items:
+          $ref: "#/definitions/ParticipantSetMemberInfo"
+      order:
+        type: "integer"
+        description: "Index indicating position at which signing group needs to sign.\
+          \ Additional participant to sign at first place is assigned a index of 1.\
+          \ Widget participant should not have any order specified. Widget participant\
+          \ should not have any email address and and can not have phone authentication\
+          \ applied. Different signingOrder specified in input should form a valid\
+          \ consecutive increasing sequence of integers. Otherwise signingOrder will\
+          \ be considered invalid"
+      role:
+        type: "string"
+        description: "Role assumed by all participants in the set (signer, approver,\
+          \ etc.) Widget First Participant will only have roles - Signer, Approver,\
+          \ Acceptor and Form Filler"
+        enum:
+        - "SIGNER"
+        - "DELEGATE_TO_SIGNER"
+        - "APPROVER"
+        - "DELEGATE_TO_APPROVER"
+        - "ACCEPTOR"
+        - "DELEGATE_TO_ACCEPTOR"
+        - "FORM_FILLER"
+        - "DELEGATE_TO_FORM_FILLER"
+        - "CERTIFIED_RECIPIENT"
+        - "DELEGATE_TO_CERTIFIED_RECIPIENT"
+    example:
+      role: "SIGNER"
+      memberInfos:
+      - email: "email"
+        securityOption:
+          password: "password"
+          authenticationMethod: "NONE"
+          phoneInfo:
+            phone: "phone"
+            countryCode: "countryCode"
+      - email: "email"
+        securityOption:
+          password: "password"
+          authenticationMethod: "NONE"
+          phoneInfo:
+            phone: "phone"
+            countryCode: "countryCode"
+      order: 0
+  WidgetAgreement:
+    required:
+    - "displayDate"
+    - "displayParticipantSetInfos"
+    - "esign"
+    - "hidden"
+    - "latestVersionId"
+    - "name"
+    - "status"
+    properties:
+      displayDate:
+        type: "string"
+        format: "date"
+        description: "The display date for the agreement. Format would be yyyy-MM-dd'T'HH:mm:ssZ.\
+          \ For example, e.g 2016-02-25T18:46:19Z represents UTC time"
+      displayParticipantSetInfos:
+        type: "array"
+        description: "The most relevant current user set for the agreement. It is\
+          \ typically the next signer if the agreement is from the current user, or\
+          \ the sender if received from another user"
+        items:
+          $ref: "#/definitions/DisplayWidgetParticipantSetInfo"
+      esign:
+        type: "boolean"
+        description: "True if this is an e-sign document"
+      hidden:
+        type: "boolean"
+        description: "True if agreement is hidden for the user"
+      id:
+        type: "string"
+        description: "The unique identifier of the agreement.If provided in POST,\
+          \ it will simply be ignored"
+      latestVersionId:
+        type: "string"
+        description: "A version ID which uniquely identifies the current version of\
+          \ the agreement"
+      name:
+        type: "string"
+        description: "Name of the Agreement"
+      status:
+        type: "string"
+        description: "The current status of the document from the perspective of the\
+          \ originator"
+        enum:
+        - "WAITING_FOR_MY_SIGNATURE"
+        - "WAITING_FOR_MY_APPROVAL"
+        - "WAITING_FOR_MY_DELEGATION"
+        - "WAITING_FOR_MY_ACKNOWLEDGEMENT"
+        - "WAITING_FOR_MY_ACCEPTANCE"
+        - "WAITING_FOR_MY_FORM_FILLING"
+        - "OUT_FOR_SIGNATURE"
+        - "OUT_FOR_APPROVAL"
+        - "OUT_FOR_DELIVERY"
+        - "OUT_FOR_ACCEPTANCE"
+        - "OUT_FOR_FORM_FILLING"
+        - "SIGNED"
+        - "APPROVED"
+        - "FORM_FILLED"
+        - "DELIVERED"
+        - "ACCEPTED"
+        - "ARCHIVED"
+        - "CANCELLED"
+        - "EXPIRED"
+        - "WAITING_FOR_PREFILL"
+        - "DOCUMENTS_NOT_YET_PROCESSED"
+        - "WAITING_FOR_MY_VERIFICATION"
+        - "WAITING_FOR_VERIFICATION"
+    example:
+      hidden: true
+      displayDate: "2000-01-23"
+      esign: true
+      name: "name"
+      displayParticipantSetInfos:
+      - displayUserSetMemberInfos:
+        - fullName: "fullName"
+          company: "company"
+          email: "email"
+        - fullName: "fullName"
+          company: "company"
+          email: "email"
+      - displayUserSetMemberInfos:
+        - fullName: "fullName"
+          company: "company"
+          email: "email"
+        - fullName: "fullName"
+          company: "company"
+          email: "email"
+      latestVersionId: "latestVersionId"
+      id: "id"
+      status: "WAITING_FOR_MY_SIGNATURE"
+  WidgetAgreements:
+    required:
+    - "page"
+    - "userAgreementList"
+    properties:
+      page:
+        description: "Pagination information for navigating through the response"
+        $ref: "#/definitions/PageInfo"
+      userAgreementList:
+        type: "array"
+        description: "An array of UserAgreement items"
+        items:
+          $ref: "#/definitions/WidgetAgreement"
+    example:
+      userAgreementList:
+      - hidden: true
+        displayDate: "2000-01-23"
+        esign: true
+        name: "name"
+        displayParticipantSetInfos:
+        - displayUserSetMemberInfos:
+          - fullName: "fullName"
+            company: "company"
+            email: "email"
+          - fullName: "fullName"
+            company: "company"
+            email: "email"
+        - displayUserSetMemberInfos:
+          - fullName: "fullName"
+            company: "company"
+            email: "email"
+          - fullName: "fullName"
+            company: "company"
+            email: "email"
+        latestVersionId: "latestVersionId"
+        id: "id"
+        status: "WAITING_FOR_MY_SIGNATURE"
+      - hidden: true
+        displayDate: "2000-01-23"
+        esign: true
+        name: "name"
+        displayParticipantSetInfos:
+        - displayUserSetMemberInfos:
+          - fullName: "fullName"
+            company: "company"
+            email: "email"
+          - fullName: "fullName"
+            company: "company"
+            email: "email"
+        - displayUserSetMemberInfos:
+          - fullName: "fullName"
+            company: "company"
+            email: "email"
+          - fullName: "fullName"
+            company: "company"
+            email: "email"
+        latestVersionId: "latestVersionId"
+        id: "id"
+        status: "WAITING_FOR_MY_SIGNATURE"
+      page:
+        nextCursor: "nextCursor"
+  WidgetCcInfo:
+    required:
+    - "email"
+    properties:
+      email:
+        type: "string"
+        description: "Email of the CC participant of the widget"
+    example:
+      email: "email"
+  WidgetCreationResponse:
+    required:
+    - "id"
+    properties:
+      id:
+        type: "string"
+        description: "The unique identifier of widget which can be used to retrieve\
+          \ the data entered by the signers."
+    description: "A JSON object describing the widget"
+    example:
+      id: "id"
+  WidgetDocuments:
+    required:
+    - "documents"
+    properties:
+      documents:
+        type: "array"
+        description: "A list of documents"
+        items:
+          $ref: "#/definitions/Document"
+    example:
+      documents:
+      - numPages: 1
+        name: "name"
+        id: "id"
+        label: "label"
+        mimeType: "mimeType"
+      - numPages: 1
+        name: "name"
+        id: "id"
+        label: "label"
+        mimeType: "mimeType"
+  WidgetEvent:
+    required:
+    - "actingUserEmail"
+    - "actingUserIpAddress"
+    - "actingUserName"
+    - "date"
+    - "description"
+    - "deviceLocation"
+    - "devicePhoneNumber"
+    - "digitalSignatureInfo"
+    - "initiatingUserEmail"
+    - "initiatingUserName"
+    - "participantEmail"
+    - "participantId"
+    - "participantRole"
+    - "synchronizationId"
+    - "type"
+    - "vaultEventId"
+    - "vaultProviderName"
+    - "versionId"
+    properties:
+      actingUserEmail:
+        type: "string"
+        description: "Email address of the user that created the event"
+      actingUserIpAddress:
+        type: "string"
+        description: "The IP address of the user that created the event"
+      actingUserName:
+        type: "string"
+        description: "The name of the acting user"
+      comment:
+        type: "string"
+        description: "The event comment. For RECALLED or REJECTED, the reason given\
+          \ by the user that initiates the event. For DELEGATE or SHARE, the message\
+          \ from the acting user to the participant"
+      date:
+        type: "string"
+        format: "date"
+        description: "The date of the audit event. Format would be yyyy-MM-dd'T'HH:mm:ssZ.\
+          \ For example, e.g 2016-02-25T18:46:19Z represents UTC time"
+      description:
+        type: "string"
+        description: "A description of the audit event"
+      deviceLocation:
+        description: "Location of the device that generated the event (This value\
+          \ may be null due to limited privileges)"
+        $ref: "#/definitions/WidgetEventDeviceLocation"
+      devicePhoneNumber:
+        type: "string"
+        description: "Phone number from the device used when the participation is\
+          \ completed on a mobile phone"
+      digitalSignatureInfo:
+        description: "This is present for ESIGNED events when the participation is\
+          \ signed digitally"
+        $ref: "#/definitions/DigitalSignatureInfo"
+      initiatingUserEmail:
+        type: "string"
+        description: "Email address of the user that initiated the event on behalf\
+          \ of the acting user when the account is shared. Will be empty if there\
+          \ is no account sharing in effect"
+      initiatingUserName:
+        type: "string"
+        description: "Full name of the user that initiated the event on behalf of\
+          \ the acting user when the account is shared. Will be empty if there is\
+          \ no account sharing in effect"
+      participantEmail:
+        type: "string"
+        description: "Email address of the user that is the participant for the event.\
+          \ This may be different than the acting user for certain event types. For\
+          \ example, for a DELEGATION event, this is the user who was delegated to"
+      participantId:
+        type: "string"
+        description: "The unique identifier of the participant for the event. This\
+          \ may be different than the acting user for certain event types. For example,\
+          \ for a DELEGATION event, this is the user who was delegated to"
+      participantRole:
+        type: "string"
+        description: "Role assumed by all participants in the participant set the\
+          \ participant belongs to (signer, approver etc.)."
+        enum:
+        - "SIGNER"
+        - "DELEGATE_TO_SIGNER"
+        - "APPROVER"
+        - "DELEGATE_TO_APPROVER"
+        - "ACCEPTOR"
+        - "DELEGATE_TO_ACCEPTOR"
+        - "FORM_FILLER"
+        - "DELEGATE_TO_FORM_FILLER"
+        - "CERTIFIED_RECIPIENT"
+        - "DELEGATE_TO_CERTIFIED_RECIPIENT"
+        - "SHARE"
+        - "SENDER"
+      synchronizationId:
+        type: "string"
+        description: "A unique identifier linking offline events to synchronization\
+          \ events (specified for offline signing events and synchronization events,\
+          \ else null)"
+      type:
+        type: "string"
+        description: "Type of widget event"
+        enum:
+        - "AUTO_CANCELLED_CONVERSION_PROBLEM"
+        - "ACTIVATED"
+        - "CREATED"
+        - "DEACTIVATED"
+        - "MODIFIED"
+      vaultEventId:
+        type: "string"
+        description: "The identifier assigned by the vault provider for the vault\
+          \ event (if vaulted, otherwise null)"
+      vaultProviderName:
+        type: "string"
+        description: "Name of the vault provider for the vault event (if vaulted,\
+          \ otherwise null)"
+      versionId:
+        type: "string"
+        description: "An ID which uniquely identifies the version of the document\
+          \ associated with this audit event"
+    example:
+      date: "2000-01-23"
+      initiatingUserName: "initiatingUserName"
+      description: "description"
+      actingUserName: "actingUserName"
+      actingUserIpAddress: "actingUserIpAddress"
+      participantEmail: "participantEmail"
+      type: "AUTO_CANCELLED_CONVERSION_PROBLEM"
+      participantRole: "SIGNER"
+      vaultEventId: "vaultEventId"
+      participantId: "participantId"
+      versionId: "versionId"
+      actingUserEmail: "actingUserEmail"
+      devicePhoneNumber: "devicePhoneNumber"
+      initiatingUserEmail: "initiatingUserEmail"
+      digitalSignatureInfo:
+        name: "name"
+        company: "company"
+        email: "email"
+      vaultProviderName: "vaultProviderName"
+      comment: "comment"
+      synchronizationId: "synchronizationId"
+      deviceLocation:
+        latitude: 0.8008282
+        longitude: 6.0274563
+  WidgetEventDeviceLocation:
+    required:
+    - "latitude"
+    - "longitude"
+    properties:
+      latitude:
+        type: "number"
+        format: "float"
+        description: "Latitude coordinate"
+      longitude:
+        type: "number"
+        format: "float"
+        description: "Longitude coordinate"
+    example:
+      latitude: 0.8008282
+      longitude: 6.0274563
+  WidgetEventList:
+    required:
+    - "events"
+    properties:
+      events:
+        type: "array"
+        description: "An array of event objects."
+        items:
+          $ref: "#/definitions/WidgetEvent"
+    example:
+      events:
+      - date: "2000-01-23"
+        initiatingUserName: "initiatingUserName"
+        description: "description"
+        actingUserName: "actingUserName"
+        actingUserIpAddress: "actingUserIpAddress"
+        participantEmail: "participantEmail"
+        type: "AUTO_CANCELLED_CONVERSION_PROBLEM"
+        participantRole: "SIGNER"
+        vaultEventId: "vaultEventId"
+        participantId: "participantId"
+        versionId: "versionId"
+        actingUserEmail: "actingUserEmail"
+        devicePhoneNumber: "devicePhoneNumber"
+        initiatingUserEmail: "initiatingUserEmail"
+        digitalSignatureInfo:
+          name: "name"
+          company: "company"
+          email: "email"
+        vaultProviderName: "vaultProviderName"
+        comment: "comment"
+        synchronizationId: "synchronizationId"
+        deviceLocation:
+          latitude: 0.8008282
+          longitude: 6.0274563
+      - date: "2000-01-23"
+        initiatingUserName: "initiatingUserName"
+        description: "description"
+        actingUserName: "actingUserName"
+        actingUserIpAddress: "actingUserIpAddress"
+        participantEmail: "participantEmail"
+        type: "AUTO_CANCELLED_CONVERSION_PROBLEM"
+        participantRole: "SIGNER"
+        vaultEventId: "vaultEventId"
+        participantId: "participantId"
+        versionId: "versionId"
+        actingUserEmail: "actingUserEmail"
+        devicePhoneNumber: "devicePhoneNumber"
+        initiatingUserEmail: "initiatingUserEmail"
+        digitalSignatureInfo:
+          name: "name"
+          company: "company"
+          email: "email"
+        vaultProviderName: "vaultProviderName"
+        comment: "comment"
+        synchronizationId: "synchronizationId"
+        deviceLocation:
+          latitude: 0.8008282
+          longitude: 6.0274563
+  WidgetInActiveInfo:
+    required:
+    - "message"
+    - "redirectUrl"
+    properties:
+      message:
+        type: "string"
+        description: "Display this custom message to the user when the widget is accessed.\
+          \ Note that this can contain wiki markup to include clickable links in the\
+          \ message. This is required if redirectUrl is not provided. Both message\
+          \ and redirectUrl can not be specified."
+      redirectUrl:
+        type: "string"
+        description: "Redirect the user to this URL when the widget is accessed. This\
+          \ is required if message is not provided. Both message and redirectUrl can\
+          \ not be specified."
+  WidgetInfo:
+    required:
+    - "fileInfos"
+    - "name"
+    - "state"
+    - "widgetParticipantSetInfo"
+    properties:
+      additionalParticipantSetsInfo:
+        type: "array"
+        description: "List of all the participants in the widget except widget signer"
+        items:
+          $ref: "#/definitions/WidgetAdditionalParticipationSetInfo"
+      authFailureInfo:
+        description: "URL and associated properties for the error page the widget\
+          \ signer will be taken after failing to authenticate"
+        $ref: "#/definitions/WidgetRedirectionInfo"
+      ccs:
+        type: "array"
+        description: "A list of one or more email addresses that you want to copy\
+          \ on this transaction. The email addresses will each receive an email when\
+          \ the final agreement created through widget is signed. The email addresses\
+          \ will also receive a copy of the document, attached as a PDF file"
+        items:
+          $ref: "#/definitions/WidgetCcInfo"
+      completionInfo:
+        description: "URL and associated properties for the success page the widget\
+          \ signer will be taken to after performing desired action on the widget"
+        $ref: "#/definitions/WidgetRedirectionInfo"
+      createdDate:
+        type: "string"
+        format: "date"
+        description: "Date when widget was created. If provided in POST, it will simply\
+          \ be ignored. Format would be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z\
+          \ represents UTC time"
+      creatorEmail:
+        type: "string"
+        description: "Email of widget creator. Only returned in GET response. Cannot\
+          \ be provided in POST/PUT request. If provided in POST, it will simply be\
+          \ ignored"
+      fileInfos:
+        type: "array"
+        description: "A list of one or more files (or references to files) that will\
+          \ be used to create the widget. If more than one file is provided, they\
+          \ will be combined before the widget is created. Library documents are not\
+          \ permitted. Note: Only one of the four parameters in every FileInfo object\
+          \ must be specified"
+        items:
+          $ref: "#/definitions/FileInfo"
+      id:
+        type: "string"
+        description: "A resource identifier that can be used to uniquely identify\
+          \ the widget in other apis. If provided in POST, it will simply be ignored"
+      locale:
+        type: "string"
+        description: "The locale associated with this widget - specifies the language\
+          \ for the signing page and emails, for example en_US or fr_FR. If none specified,\
+          \ defaults to the language configured for the widget creator"
+      name:
+        type: "string"
+        description: "The name of the widget that will be used to identify it, in\
+          \ emails, website and other places"
+      securityOption:
+        description: "Secondary security parameters for the widget"
+        $ref: "#/definitions/SecurityOption"
+      state:
+        type: "string"
+        description: "The state in which the widget should land. For example in order\
+          \ to create a widget in DRAFT state, field should be DRAFT. The state field\
+          \ will never get returned in GET /widgets/{ID} and will be ignored if provided\
+          \ in PUT /widgets/{ID} call. The eventual status of the widget can be obtained\
+          \ from GET /widgets/ID"
+        enum:
+        - "DRAFT"
+        - "ACTIVE"
+        - "AUTHORING"
+      status:
+        type: "string"
+        description: "Status of the Widget. If provided in POST, it will simply be\
+          \ ignored"
+        enum:
+        - "DRAFT"
+        - "AUTHORING"
+        - "ACTIVE"
+        - "DOCUMENTS_NOT_YET_PROCESSED"
+        - "DISABLED"
+        - "DISCARDED"
+      vaultingInfo:
+        description: "Vaulting properties that allows Adobe Sign to securely store\
+          \ documents with a vault provider"
+        $ref: "#/definitions/VaultingInfo"
+      widgetParticipantSetInfo:
+        description: "Represents widget participant for whom email should not be provided"
+        $ref: "#/definitions/WidgetParticipantSetInfo"
+    example:
+      additionalParticipantSetsInfo:
+      - role: "SIGNER"
+        memberInfos:
+        - email: "email"
+          securityOption:
+            password: "password"
+            authenticationMethod: "NONE"
+            phoneInfo:
+              phone: "phone"
+              countryCode: "countryCode"
+        - email: "email"
+          securityOption:
+            password: "password"
+            authenticationMethod: "NONE"
+            phoneInfo:
+              phone: "phone"
+              countryCode: "countryCode"
+        order: 0
+      - role: "SIGNER"
+        memberInfos:
+        - email: "email"
+          securityOption:
+            password: "password"
+            authenticationMethod: "NONE"
+            phoneInfo:
+              phone: "phone"
+              countryCode: "countryCode"
+        - email: "email"
+          securityOption:
+            password: "password"
+            authenticationMethod: "NONE"
+            phoneInfo:
+              phone: "phone"
+              countryCode: "countryCode"
+        order: 0
+      creatorEmail: "creatorEmail"
+      locale: "locale"
+      vaultingInfo:
+        enabled: true
+      securityOption:
+        openPassword: "openPassword"
+      widgetParticipantSetInfo:
+        role: "SIGNER"
+        memberInfos:
+        - email: "email"
+          securityOption:
+            password: "password"
+            authenticationMethod: "NONE"
+            phoneInfo:
+              phone: "phone"
+              countryCode: "countryCode"
+        - email: "email"
+          securityOption:
+            password: "password"
+            authenticationMethod: "NONE"
+            phoneInfo:
+              phone: "phone"
+              countryCode: "countryCode"
+      ccs:
+      - email: "email"
+      - email: "email"
+      createdDate: "2000-01-23"
+      name: "name"
+      completionInfo:
+        delay: 6
+        deframe: true
+        url: "url"
+      authFailureInfo:
+        delay: 6
+        deframe: true
+        url: "url"
+      fileInfos:
+      - transientDocumentId: "transientDocumentId"
+        document:
+          numPages: 1
+          name: "name"
+          id: "id"
+          label: "label"
+          mimeType: "mimeType"
+        libraryDocumentId: "libraryDocumentId"
+        label: "label"
+        urlFileInfo:
+          name: "name"
+          mimeType: "mimeType"
+          url: "url"
+      - transientDocumentId: "transientDocumentId"
+        document:
+          numPages: 1
+          name: "name"
+          id: "id"
+          label: "label"
+          mimeType: "mimeType"
+        libraryDocumentId: "libraryDocumentId"
+        label: "label"
+        urlFileInfo:
+          name: "name"
+          mimeType: "mimeType"
+          url: "url"
+      id: "id"
+      state: "DRAFT"
+      status: "DRAFT"
+  WidgetMembersInfo:
+    required:
+    - "ccsInfo"
+    - "creatorInfo"
+    - "sharesInfo"
+    properties:
+      additionalParticipantSets:
+        type: "array"
+        description: "Information about the widget additional participant Sets"
+        items:
+          $ref: "#/definitions/DetailedWidgetParticipantSetInfo"
+      ccsInfo:
+        type: "array"
+        description: "Information of CC participants of the widget."
+        items:
+          $ref: "#/definitions/CCParticipantInfo"
+      creatorInfo:
+        description: "Information of the creator of the widget."
+        $ref: "#/definitions/SenderInfo"
+      sharesInfo:
+        type: "array"
+        description: "Information of the participants with whom the widget has been\
+          \ shared."
+        items:
+          $ref: "#/definitions/ShareParticipantInfo"
+      widgetParticipantSet:
+        description: "Information about the widget participant Set"
+        $ref: "#/definitions/DetailedWidgetParticipantSetInfo"
+    example:
+      ccsInfo:
+      - participantId: "participantId"
+        name: "name"
+        company: "company"
+        email: "email"
+      - participantId: "participantId"
+        name: "name"
+        company: "company"
+        email: "email"
+      additionalParticipantSets:
+      - role: "SIGNER"
+        id: "id"
+        memberInfos:
+        - name: "name"
+          self: true
+          company: "company"
+          id: "id"
+          fax: "fax"
+          privateMessage: "privateMessage"
+          email: "email"
+          securityOption:
+            password: "password"
+            authenticationMethod: "NONE"
+            phoneInfo:
+              phone: "phone"
+              countryCode: "countryCode"
+          status: "REPLACED"
+        - name: "name"
+          self: true
+          company: "company"
+          id: "id"
+          fax: "fax"
+          privateMessage: "privateMessage"
+          email: "email"
+          securityOption:
+            password: "password"
+            authenticationMethod: "NONE"
+            phoneInfo:
+              phone: "phone"
+              countryCode: "countryCode"
+          status: "REPLACED"
+        order: 0
+      - role: "SIGNER"
+        id: "id"
+        memberInfos:
+        - name: "name"
+          self: true
+          company: "company"
+          id: "id"
+          fax: "fax"
+          privateMessage: "privateMessage"
+          email: "email"
+          securityOption:
+            password: "password"
+            authenticationMethod: "NONE"
+            phoneInfo:
+              phone: "phone"
+              countryCode: "countryCode"
+          status: "REPLACED"
+        - name: "name"
+          self: true
+          company: "company"
+          id: "id"
+          fax: "fax"
+          privateMessage: "privateMessage"
+          email: "email"
+          securityOption:
+            password: "password"
+            authenticationMethod: "NONE"
+            phoneInfo:
+              phone: "phone"
+              countryCode: "countryCode"
+          status: "REPLACED"
+        order: 0
+      widgetParticipantSet:
+        role: "SIGNER"
+        id: "id"
+        memberInfos:
+        - name: "name"
+          self: true
+          company: "company"
+          id: "id"
+          fax: "fax"
+          privateMessage: "privateMessage"
+          email: "email"
+          securityOption:
+            password: "password"
+            authenticationMethod: "NONE"
+            phoneInfo:
+              phone: "phone"
+              countryCode: "countryCode"
+          status: "REPLACED"
+        - name: "name"
+          self: true
+          company: "company"
+          id: "id"
+          fax: "fax"
+          privateMessage: "privateMessage"
+          email: "email"
+          securityOption:
+            password: "password"
+            authenticationMethod: "NONE"
+            phoneInfo:
+              phone: "phone"
+              countryCode: "countryCode"
+          status: "REPLACED"
+        order: 0
+      sharesInfo:
+      - participantId: "participantId"
+        name: "name"
+        sharerParticipantId: "sharerParticipantId"
+        company: "company"
+        email: "email"
+      - participantId: "participantId"
+        name: "name"
+        sharerParticipantId: "sharerParticipantId"
+        company: "company"
+        email: "email"
+      creatorInfo:
+        participantId: "participantId"
+        name: "name"
+        self: true
+        company: "company"
+        email: "email"
+  WidgetParticipantSetInfo:
+    required:
+    - "memberInfos"
+    - "role"
+    properties:
+      memberInfos:
+        type: "array"
+        description: "Array of ParticipantInfo objects, containing participant - specific\
+          \ data (email, e.g.). All participants in the array belong to the same set.\
+          \ Currently we are supporting only one member in the set. Since the email\
+          \ of the widget signer is unknown at the time of widget creation, the email\
+          \ should be left empty and its optional security options should be provided. "
+        items:
+          $ref: "#/definitions/ParticipantSetMemberInfo"
+      role:
+        type: "string"
+        description: "Role assumed by all participants in the set (signer, approver,\
+          \ etc.) Widget First Participant will only have roles - Signer, Approver,\
+          \ Acceptor and Form Filler"
+        enum:
+        - "SIGNER"
+        - "DELEGATE_TO_SIGNER"
+        - "APPROVER"
+        - "DELEGATE_TO_APPROVER"
+        - "ACCEPTOR"
+        - "DELEGATE_TO_ACCEPTOR"
+        - "FORM_FILLER"
+        - "DELEGATE_TO_FORM_FILLER"
+        - "CERTIFIED_RECIPIENT"
+        - "DELEGATE_TO_CERTIFIED_RECIPIENT"
+    example:
+      role: "SIGNER"
+      memberInfos:
+      - email: "email"
+        securityOption:
+          password: "password"
+          authenticationMethod: "NONE"
+          phoneInfo:
+            phone: "phone"
+            countryCode: "countryCode"
+      - email: "email"
+        securityOption:
+          password: "password"
+          authenticationMethod: "NONE"
+          phoneInfo:
+            phone: "phone"
+            countryCode: "countryCode"
+  WidgetRedirectionInfo:
+    required:
+    - "url"
+    properties:
+      deframe:
+        type: "boolean"
+        description: "If deframe is false, the resultant page will be shown inside\
+          \ the widget frame. If deframe is true, the resultant page will be shown\
+          \ in the full browser window. \n Note that in the case of embedded widgets,\
+          \ browser security restrictions do not permit automatic redirection in the\
+          \ full browser window, so if deframe is true the user will instead just\
+          \ see a link to the success page. We recommend this scenario be avoided\
+          \ - in other words, setting deframe to false is recommended for embedded\
+          \ widgets"
+      delay:
+        type: "integer"
+        description: "The delay (in seconds) before the user is taken to the resultant\
+          \ page. If this value is greater than 0, the user will first see the standard\
+          \ Adobe Sign result message, and then after a delay will be redirected to\
+          \ your resultant page. \n Note that this parameter has no effect for embedded\
+          \ widgets when deframe is true"
+      url:
+        type: "string"
+        description: "A publicly accessible url to which the user will be sent after\
+          \ successfully completing the widget. \nIf the URL you provide includes\
+          \ information that allows you to identify the specific transaction, such\
+          \ as your own unique identifier, you can use the browser request to this\
+          \ URL as a callback to notify you that this transaction is completed. \n\
+          In addition, Adobe Sign will append a documentKey parameter to the URL which\
+          \ will contain the Adobe Sign DocumentKey for this signed widget, but only\
+          \ if the sender is the same as the API key user. Your application can use\
+          \ this value to get the form data for this widget"
+    example:
+      delay: 6
+      deframe: true
+      url: "url"
+  WidgetStateInfo:
+    required:
+    - "state"
+    properties:
+      state:
+        type: "string"
+        description: "State of the Widget"
+        enum:
+        - "ACTIVE"
+        - "INACTIVE"
+        - "AUTHORING"
+        - "CANCELLED"
+      widgetInActiveInfo:
+        description: "Specify custom message which will be displayed  to the user\
+          \ or the URL to which user will be redirected when the widget is accessed\
+          \ in disabled state. This can be specified only in PUT request"
+        $ref: "#/definitions/WidgetInActiveInfo"
+  WidgetView:
+    required:
+    - "isCurrent"
+    - "name"
+    properties:
+      embeddedCode:
+        type: "string"
+        description: "Embedded code of url of resource "
+      expiration:
+        type: "string"
+        format: "date"
+        description: "Expiration of user url "
+      isCurrent:
+        type: "boolean"
+        description: "True if this view is the current view"
+      name:
+        type: "string"
+        description: "Name of the requested widget view"
+        enum:
+        - "AUTHORING"
+        - "DOCUMENT"
+        - "MANAGE"
+        - "POST_CREATE"
+        - "SIGNING"
+        - "ALL"
+      url:
+        type: "string"
+        description: "Url of resource location"
+    example:
+      isCurrent: true
+      embeddedCode: "embeddedCode"
+      name: "AUTHORING"
+      expiration: "2000-01-23"
+      url: "url"
+  WidgetViewInfo:
+    required:
+    - "name"
+    properties:
+      commonViewConfiguration:
+        description: "Common view configuration for all the available views"
+        $ref: "#/definitions/CommonViewConfiguration"
+      name:
+        type: "string"
+        description: "Name of the requested widget view"
+        enum:
+        - "AUTHORING"
+        - "DOCUMENT"
+        - "MANAGE"
+        - "POST_CREATE"
+        - "SIGNING"
+        - "ALL"
+  WidgetViews:
+    required:
+    - "widgetViewList"
+    properties:
+      widgetViewList:
+        type: "array"
+        description: "List of widget views"
+        items:
+          $ref: "#/definitions/WidgetView"
+    example:
+      widgetViewList:
+      - isCurrent: true
+        embeddedCode: "embeddedCode"
+        name: "AUTHORING"
+        expiration: "2000-01-23"
+        url: "url"
+      - isCurrent: true
+        embeddedCode: "embeddedCode"
+        name: "AUTHORING"
+        expiration: "2000-01-23"
+        url: "url"

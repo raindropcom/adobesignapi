@@ -1,0 +1,687 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "6.0.0",
+    "title": "AdobeSign Users APIs"
+  },
+  "basePath": "/api/rest/v6",
+  "paths": {
+    "/users": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_read')\" oncontextmenu=\"this.href=oauthDoc('user_read')\" target=\"oauthDoc\">user_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Used to navigate through the pages. If not provided, returns the first page.",
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Number of intended items in the response page.",
+            "in": "query",
+            "name": "pageSize",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/UsersInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "user_read"
+            ]
+          }
+        ],
+        "operationId": "getUsers",
+        "summary": "Retrieves all the users in an account."
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_read')\" oncontextmenu=\"this.href=oauthDoc('user_read')\" target=\"oauthDoc\">user_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The user identifier, as returned by the user creation API or retrieved from the API to fetch users. To get the details for the token owner, UserId can be replaced by \"me\" without quotes.",
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/DetailedUserInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "user_read"
+            ]
+          }
+        ],
+        "operationId": "getUserDetail",
+        "summary": "Retrieves detailed information about the user in the caller account."
+      },
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_write')\" oncontextmenu=\"this.href=oauthDoc('user_write')\" target=\"oauthDoc\">user_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The user identifier, as provided by GET /users or POST /users",
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Information necessary to update a user.",
+            "in": "body",
+            "name": "DetailedUserInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DetailedUserInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "user_write"
+            ]
+          }
+        ],
+        "operationId": "modifyUser",
+        "summary": "Update an user."
+      }
+    },
+    "/users/{userId}/groups": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_read')\" oncontextmenu=\"this.href=oauthDoc('user_read')\" target=\"oauthDoc\">user_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The user identifier, as returned by the user creation API or retrieved from the API to fetch users. To get the details for the token owner, UserId can be replaced by \"me\" without quotes.",
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/UserGroupsInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "user_read"
+            ]
+          }
+        ],
+        "operationId": "getGroupsOfUser",
+        "summary": "Retrieves the groups of the user."
+      },
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_write')\" oncontextmenu=\"this.href=oauthDoc('user_write')\" target=\"oauthDoc\">user_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The user identifier, as returned by the user creation API or retrieved from the API to fetch users. To update the details for the token owner, UserId can be replaced by \"me\" without quotes.",
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "UserGroupsInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserGroupsInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "user_write"
+            ]
+          }
+        ],
+        "operationId": "updateGroupsOfUser",
+        "summary": "Updates the groups of the user."
+      }
+    },
+    "/users/{userId}/state": {
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_write')\" oncontextmenu=\"this.href=oauthDoc('user_write')\" target=\"oauthDoc\">user_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The user identifier, as returned by the user creation API or retrieved from the API to fetch users. To update the details for the token owner, UserId can be replaced by \"me\" without quotes.",
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "UserStateInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserStateInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/UserStatusUpdateResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "user_write"
+            ]
+          }
+        ],
+        "operationId": "modifyUserState",
+        "summary": "Activate/Deactivate a given user."
+      }
+    },
+    "/users/{userId}/views": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_read')\" oncontextmenu=\"this.href=oauthDoc('user_read')\" target=\"oauthDoc\">user_read</a> - user read is always required</li><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_login')\" oncontextmenu=\"this.href=oauthDoc('user_login')\" target=\"oauthDoc\">user_login</a> - Required additionally if the autoLoginUser parameter is set to true</li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The user identifier, as returned by the user creation API or retrieved from the API to fetch users. To get the details for the token owner, UserId can be replaced by \"me\" without quotes.",
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Name of the required view and its desired configuration.",
+            "in": "body",
+            "name": "UserViewInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserViewInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/UserViewResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "user_read",
+              "user_login"
+            ]
+          }
+        ],
+        "operationId": "getUserViews",
+        "summary": "Retrieves the URL of manage, account settings and user profile page."
+      }
+    }
+  },
+  "definitions": {
+    "CommonViewConfiguration": {
+      "properties": {
+        "autoLoginUser": {
+          "description": "Auto LogIn Flag. If true, the URL returned will automatically log the user in. If false, the URL returned will require the credentials. By default its value is false",
+          "type": "boolean"
+        },
+        "noChrome": {
+          "description": "No Chrome Flag. If true, the embedded page is shown without a navigation header or footer. If false, the standard page header and footer will be present. By default its value is false",
+          "type": "boolean"
+        }
+      }
+    },
+    "DetailedUserInfo": {
+      "properties": {
+        "accountType": {
+          "description": "Type of account to which the user belongs (null if no account)",
+          "enum": [
+            "FREE",
+            "PRO",
+            "TEAM",
+            "TEAM_TRIAL",
+            "ENTERPRISE",
+            "ENTERPRISE_TRIAL",
+            "GLOBAL",
+            "GLOBAL_TRIAL"
+          ],
+          "type": "string"
+        },
+        "company": {
+          "description": "The name of company of the user",
+          "type": "string"
+        },
+        "email": {
+          "description": "The email address of the user",
+          "type": "string"
+        },
+        "firstName": {
+          "description": "The first name of the user",
+          "type": "string"
+        },
+        "id": {
+          "description": "A unique identifier of the user resource for REST APIs as issued by Sign.",
+          "type": "string"
+        },
+        "initials": {
+          "description": "The initials of the user",
+          "type": "string"
+        },
+        "isAccountAdmin": {
+          "description": "True if the user is account admin",
+          "type": "boolean"
+        },
+        "lastName": {
+          "description": "The last name of the user",
+          "type": "string"
+        },
+        "locale": {
+          "description": "The UI locale of the user",
+          "type": "string"
+        },
+        "phone": {
+          "description": "The phone number of the user",
+          "type": "string"
+        },
+        "status": {
+          "description": "Status of the user",
+          "enum": [
+            "ACTIVE",
+            "INACTIVE",
+            "CREATED",
+            "UNVERIFIED"
+          ],
+          "type": "string"
+        },
+        "title": {
+          "description": "The job title of the user",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "id",
+        "isAccountAdmin",
+        "status"
+      ]
+    },
+    "PageInfo": {
+      "properties": {
+        "nextCursor": {
+          "description": "Used to navigate to the next page. If not returned, there are no further pages.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "nextCursor"
+      ]
+    },
+    "UserGroupInfo": {
+      "properties": {
+        "id": {
+          "description": "Unique identifier of the group",
+          "type": "string"
+        },
+        "isGroupAdmin": {
+          "description": "True if user is group admin.",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name of the group. This will be ignored as part of PUT call.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "isGroupAdmin"
+      ]
+    },
+    "UserGroupsInfo": {
+      "properties": {
+        "groupInfoList": {
+          "description": "The list of groups for given user.",
+          "items": {
+            "$ref": "#/definitions/UserGroupInfo"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "groupInfoList"
+      ]
+    },
+    "UserInfo": {
+      "properties": {
+        "company": {
+          "description": "The name of company of the user",
+          "type": "string"
+        },
+        "email": {
+          "description": "The email address of the user",
+          "type": "string"
+        },
+        "firstName": {
+          "description": "The first name of the user",
+          "type": "string"
+        },
+        "id": {
+          "description": "A unique identifier of the user resource for REST APIs as issued by Sign.",
+          "type": "string"
+        },
+        "isAccountAdmin": {
+          "description": "True if user is account admin",
+          "type": "boolean"
+        },
+        "lastName": {
+          "description": "The last name of the user",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "id",
+        "isAccountAdmin"
+      ]
+    },
+    "UserStateInfo": {
+      "properties": {
+        "comment": {
+          "description": "An optional comment describing why you want to activate/deactivate a given user",
+          "type": "string"
+        },
+        "state": {
+          "description": "The state to which the user is to be updated. The valid states for this variable is currently, ACTIVE and INACTIVE",
+          "enum": [
+            "ACTIVE",
+            "INACTIVE"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "state"
+      ]
+    },
+    "UserStatusUpdateResponse": {
+      "properties": {
+        "code": {
+          "description": "The result of the attempt to activate or deactivate the user",
+          "enum": [
+            "ALREADY_ACTIVE",
+            "ALREADY_INACTIVE",
+            "OK",
+            "RESET_PASSWORD_WORKFLOW_INITIATED",
+            "SET_PASSWORD_WORKFLOW_INITIATED"
+          ],
+          "type": "string"
+        },
+        "message": {
+          "description": "String result message if there was no error",
+          "type": "string"
+        },
+        "state": {
+          "description": "A status value showing the result of this operation",
+          "enum": [
+            "ACTIVE",
+            "INACTIVE",
+            "CREATED",
+            "PENDING",
+            "UNVERIFIED"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "state"
+      ]
+    },
+    "UserView": {
+      "properties": {
+        "embeddedCode": {
+          "description": "Embedded code of url of resource ",
+          "type": "string"
+        },
+        "expiration": {
+          "description": "Expiration of user url ",
+          "format": "date",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the requested user view",
+          "enum": [
+            "MANAGE",
+            "ACCOUNT_SETTINGS",
+            "USER_PROFILE",
+            "ALL"
+          ],
+          "type": "string"
+        },
+        "url": {
+          "description": "Url of resource location",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "UserViewInfo": {
+      "properties": {
+        "commonViewConfiguration": {
+          "$ref": "#/definitions/CommonViewConfiguration",
+          "description": "Common view configuration for all the available views",
+          "items": {
+            "$ref": "#/definitions/CommonViewConfiguration"
+          }
+        },
+        "name": {
+          "description": "Name of the requested user view",
+          "enum": [
+            "MANAGE",
+            "ACCOUNT_SETTINGS",
+            "USER_PROFILE",
+            "ALL"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "UserViewResponse": {
+      "properties": {
+        "userViewList": {
+          "description": "List of user views",
+          "items": {
+            "$ref": "#/definitions/UserView"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "userViewList"
+      ]
+    },
+    "UsersInfo": {
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageInfo",
+          "description": "Pagination information for navigating through the response",
+          "items": {
+            "$ref": "#/definitions/PageInfo"
+          }
+        },
+        "userInfoList": {
+          "description": "The list of users in the account.",
+          "items": {
+            "$ref": "#/definitions/UserInfo"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "page",
+        "userInfoList"
+      ]
+    }
+  }
+}

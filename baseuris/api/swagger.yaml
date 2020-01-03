@@ -1,0 +1,64 @@
+---
+swagger: "2.0"
+info:
+  version: "6.0.0"
+  title: "AdobeSign BaseURIs APIs"
+basePath: "/api/rest/v6"
+paths:
+  /baseUris:
+    get:
+      summary: "Gets the base uri to access other APIs. In case other APIs are accessed\
+        \ from a different end point, it will be considered an invalid request."
+      operationId: "getBaseUris"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with any\
+          \ of the valid scopes<ul></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/BaseUriInfo"
+      security:
+      - oauth2:
+        - "agreement_read"
+        - "agreement_sign"
+        - "agreement_write"
+        - "agreement_retention"
+        - "library_read"
+        - "library_write"
+        - "library_retention"
+        - "user_login"
+        - "user_read"
+        - "user_write"
+        - "widget_read"
+        - "widget_write"
+        - "agreement_send"
+        - "workflow_read"
+        - "webhook_read"
+        - "webhook_write"
+        - "webhook_retention"
+definitions:
+  BaseUriInfo:
+    required:
+    - "apiAccessPoint"
+    - "webAccessPoint"
+    properties:
+      apiAccessPoint:
+        type: "string"
+        description: "The access point from where other APIs need to be accessed.\
+          \ In case other APIs are accessed from a different end point, it will be\
+          \ considered an invalid request"
+      webAccessPoint:
+        type: "string"
+        description: "The access point from where Adobe Sign website can be be accessed"
+    example:
+      apiAccessPoint: "apiAccessPoint"
+      webAccessPoint: "webAccessPoint"

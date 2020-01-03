@@ -1,0 +1,1394 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "6.0.0",
+    "title": "AdobeSign MegaSigns APIs"
+  },
+  "basePath": "/api/rest/v6",
+  "paths": {
+    "/megaSigns": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Used to navigate through the pages. If not provided, returns the first page.",
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Number of intended items in the response page.",
+            "in": "query",
+            "name": "pageSize",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/MegaSigns"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getMegaSigns",
+        "summary": "Retrieves MegaSign parent agreements for a user."
+      },
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\" oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\">agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Information about the MegaSign that you want to send.",
+            "in": "body",
+            "name": "MegaSignInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MegaSignCreationInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/MegaSignCreationResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_write"
+            ]
+          }
+        ],
+        "description": "This is a primary endpoint which is used to create a new megaSign. A megaSign can be created using transientDocument, libraryDocument or a URL. You can create a megaSign in <b>IN_PROCESS</b> - Create a megaSign in this state to immediately send it. You can use the PUT/megaSigns/{megaSignId}/state endpoint to transition the state of megaSign. An allowed transition would follow the following sequence: IN_PROCESS -> CANCELLED.",
+        "operationId": "createMegaSign",
+        "summary": "Send an agreement out for signature to multiple recipients. Each recipient will receive and sign their own copy of the agreement."
+      }
+    },
+    "/megaSigns/{megaSignId}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The identifier of the MegaSign parent agreement, as returned by the megaSign creation API or retrieved from the API to fetch megaSign agreements",
+            "in": "path",
+            "name": "megaSignId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/MegaSignCreationInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getMegaSignInfo",
+        "summary": "Get detailed information of the specified MegaSign parent agreement."
+      }
+    },
+    "/megaSigns/{megaSignId}/agreements": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The identifier of the MegaSign parent agreement, as returned by the megaSign creation API or retrieved from the API to fetch megaSign agreements",
+            "in": "path",
+            "name": "megaSignId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Used to navigate through the pages. If not provided, returns the first page.",
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Number of intended items in the response page.",
+            "in": "query",
+            "name": "pageSize",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/MegaSignChildAgreements"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getMegaSignChildAgreements",
+        "summary": "Get all the child agreements of the specified MegaSign parent agreement."
+      }
+    },
+    "/megaSigns/{megaSignId}/childAgreementsInfo/{childAgreementsInfoFileId}": {
+      "get": {
+        "produces": [
+          "text/csv"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The identifier of the MegaSign parent agreement, as returned by the megaSign creation API or retrieved from the API to fetch megaSign agreements",
+            "in": "path",
+            "name": "megaSignId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The identifier of the childAgreementsInfoFile that has been uploaded by sender while creating the megaSign or retrieved from the API to fetch megaSignInfo ",
+            "in": "path",
+            "name": "childAgreementsInfoFileId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "format": "byte",
+              "type": "string"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "description": "CSV file stream containing form data information",
+        "operationId": "getChildAgreementsInfoFile",
+        "summary": "Retrieves the file stream of the original childAgreementsInfoFile that was uploaded by sender while creating the MegaSign."
+      }
+    },
+    "/megaSigns/{megaSignId}/combinedDocument": {
+      "get": {
+        "produces": [
+          "application/pdf",
+          "application/pdf;encoding=base64"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The identifier of the MegaSign parent agreement, as returned by the megaSign creation API or retrieved from the API to fetch megaSign agreements",
+            "in": "path",
+            "name": "megaSignId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "When set to true attach an audit report to the MegaSign document PDF. Default value will be false.",
+            "in": "query",
+            "name": "attachAuditReport",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "format": "byte",
+              "type": "string"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getMegaSignCombinedDocument",
+        "summary": "Retrieves a single combined PDF document for the documents associated with the MegaSign parent agreement."
+      }
+    },
+    "/megaSigns/{megaSignId}/events": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Pass the value of the e-tag header obtained from the previous response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the resource hasn't changed.",
+            "in": "header",
+            "name": "If-None-Match",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The identifier of the MegaSign parent agreement, as returned by the megaSign creation API or retrieved from the API to fetch megaSign agreements",
+            "in": "path",
+            "name": "megaSignId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/MegasignEventList"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "operationId": "getEvents",
+        "summary": "Retrieves the events information for the MegaSign parent agreement."
+      }
+    },
+    "/megaSigns/{megaSignId}/formData": {
+      "get": {
+        "produces": [
+          "text/csv"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The identifier of the MegaSign parent agreement, as returned by the megaSign creation API or retrieved from the API to fetch megaSign agreements",
+            "in": "path",
+            "name": "megaSignId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "format": "byte",
+              "type": "string"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read"
+            ]
+          }
+        ],
+        "description": "CSV file stream containing form data information",
+        "operationId": "getMegaSignFormData",
+        "summary": "Retrieves data entered by recipients into interactive form fields at the time they signed the child agreements of the specified MegaSign agreement"
+      }
+    },
+    "/megaSigns/{megaSignId}/state": {
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\" oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\">agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The server will only update the resource if it matches the listed ETag otherwise error RESOURCE_MODIFIED(412) is returned.",
+            "in": "header",
+            "name": "If-Match",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The identifier of the MegaSign parent agreement, as returned by the megaSign creation API or retrieved from the API to fetch megaSign agreements",
+            "in": "path",
+            "name": "megaSignId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "MegaSign state update information object.",
+            "in": "body",
+            "name": "MegaSignStateInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MegaSignStateInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_write"
+            ]
+          }
+        ],
+        "description": "This endpoint can be used by creator of the MegaSign to transition between the states of megaSign. An allowed transition would follow the following sequence :  IN_PROCESS->CANCELLED.",
+        "operationId": "updateMegaSignState",
+        "summary": "Updates the state of a MegaSign identified by MegaSignId in the path."
+      }
+    },
+    "/megaSigns/{megaSignId}/views": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\" oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\">agreement_read</a> - agreement read is always required</li><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_login')\" oncontextmenu=\"this.href=oauthDoc('user_login')\" target=\"oauthDoc\">user_login</a> - Required additionally if the autoLoginUser parameter is set to true</li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email in the format <b>userid:{userId} OR email:{email}.</b> of the user that has shared his/her account",
+            "in": "header",
+            "name": "x-on-behalf-of-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The identifier of the MegaSign parent agreement, as returned by the megaSign creation API or retrieved from the API to fetch megaSign agreements",
+            "in": "path",
+            "name": "megaSignId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Name of the required view and its desired configuration.",
+            "in": "body",
+            "name": "MegaSignViewInfo",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MegaSignViewInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/MegaSignViewResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "agreement_read",
+              "user_login"
+            ]
+          }
+        ],
+        "operationId": "getMegaSignView",
+        "summary": "Retrieves the requested views of mega sign agreement."
+      }
+    }
+  },
+  "definitions": {
+    "AgreementCancellationInfo": {
+      "properties": {
+        "comment": {
+          "description": "An optional comment describing to the recipients why you want to cancel the transaction",
+          "type": "string"
+        },
+        "notifyOthers": {
+          "description": "Whether or not you would like the recipients to be notified that the transaction has been cancelled. The default value is false",
+          "type": "boolean"
+        }
+      }
+    },
+    "ChildAgreementsInfo": {
+      "properties": {
+        "fileInfo": {
+          "$ref": "#/definitions/MegaSignChildAgreementsFileInfo",
+          "description": "File info containing per child agreement information of megaSign.",
+          "items": {
+            "$ref": "#/definitions/MegaSignChildAgreementsFileInfo"
+          }
+        }
+      },
+      "required": [
+        "fileInfo"
+      ]
+    },
+    "CommonViewConfiguration": {
+      "properties": {
+        "autoLoginUser": {
+          "description": "Auto LogIn Flag. If true, the URL returned will automatically log the user in. If false, the URL returned will require the credentials. By default its value is false",
+          "type": "boolean"
+        },
+        "locale": {
+          "description": "Message template locale",
+          "type": "string"
+        },
+        "noChrome": {
+          "description": "No Chrome Flag. If true, the embedded page is shown without a navigation header or footer. If false, the standard page header and footer will be present. By default its value is false",
+          "type": "boolean"
+        }
+      }
+    },
+    "DeviceLocation": {
+      "properties": {
+        "latitude": {
+          "description": "Latitude coordinate",
+          "format": "float",
+          "type": "number"
+        },
+        "longitude": {
+          "description": "Longitude coordinate",
+          "format": "float",
+          "type": "number"
+        }
+      },
+      "required": [
+        "latitude",
+        "longitude"
+      ]
+    },
+    "DigitalSignatureInfo": {
+      "properties": {
+        "company": {
+          "description": "Company name captured during digital signing",
+          "type": "string"
+        },
+        "email": {
+          "description": "Email captured during digital signing",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name captured during digital signing",
+          "type": "string"
+        }
+      },
+      "required": [
+        "company",
+        "email",
+        "name"
+      ]
+    },
+    "ExternalId": {
+      "properties": {
+        "id": {
+          "description": "An arbitrary value from your system, which can be specified at sending time and then later returned or queried",
+          "type": "string"
+        }
+      }
+    },
+    "FileInfo": {
+      "properties": {
+        "label": {
+          "description": "The unique label value of a file info element. In case of custom workflow this will map a file to corresponding file element in workflow definition. This must be specified in case of custom workflow agreement creation request ",
+          "type": "string"
+        },
+        "libraryDocumentId": {
+          "description": "ID for an existing Library document that will be added to the agreement",
+          "type": "string"
+        },
+        "transientDocumentId": {
+          "description": "ID for a transient document that will be added to the agreement",
+          "type": "string"
+        },
+        "urlFileInfo": {
+          "$ref": "#/definitions/URLFileInfo",
+          "description": "URL for an external document to add to the agreement",
+          "items": {
+            "$ref": "#/definitions/URLFileInfo"
+          }
+        }
+      }
+    },
+    "MegaSign": {
+      "properties": {
+        "displayDate": {
+          "description": "The display date for the MegaSign parent agreement. Format would be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time",
+          "format": "date",
+          "type": "string"
+        },
+        "esign": {
+          "description": "True, if the signature type of the MegaSign parent agreement is ESIGN. False, if the signature type of the MegaSign parent agreement is WRITTEN",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "The unique identifier of the MegaSign parent agreement",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the MegaSign parent agreement",
+          "type": "string"
+        },
+        "status": {
+          "description": "Current status of the MegaSign parent agreement from the perspective of the user",
+          "enum": [
+            "WAITING_FOR_MY_SIGNATURE",
+            "IN_PROCESS",
+            "CANCELLED",
+            "ARCHIVED",
+            "COMPLETED",
+            "WAITING_FOR_AUTHORING",
+            "WAITING_FOR_PREFILL"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "displayDate",
+        "esign",
+        "id",
+        "name",
+        "status"
+      ]
+    },
+    "MegaSignCcInfo": {
+      "properties": {
+        "email": {
+          "description": "Email of the CC participant of the megaSign.",
+          "type": "string"
+        }
+      }
+    },
+    "MegaSignChildAgreement": {
+      "properties": {
+        "displayDate": {
+          "description": "The display date for the agreement. Format would be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time",
+          "format": "date",
+          "type": "string"
+        },
+        "esign": {
+          "description": "True if this is an e-sign document",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "The unique identifier of the agreement.If provided in POST, it will simply be ignored",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the Agreement",
+          "type": "string"
+        },
+        "status": {
+          "description": "This is a server generated attribute which provides the detailed status of an agreement with respect to the apiCaller",
+          "enum": [
+            "WAITING_FOR_MY_SIGNATURE",
+            "WAITING_FOR_MY_APPROVAL",
+            "WAITING_FOR_MY_DELEGATION",
+            "WAITING_FOR_MY_ACKNOWLEDGEMENT",
+            "WAITING_FOR_MY_ACCEPTANCE",
+            "WAITING_FOR_MY_FORM_FILLING",
+            "OUT_FOR_SIGNATURE",
+            "OUT_FOR_APPROVAL",
+            "OUT_FOR_DELIVERY",
+            "OUT_FOR_ACCEPTANCE",
+            "OUT_FOR_FORM_FILLING",
+            "SIGNED",
+            "APPROVED",
+            "FORM_FILLED",
+            "DELIVERED",
+            "ACCEPTED",
+            "ARCHIVED",
+            "CANCELLED",
+            "EXPIRED",
+            "WAITING_FOR_AUTHORING",
+            "WAITING_FOR_PREFILL",
+            "DRAFT",
+            "DOCUMENTS_NOT_YET_PROCESSED",
+            "WAITING_FOR_MY_VERIFICATION",
+            "WAITING_FOR_VERIFICATION"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "displayDate",
+        "esign",
+        "name"
+      ]
+    },
+    "MegaSignChildAgreements": {
+      "properties": {
+        "megaSignChildAgreementList": {
+          "description": "A array of MegaSign child agreements",
+          "items": {
+            "$ref": "#/definitions/MegaSignChildAgreement"
+          },
+          "type": "array"
+        },
+        "page": {
+          "$ref": "#/definitions/PageInfo",
+          "description": "Pagination information for navigating through the response",
+          "items": {
+            "$ref": "#/definitions/PageInfo"
+          }
+        }
+      },
+      "required": [
+        "megaSignChildAgreementList",
+        "page"
+      ]
+    },
+    "MegaSignChildAgreementsFileInfo": {
+      "properties": {
+        "childAgreementsInfoFileId": {
+          "description": "id of the file containg information about the existing childAgreementsInfo associated with the megaSign. Will be ignored in POST call and in case of GET call, this is the only thing that will be returned. The content of the file can be fetched through GET /megaSigns/{megaSignId}/childAgreementsInfo/{childAgreementsInfoFileId} endpoint.",
+          "type": "string"
+        },
+        "fileType": {
+          "description": "Input type through which participantSetsInfos will be provided. Whichever input type is provided, the values should be provided in its corresponding value object. Currently we are supporting CSV file format for providing megaSIgn child recipients.",
+          "enum": [
+            "CSV"
+          ],
+          "type": "string"
+        },
+        "transientDocumentId": {
+          "description": "Transient id of the input file which contains participantSetsInfos. Currently only csv format is suppported. More details about CSV format <a href='https://www.adobe.com/go/documentcloud_megasigncsv'>here</a>  ",
+          "type": "string"
+        }
+      },
+      "required": [
+        "fileType",
+        "transientDocumentId"
+      ]
+    },
+    "MegaSignCreationInfo": {
+      "properties": {
+        "ccs": {
+          "description": "A list of one or more CCs that will be copied in the megasign transaction. The CCs will each receive an email at the beginning of the transaction and also when the final document is signed. The email addresses will also receive a copy of the document, attached as a PDF file ",
+          "items": {
+            "$ref": "#/definitions/MegaSignCcInfo"
+          },
+          "type": "array"
+        },
+        "childAgreementsInfo": {
+          "$ref": "#/definitions/ChildAgreementsInfo",
+          "description": "Info corresponding to each child agreement of the megaSign ",
+          "items": {
+            "$ref": "#/definitions/ChildAgreementsInfo"
+          }
+        },
+        "createdDate": {
+          "description": "Date when megasign was created. Format would be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time",
+          "format": "date",
+          "type": "string"
+        },
+        "expirationTime": {
+          "description": "Time after which Agreement expires and needs to be signed before it. Format should be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time. Should not be provided in offline agreement creation.",
+          "format": "date",
+          "type": "string"
+        },
+        "externalId": {
+          "$ref": "#/definitions/ExternalId",
+          "description": "An arbitrary value from your system, which can be specified at sending time and then later returned or queried",
+          "items": {
+            "$ref": "#/definitions/ExternalId"
+          }
+        },
+        "fileInfos": {
+          "description": "A list of one or more files (or references to files) that will be sent out for signature. If more than one file is provided, they will be combined into one PDF before being sent out. Note: Only one of the four parameters in every FileInfo object must be specified",
+          "items": {
+            "$ref": "#/definitions/FileInfo"
+          },
+          "type": "array"
+        },
+        "firstReminderDelay": {
+          "description": "Integer which specifies the delay in hours before sending the first reminder.<br>This is an optional field. The minimum value allowed is 1 hour and the maximum value can’t be more than the difference of agreement creation and expiry time of the agreement in hours.<br>If this is not specified but the reminder frequency is specified, then the first reminder will be sent based on frequency.<br>i.e. if the reminder is created with frequency specified as daily, the firstReminderDelay will be 24 hours",
+          "type": "integer"
+        },
+        "id": {
+          "description": "The unique identifier of megasign ",
+          "type": "string"
+        },
+        "locale": {
+          "description": "The locale associated with this agreement - specifies the language for the signing page and emails, for example en_US or fr_FR. If none specified, defaults to the language configured for the agreement sender",
+          "type": "string"
+        },
+        "message": {
+          "description": "An optional message to the participants, describing what is being sent or why their signature is required",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the agreement that will be used to identify it, in emails, website and other places",
+          "type": "string"
+        },
+        "postSignOption": {
+          "$ref": "#/definitions/PostSignOption",
+          "description": "URL and associated properties for the success page the user will be taken to after completing the signing process",
+          "items": {
+            "$ref": "#/definitions/PostSignOption"
+          }
+        },
+        "reminderFrequency": {
+          "description": "Optional parameter that sets how often you want to send reminders to the participants. If it is not specified, the default frequency set for the account will be used",
+          "enum": [
+            "DAILY_UNTIL_SIGNED",
+            "WEEKLY_UNTIL_SIGNED"
+          ],
+          "type": "string"
+        },
+        "securityOption": {
+          "$ref": "#/definitions/MegaSignSecurityOption",
+          "description": "Optional security parameters for the megasign",
+          "items": {
+            "$ref": "#/definitions/MegaSignSecurityOption"
+          }
+        },
+        "senderEmail": {
+          "description": "Email of agreement sender. Only provided in GET. Can not be provided in POST/PUT request. If provided in POST/PUT, it will be ignored",
+          "type": "string"
+        },
+        "signatureType": {
+          "description": "Specifies the type of signature you would like to request - written or e-signature. The possible values are <br> ESIGN : Agreement needs to be signed electronically <br>,\nWRITTEN : Agreement will be signed using handwritten signature and signed document will be uploaded into the system",
+          "enum": [
+            "ESIGN",
+            "WRITTEN"
+          ],
+          "type": "string"
+        },
+        "state": {
+          "description": "State of the Megasign",
+          "enum": [
+            "IN_PROCESS"
+          ],
+          "type": "string"
+        },
+        "status": {
+          "description": "Status of the Megasign",
+          "enum": [
+            "AUTHORING",
+            "IN_PROCESS",
+            "CANCELLED",
+            "COMPLETED",
+            "EXPIRED",
+            "PREFILL"
+          ],
+          "type": "string"
+        },
+        "vaultingInfo": {
+          "$ref": "#/definitions/VaultingInfo",
+          "description": "Vaulting properties that allows Adobe Sign to securely store documents with a vault provider",
+          "items": {
+            "$ref": "#/definitions/VaultingInfo"
+          }
+        }
+      },
+      "required": [
+        "childAgreementsInfo",
+        "fileInfos",
+        "name",
+        "signatureType",
+        "state",
+        "status"
+      ]
+    },
+    "MegaSignCreationResponse": {
+      "description": "A JSON  that contains the id of the newly created Mega Sign",
+      "properties": {
+        "id": {
+          "description": "Unique identifier of the MegaSign parent agreement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "MegaSignSecurityOption": {
+      "properties": {
+        "externalAuthenticationMethod": {
+          "description": "The authentication method for the participants to have access to view and sign the document.",
+          "enum": [
+            "NONE",
+            "WEB_IDENTITY",
+            "KBA",
+            "PASSWORD"
+          ],
+          "type": "string"
+        },
+        "externalPassword": {
+          "description": "The secondary password that will be used to protect signing the document for internal signers. Note that Adobe Sign will never show this password to anyone, so you will need to separately communicate it to any relevant parties. This password is applied only if password protection is specified for internal signers or all signers",
+          "type": "string"
+        },
+        "internalAuthenticationMethod": {
+          "description": "The authentication method for the participants to have access to view and sign the document.",
+          "enum": [
+            "NONE",
+            "WEB_IDENTITY",
+            "KBA",
+            "PASSWORD"
+          ],
+          "type": "string"
+        },
+        "internalPassword": {
+          "description": "The secondary password that will be used to protect signing the document for external signers. Note that Adobe Sign will never show this password to anyone, so you will need to separately communicate it to any relevant parties. This password is applied only if password protection is specified for external signers or all signers",
+          "type": "string"
+        },
+        "openPassword": {
+          "description": "The secondary password that will be used to secure the PDF document. Note that AdobeSign will never show this password to anyone, so you will need to separately communicate it to any relevant parties",
+          "type": "string"
+        }
+      },
+      "required": [
+        "externalAuthenticationMethod",
+        "internalAuthenticationMethod"
+      ]
+    },
+    "MegaSignStateInfo": {
+      "properties": {
+        "megaSignCancellationInfo": {
+          "$ref": "#/definitions/AgreementCancellationInfo",
+          "description": "Cancellation information for the agreement. Mandatory while cancelling a megaSign",
+          "items": {
+            "$ref": "#/definitions/AgreementCancellationInfo"
+          }
+        },
+        "state": {
+          "description": "The state to which the megaSign is to be updated. The only valid state for this variable is currently, CANCELLED",
+          "enum": [
+            "CANCELLED"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "state"
+      ]
+    },
+    "MegaSignView": {
+      "properties": {
+        "embeddedCode": {
+          "description": "Embedded code of url of resource ",
+          "type": "string"
+        },
+        "expiration": {
+          "description": "Expiration of user url ",
+          "format": "date",
+          "type": "string"
+        },
+        "isCurrent": {
+          "description": "True if this view is the current view",
+          "type": "boolean"
+        },
+        "url": {
+          "description": "Url of resource location",
+          "type": "string"
+        }
+      },
+      "required": [
+        "isCurrent"
+      ]
+    },
+    "MegaSignViewInfo": {
+      "properties": {
+        "commonViewConfiguration": {
+          "$ref": "#/definitions/CommonViewConfiguration",
+          "description": "Common view configuration for all the available views",
+          "items": {
+            "$ref": "#/definitions/CommonViewConfiguration"
+          }
+        },
+        "name": {
+          "description": "Name of the requested mega sign view",
+          "enum": [
+            "AUTHORING",
+            "DOCUMENT",
+            "MANAGE",
+            "POST_CREATE",
+            "PREFILL",
+            "ALL"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "MegaSignViewResponse": {
+      "properties": {
+        "megaSignViewList": {
+          "description": "List of mega sign views",
+          "items": {
+            "$ref": "#/definitions/MegaSignView"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "megaSignViewList"
+      ]
+    },
+    "MegaSigns": {
+      "properties": {
+        "megaSignList": {
+          "description": "An array of MegaSign parent agreements",
+          "items": {
+            "$ref": "#/definitions/MegaSign"
+          },
+          "type": "array"
+        },
+        "page": {
+          "$ref": "#/definitions/PageInfo",
+          "description": "Pagination information for navigating through the response",
+          "items": {
+            "$ref": "#/definitions/PageInfo"
+          }
+        }
+      },
+      "required": [
+        "megaSignList",
+        "page"
+      ]
+    },
+    "MegasignEvent": {
+      "properties": {
+        "actingUserEmail": {
+          "description": "Email address of the user that created the event",
+          "type": "string"
+        },
+        "actingUserIpAddress": {
+          "description": "The IP address of the user that created the event",
+          "type": "string"
+        },
+        "actingUserName": {
+          "description": "The name of the acting user",
+          "type": "string"
+        },
+        "comment": {
+          "description": "The event comment. For RECALLED or REJECTED, the reason given by the user that initiates the event. For DELEGATE or SHARE, the message from the acting user to the participant",
+          "type": "string"
+        },
+        "date": {
+          "description": "The date of the audit event. Format would be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time",
+          "format": "date",
+          "type": "string"
+        },
+        "description": {
+          "description": "A description of the audit event",
+          "type": "string"
+        },
+        "deviceLocation": {
+          "$ref": "#/definitions/DeviceLocation",
+          "description": "Location of the device that generated the event (This value may be null due to limited privileges)",
+          "items": {
+            "$ref": "#/definitions/DeviceLocation"
+          }
+        },
+        "devicePhoneNumber": {
+          "description": "Phone number from the device used when the participation is completed on a mobile phone",
+          "type": "string"
+        },
+        "digitalSignatureInfo": {
+          "$ref": "#/definitions/DigitalSignatureInfo",
+          "description": "This is present for ESIGNED events when the participation is signed digitally",
+          "items": {
+            "$ref": "#/definitions/DigitalSignatureInfo"
+          }
+        },
+        "initiatingUserEmail": {
+          "description": "Email address of the user that initiated the event on behalf of the acting user when the account is shared. Will be empty if there is no account sharing in effect",
+          "type": "string"
+        },
+        "initiatingUserName": {
+          "description": "Full name of the user that initiated the event on behalf of the acting user when the account is shared. Will be empty if there is no account sharing in effect",
+          "type": "string"
+        },
+        "participantEmail": {
+          "description": "Email address of the user that is the participant for the event. This may be different than the acting user for certain event types. For example, for a DELEGATION event, this is the user who was delegated to",
+          "type": "string"
+        },
+        "participantId": {
+          "description": "The unique identifier of the participant for the event. This may be different than the acting user for certain event types. For example, for a DELEGATION event, this is the user who was delegated to",
+          "type": "string"
+        },
+        "participantRole": {
+          "description": "Role assumed by all participants in the participant set the participant belongs to (signer, approver etc.).",
+          "enum": [
+            "SIGNER",
+            "DELEGATE_TO_SIGNER",
+            "APPROVER",
+            "DELEGATE_TO_APPROVER",
+            "ACCEPTOR",
+            "DELEGATE_TO_ACCEPTOR",
+            "FORM_FILLER",
+            "DELEGATE_TO_FORM_FILLER",
+            "CERTIFIED_RECIPIENT",
+            "DELEGATE_TO_CERTIFIED_RECIPIENT",
+            "SHARE",
+            "SENDER"
+          ],
+          "type": "string"
+        },
+        "synchronizationId": {
+          "description": "A unique identifier linking offline events to synchronization events (specified for offline signing events and synchronization events, else null)",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of MegaSign event",
+          "enum": [
+            "AUTO_CANCELLED_CONVERSION_PROBLEM",
+            "CREATED",
+            "EXPIRED",
+            "EMAIL_BOUNCED",
+            "RECALLED",
+            "SHARED",
+            "VAULTED"
+          ],
+          "type": "string"
+        },
+        "vaultEventId": {
+          "description": "The identifier assigned by the vault provider for the vault event (if vaulted, otherwise null)",
+          "type": "string"
+        },
+        "vaultProviderName": {
+          "description": "Name of the vault provider for the vault event (if vaulted, otherwise null)",
+          "type": "string"
+        },
+        "versionId": {
+          "description": "An ID which uniquely identifies the version of the document associated with this audit event",
+          "type": "string"
+        }
+      },
+      "required": [
+        "actingUserEmail",
+        "actingUserIpAddress",
+        "actingUserName",
+        "date",
+        "description",
+        "deviceLocation",
+        "devicePhoneNumber",
+        "digitalSignatureInfo",
+        "initiatingUserEmail",
+        "initiatingUserName",
+        "participantEmail",
+        "participantId",
+        "participantRole",
+        "synchronizationId",
+        "type",
+        "vaultEventId",
+        "vaultProviderName",
+        "versionId"
+      ]
+    },
+    "MegasignEventList": {
+      "properties": {
+        "events": {
+          "description": "An array of event objects.",
+          "items": {
+            "$ref": "#/definitions/MegasignEvent"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "events"
+      ]
+    },
+    "PageInfo": {
+      "properties": {
+        "nextCursor": {
+          "description": "Used to navigate to the next page. If not returned, there are no further pages.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "nextCursor"
+      ]
+    },
+    "PostSignOption": {
+      "properties": {
+        "redirectDelay": {
+          "description": "The delay (in seconds) before the user is taken to the success page. If this value is greater than 0, the user will first see the standard Adobe Sign success message, and then after a delay will be redirected to your success page",
+          "type": "integer"
+        },
+        "redirectUrl": {
+          "description": "A publicly accessible url to which the user will be sent after successfully completing the signing process",
+          "type": "string"
+        }
+      }
+    },
+    "URLFileInfo": {
+      "properties": {
+        "mimeType": {
+          "description": "The mime type of the referenced file, used to determine if the file can be accepted and the necessary conversion steps can be performed",
+          "type": "string"
+        },
+        "name": {
+          "description": "The original system file name of the document being sent",
+          "type": "string"
+        },
+        "url": {
+          "description": "A publicly accessible URL for retrieving the raw file content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "mimeType",
+        "name",
+        "url"
+      ]
+    },
+    "VaultingInfo": {
+      "properties": {
+        "enabled": {
+          "description": "For accounts set up for document vaulting and the option to enable per agreement, this determines whether the document is to be vaulted",
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

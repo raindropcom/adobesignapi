@@ -1,0 +1,1472 @@
+---
+swagger: "2.0"
+info:
+  version: "6.0.0"
+  title: "AdobeSign MegaSigns APIs"
+basePath: "/api/rest/v6"
+paths:
+  /megaSigns:
+    get:
+      summary: "Retrieves MegaSign parent agreements for a user."
+      operationId: "getMegaSigns"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\"\
+          >agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "cursor"
+        in: "query"
+        description: "Used to navigate through the pages. If not provided, returns\
+          \ the first page."
+        required: false
+        type: "string"
+        x-exportParamName: "Cursor"
+        x-optionalDataType: "String"
+      - name: "pageSize"
+        in: "query"
+        description: "Number of intended items in the response page."
+        required: false
+        type: "integer"
+        x-exportParamName: "PageSize"
+        x-optionalDataType: "Int32"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/MegaSigns"
+      security:
+      - oauth2:
+        - "agreement_read"
+    post:
+      summary: "Send an agreement out for signature to multiple recipients. Each recipient\
+        \ will receive and sign their own copy of the agreement."
+      description: "This is a primary endpoint which is used to create a new megaSign.\
+        \ A megaSign can be created using transientDocument, libraryDocument or a\
+        \ URL. You can create a megaSign in <b>IN_PROCESS</b> - Create a megaSign\
+        \ in this state to immediately send it. You can use the PUT/megaSigns/{megaSignId}/state\
+        \ endpoint to transition the state of megaSign. An allowed transition would\
+        \ follow the following sequence: IN_PROCESS -> CANCELLED."
+      operationId: "createMegaSign"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\"\
+          >agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - in: "body"
+        name: "MegaSignInfo"
+        description: "Information about the MegaSign that you want to send."
+        required: true
+        schema:
+          $ref: "#/definitions/MegaSignCreationInfo"
+        x-exportParamName: "MegaSignInfo"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/MegaSignCreationResponse"
+      security:
+      - oauth2:
+        - "agreement_write"
+  /megaSigns/{megaSignId}:
+    get:
+      summary: "Get detailed information of the specified MegaSign parent agreement."
+      operationId: "getMegaSignInfo"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\"\
+          >agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "If-None-Match"
+        in: "header"
+        description: "Pass the value of the e-tag header obtained from the previous\
+          \ response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the\
+          \ resource hasn't changed."
+        required: false
+        type: "string"
+        x-exportParamName: "IfNoneMatch"
+        x-optionalDataType: "String"
+      - name: "megaSignId"
+        in: "path"
+        description: "The identifier of the MegaSign parent agreement, as returned\
+          \ by the megaSign creation API or retrieved from the API to fetch megaSign\
+          \ agreements"
+        required: true
+        type: "string"
+        x-exportParamName: "MegaSignId"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/MegaSignCreationInfo"
+      security:
+      - oauth2:
+        - "agreement_read"
+  /megaSigns/{megaSignId}/agreements:
+    get:
+      summary: "Get all the child agreements of the specified MegaSign parent agreement."
+      operationId: "getMegaSignChildAgreements"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\"\
+          >agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "megaSignId"
+        in: "path"
+        description: "The identifier of the MegaSign parent agreement, as returned\
+          \ by the megaSign creation API or retrieved from the API to fetch megaSign\
+          \ agreements"
+        required: true
+        type: "string"
+        x-exportParamName: "MegaSignId"
+      - name: "cursor"
+        in: "query"
+        description: "Used to navigate through the pages. If not provided, returns\
+          \ the first page."
+        required: false
+        type: "string"
+        x-exportParamName: "Cursor"
+        x-optionalDataType: "String"
+      - name: "pageSize"
+        in: "query"
+        description: "Number of intended items in the response page."
+        required: false
+        type: "integer"
+        x-exportParamName: "PageSize"
+        x-optionalDataType: "Int32"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/MegaSignChildAgreements"
+      security:
+      - oauth2:
+        - "agreement_read"
+  /megaSigns/{megaSignId}/childAgreementsInfo/{childAgreementsInfoFileId}:
+    get:
+      summary: "Retrieves the file stream of the original childAgreementsInfoFile\
+        \ that was uploaded by sender while creating the MegaSign."
+      description: "CSV file stream containing form data information"
+      operationId: "getChildAgreementsInfoFile"
+      produces:
+      - "text/csv"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\"\
+          >agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "If-None-Match"
+        in: "header"
+        description: "Pass the value of the e-tag header obtained from the previous\
+          \ response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the\
+          \ resource hasn't changed."
+        required: false
+        type: "string"
+        x-exportParamName: "IfNoneMatch"
+        x-optionalDataType: "String"
+      - name: "megaSignId"
+        in: "path"
+        description: "The identifier of the MegaSign parent agreement, as returned\
+          \ by the megaSign creation API or retrieved from the API to fetch megaSign\
+          \ agreements"
+        required: true
+        type: "string"
+        x-exportParamName: "MegaSignId"
+      - name: "childAgreementsInfoFileId"
+        in: "path"
+        description: "The identifier of the childAgreementsInfoFile that has been\
+          \ uploaded by sender while creating the megaSign or retrieved from the API\
+          \ to fetch megaSignInfo "
+        required: true
+        type: "string"
+        x-exportParamName: "ChildAgreementsInfoFileId"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            type: "string"
+            format: "byte"
+      security:
+      - oauth2:
+        - "agreement_read"
+  /megaSigns/{megaSignId}/combinedDocument:
+    get:
+      summary: "Retrieves a single combined PDF document for the documents associated\
+        \ with the MegaSign parent agreement."
+      operationId: "getMegaSignCombinedDocument"
+      produces:
+      - "application/pdf"
+      - "application/pdf;encoding=base64"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\"\
+          >agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "If-None-Match"
+        in: "header"
+        description: "Pass the value of the e-tag header obtained from the previous\
+          \ response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the\
+          \ resource hasn't changed."
+        required: false
+        type: "string"
+        x-exportParamName: "IfNoneMatch"
+        x-optionalDataType: "String"
+      - name: "megaSignId"
+        in: "path"
+        description: "The identifier of the MegaSign parent agreement, as returned\
+          \ by the megaSign creation API or retrieved from the API to fetch megaSign\
+          \ agreements"
+        required: true
+        type: "string"
+        x-exportParamName: "MegaSignId"
+      - name: "attachAuditReport"
+        in: "query"
+        description: "When set to true attach an audit report to the MegaSign document\
+          \ PDF. Default value will be false."
+        required: false
+        type: "boolean"
+        x-exportParamName: "AttachAuditReport"
+        x-optionalDataType: "Bool"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            type: "string"
+            format: "byte"
+      security:
+      - oauth2:
+        - "agreement_read"
+  /megaSigns/{megaSignId}/events:
+    get:
+      summary: "Retrieves the events information for the MegaSign parent agreement."
+      operationId: "getEvents"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\"\
+          >agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "If-None-Match"
+        in: "header"
+        description: "Pass the value of the e-tag header obtained from the previous\
+          \ response to the same request to get a RESOURCE_NOT_MODIFIED(304) if the\
+          \ resource hasn't changed."
+        required: false
+        type: "string"
+        x-exportParamName: "IfNoneMatch"
+        x-optionalDataType: "String"
+      - name: "megaSignId"
+        in: "path"
+        description: "The identifier of the MegaSign parent agreement, as returned\
+          \ by the megaSign creation API or retrieved from the API to fetch megaSign\
+          \ agreements"
+        required: true
+        type: "string"
+        x-exportParamName: "MegaSignId"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/MegasignEventList"
+      security:
+      - oauth2:
+        - "agreement_read"
+  /megaSigns/{megaSignId}/formData:
+    get:
+      summary: "Retrieves data entered by recipients into interactive form fields\
+        \ at the time they signed the child agreements of the specified MegaSign agreement"
+      description: "CSV file stream containing form data information"
+      operationId: "getMegaSignFormData"
+      produces:
+      - "text/csv"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\"\
+          >agreement_read</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "megaSignId"
+        in: "path"
+        description: "The identifier of the MegaSign parent agreement, as returned\
+          \ by the megaSign creation API or retrieved from the API to fetch megaSign\
+          \ agreements"
+        required: true
+        type: "string"
+        x-exportParamName: "MegaSignId"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            type: "string"
+            format: "byte"
+      security:
+      - oauth2:
+        - "agreement_read"
+  /megaSigns/{megaSignId}/state:
+    put:
+      summary: "Updates the state of a MegaSign identified by MegaSignId in the path."
+      description: "This endpoint can be used by creator of the MegaSign to transition\
+        \ between the states of megaSign. An allowed transition would follow the following\
+        \ sequence :  IN_PROCESS->CANCELLED."
+      operationId: "updateMegaSignState"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_write')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('agreement_write')\" target=\"oauthDoc\"\
+          >agreement_write</a></li></ul>in the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "If-Match"
+        in: "header"
+        description: "The server will only update the resource if it matches the listed\
+          \ ETag otherwise error RESOURCE_MODIFIED(412) is returned."
+        required: true
+        type: "string"
+        x-exportParamName: "IfMatch"
+      - name: "megaSignId"
+        in: "path"
+        description: "The identifier of the MegaSign parent agreement, as returned\
+          \ by the megaSign creation API or retrieved from the API to fetch megaSign\
+          \ agreements"
+        required: true
+        type: "string"
+        x-exportParamName: "MegaSignId"
+      - in: "body"
+        name: "MegaSignStateInfo"
+        description: "MegaSign state update information object."
+        required: true
+        schema:
+          $ref: "#/definitions/MegaSignStateInfo"
+        x-exportParamName: "MegaSignStateInfo"
+      responses:
+        "200":
+          description: "No response was specified"
+      security:
+      - oauth2:
+        - "agreement_write"
+  /megaSigns/{megaSignId}/views:
+    post:
+      summary: "Retrieves the requested views of mega sign agreement."
+      operationId: "getMegaSignView"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"\
+          this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li\
+          \ style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('agreement_read')\"\
+          \ oncontextmenu=\"this.href=oauthDoc('agreement_read')\" target=\"oauthDoc\"\
+          >agreement_read</a> - agreement read is always required</li><li style='list-style-type:\
+          \ square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_login')\" oncontextmenu=\"\
+          this.href=oauthDoc('user_login')\" target=\"oauthDoc\">user_login</a> -\
+          \ Required additionally if the autoLoginUser parameter is set to true</li></ul>in\
+          \ the format <b>'Bearer {accessToken}'."
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "x-api-user"
+        in: "header"
+        description: "The userId or email of API caller using the account or group\
+          \ token in the format <b>userid:{userId} OR email:{email}.</b> If it is\
+          \ not specified, then the caller is inferred from the token."
+        required: false
+        type: "string"
+        x-exportParamName: "XApiUser"
+        x-optionalDataType: "String"
+      - name: "x-on-behalf-of-user"
+        in: "header"
+        description: "The userId or email in the format <b>userid:{userId} OR email:{email}.</b>\
+          \ of the user that has shared his/her account"
+        required: false
+        type: "string"
+        x-exportParamName: "XOnBehalfOfUser"
+        x-optionalDataType: "String"
+      - name: "megaSignId"
+        in: "path"
+        description: "The identifier of the MegaSign parent agreement, as returned\
+          \ by the megaSign creation API or retrieved from the API to fetch megaSign\
+          \ agreements"
+        required: true
+        type: "string"
+        x-exportParamName: "MegaSignId"
+      - in: "body"
+        name: "MegaSignViewInfo"
+        description: "Name of the required view and its desired configuration."
+        required: true
+        schema:
+          $ref: "#/definitions/MegaSignViewInfo"
+        x-exportParamName: "MegaSignViewInfo"
+      responses:
+        "200":
+          description: "No response was specified"
+          schema:
+            $ref: "#/definitions/MegaSignViewResponse"
+      security:
+      - oauth2:
+        - "agreement_read"
+        - "user_login"
+definitions:
+  AgreementCancellationInfo:
+    properties:
+      comment:
+        type: "string"
+        description: "An optional comment describing to the recipients why you want\
+          \ to cancel the transaction"
+      notifyOthers:
+        type: "boolean"
+        description: "Whether or not you would like the recipients to be notified\
+          \ that the transaction has been cancelled. The default value is false"
+  ChildAgreementsInfo:
+    required:
+    - "fileInfo"
+    properties:
+      fileInfo:
+        description: "File info containing per child agreement information of megaSign."
+        $ref: "#/definitions/MegaSignChildAgreementsFileInfo"
+    example:
+      fileInfo:
+        transientDocumentId: "transientDocumentId"
+        fileType: "CSV"
+        childAgreementsInfoFileId: "childAgreementsInfoFileId"
+  CommonViewConfiguration:
+    properties:
+      autoLoginUser:
+        type: "boolean"
+        description: "Auto LogIn Flag. If true, the URL returned will automatically\
+          \ log the user in. If false, the URL returned will require the credentials.\
+          \ By default its value is false"
+      locale:
+        type: "string"
+        description: "Message template locale"
+      noChrome:
+        type: "boolean"
+        description: "No Chrome Flag. If true, the embedded page is shown without\
+          \ a navigation header or footer. If false, the standard page header and\
+          \ footer will be present. By default its value is false"
+  DeviceLocation:
+    required:
+    - "latitude"
+    - "longitude"
+    properties:
+      latitude:
+        type: "number"
+        format: "float"
+        description: "Latitude coordinate"
+      longitude:
+        type: "number"
+        format: "float"
+        description: "Longitude coordinate"
+    example:
+      latitude: 0.8008282
+      longitude: 6.0274563
+  DigitalSignatureInfo:
+    required:
+    - "company"
+    - "email"
+    - "name"
+    properties:
+      company:
+        type: "string"
+        description: "Company name captured during digital signing"
+      email:
+        type: "string"
+        description: "Email captured during digital signing"
+      name:
+        type: "string"
+        description: "Name captured during digital signing"
+    example:
+      name: "name"
+      company: "company"
+      email: "email"
+  ExternalId:
+    properties:
+      id:
+        type: "string"
+        description: "An arbitrary value from your system, which can be specified\
+          \ at sending time and then later returned or queried"
+    example:
+      id: "id"
+  FileInfo:
+    properties:
+      label:
+        type: "string"
+        description: "The unique label value of a file info element. In case of custom\
+          \ workflow this will map a file to corresponding file element in workflow\
+          \ definition. This must be specified in case of custom workflow agreement\
+          \ creation request "
+      libraryDocumentId:
+        type: "string"
+        description: "ID for an existing Library document that will be added to the\
+          \ agreement"
+      transientDocumentId:
+        type: "string"
+        description: "ID for a transient document that will be added to the agreement"
+      urlFileInfo:
+        description: "URL for an external document to add to the agreement"
+        $ref: "#/definitions/URLFileInfo"
+    example:
+      transientDocumentId: "transientDocumentId"
+      libraryDocumentId: "libraryDocumentId"
+      label: "label"
+      urlFileInfo:
+        name: "name"
+        mimeType: "mimeType"
+        url: "url"
+  MegaSign:
+    required:
+    - "displayDate"
+    - "esign"
+    - "id"
+    - "name"
+    - "status"
+    properties:
+      displayDate:
+        type: "string"
+        format: "date"
+        description: "The display date for the MegaSign parent agreement. Format would\
+          \ be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents\
+          \ UTC time"
+      esign:
+        type: "boolean"
+        description: "True, if the signature type of the MegaSign parent agreement\
+          \ is ESIGN. False, if the signature type of the MegaSign parent agreement\
+          \ is WRITTEN"
+      id:
+        type: "string"
+        description: "The unique identifier of the MegaSign parent agreement"
+      name:
+        type: "string"
+        description: "Name of the MegaSign parent agreement"
+      status:
+        type: "string"
+        description: "Current status of the MegaSign parent agreement from the perspective\
+          \ of the user"
+        enum:
+        - "WAITING_FOR_MY_SIGNATURE"
+        - "IN_PROCESS"
+        - "CANCELLED"
+        - "ARCHIVED"
+        - "COMPLETED"
+        - "WAITING_FOR_AUTHORING"
+        - "WAITING_FOR_PREFILL"
+    example:
+      displayDate: "2000-01-23"
+      esign: true
+      name: "name"
+      id: "id"
+      status: "WAITING_FOR_MY_SIGNATURE"
+  MegaSignCcInfo:
+    properties:
+      email:
+        type: "string"
+        description: "Email of the CC participant of the megaSign."
+    example:
+      email: "email"
+  MegaSignChildAgreement:
+    required:
+    - "displayDate"
+    - "esign"
+    - "name"
+    properties:
+      displayDate:
+        type: "string"
+        format: "date"
+        description: "The display date for the agreement. Format would be yyyy-MM-dd'T'HH:mm:ssZ.\
+          \ For example, e.g 2016-02-25T18:46:19Z represents UTC time"
+      esign:
+        type: "boolean"
+        description: "True if this is an e-sign document"
+      id:
+        type: "string"
+        description: "The unique identifier of the agreement.If provided in POST,\
+          \ it will simply be ignored"
+      name:
+        type: "string"
+        description: "Name of the Agreement"
+      status:
+        type: "string"
+        description: "This is a server generated attribute which provides the detailed\
+          \ status of an agreement with respect to the apiCaller"
+        enum:
+        - "WAITING_FOR_MY_SIGNATURE"
+        - "WAITING_FOR_MY_APPROVAL"
+        - "WAITING_FOR_MY_DELEGATION"
+        - "WAITING_FOR_MY_ACKNOWLEDGEMENT"
+        - "WAITING_FOR_MY_ACCEPTANCE"
+        - "WAITING_FOR_MY_FORM_FILLING"
+        - "OUT_FOR_SIGNATURE"
+        - "OUT_FOR_APPROVAL"
+        - "OUT_FOR_DELIVERY"
+        - "OUT_FOR_ACCEPTANCE"
+        - "OUT_FOR_FORM_FILLING"
+        - "SIGNED"
+        - "APPROVED"
+        - "FORM_FILLED"
+        - "DELIVERED"
+        - "ACCEPTED"
+        - "ARCHIVED"
+        - "CANCELLED"
+        - "EXPIRED"
+        - "WAITING_FOR_AUTHORING"
+        - "WAITING_FOR_PREFILL"
+        - "DRAFT"
+        - "DOCUMENTS_NOT_YET_PROCESSED"
+        - "WAITING_FOR_MY_VERIFICATION"
+        - "WAITING_FOR_VERIFICATION"
+    example:
+      displayDate: "2000-01-23"
+      esign: true
+      name: "name"
+      id: "id"
+      status: "WAITING_FOR_MY_SIGNATURE"
+  MegaSignChildAgreements:
+    required:
+    - "megaSignChildAgreementList"
+    - "page"
+    properties:
+      megaSignChildAgreementList:
+        type: "array"
+        description: "A array of MegaSign child agreements"
+        items:
+          $ref: "#/definitions/MegaSignChildAgreement"
+      page:
+        description: "Pagination information for navigating through the response"
+        $ref: "#/definitions/PageInfo"
+    example:
+      page:
+        nextCursor: "nextCursor"
+      megaSignChildAgreementList:
+      - displayDate: "2000-01-23"
+        esign: true
+        name: "name"
+        id: "id"
+        status: "WAITING_FOR_MY_SIGNATURE"
+      - displayDate: "2000-01-23"
+        esign: true
+        name: "name"
+        id: "id"
+        status: "WAITING_FOR_MY_SIGNATURE"
+  MegaSignChildAgreementsFileInfo:
+    required:
+    - "fileType"
+    - "transientDocumentId"
+    properties:
+      childAgreementsInfoFileId:
+        type: "string"
+        description: "id of the file containg information about the existing childAgreementsInfo\
+          \ associated with the megaSign. Will be ignored in POST call and in case\
+          \ of GET call, this is the only thing that will be returned. The content\
+          \ of the file can be fetched through GET /megaSigns/{megaSignId}/childAgreementsInfo/{childAgreementsInfoFileId}\
+          \ endpoint."
+      fileType:
+        type: "string"
+        description: "Input type through which participantSetsInfos will be provided.\
+          \ Whichever input type is provided, the values should be provided in its\
+          \ corresponding value object. Currently we are supporting CSV file format\
+          \ for providing megaSIgn child recipients."
+        enum:
+        - "CSV"
+      transientDocumentId:
+        type: "string"
+        description: "Transient id of the input file which contains participantSetsInfos.\
+          \ Currently only csv format is suppported. More details about CSV format\
+          \ <a href='https://www.adobe.com/go/documentcloud_megasigncsv'>here</a>\
+          \  "
+    example:
+      transientDocumentId: "transientDocumentId"
+      fileType: "CSV"
+      childAgreementsInfoFileId: "childAgreementsInfoFileId"
+  MegaSignCreationInfo:
+    required:
+    - "childAgreementsInfo"
+    - "fileInfos"
+    - "name"
+    - "signatureType"
+    - "state"
+    - "status"
+    properties:
+      ccs:
+        type: "array"
+        description: "A list of one or more CCs that will be copied in the megasign\
+          \ transaction. The CCs will each receive an email at the beginning of the\
+          \ transaction and also when the final document is signed. The email addresses\
+          \ will also receive a copy of the document, attached as a PDF file "
+        items:
+          $ref: "#/definitions/MegaSignCcInfo"
+      childAgreementsInfo:
+        description: "Info corresponding to each child agreement of the megaSign "
+        $ref: "#/definitions/ChildAgreementsInfo"
+      createdDate:
+        type: "string"
+        format: "date"
+        description: "Date when megasign was created. Format would be yyyy-MM-dd'T'HH:mm:ssZ.\
+          \ For example, e.g 2016-02-25T18:46:19Z represents UTC time"
+      expirationTime:
+        type: "string"
+        format: "date"
+        description: "Time after which Agreement expires and needs to be signed before\
+          \ it. Format should be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z\
+          \ represents UTC time. Should not be provided in offline agreement creation."
+      externalId:
+        description: "An arbitrary value from your system, which can be specified\
+          \ at sending time and then later returned or queried"
+        $ref: "#/definitions/ExternalId"
+      fileInfos:
+        type: "array"
+        description: "A list of one or more files (or references to files) that will\
+          \ be sent out for signature. If more than one file is provided, they will\
+          \ be combined into one PDF before being sent out. Note: Only one of the\
+          \ four parameters in every FileInfo object must be specified"
+        items:
+          $ref: "#/definitions/FileInfo"
+      firstReminderDelay:
+        type: "integer"
+        description: "Integer which specifies the delay in hours before sending the\
+          \ first reminder.<br>This is an optional field. The minimum value allowed\
+          \ is 1 hour and the maximum value can’t be more than the difference of agreement\
+          \ creation and expiry time of the agreement in hours.<br>If this is not\
+          \ specified but the reminder frequency is specified, then the first reminder\
+          \ will be sent based on frequency.<br>i.e. if the reminder is created with\
+          \ frequency specified as daily, the firstReminderDelay will be 24 hours"
+      id:
+        type: "string"
+        description: "The unique identifier of megasign "
+      locale:
+        type: "string"
+        description: "The locale associated with this agreement - specifies the language\
+          \ for the signing page and emails, for example en_US or fr_FR. If none specified,\
+          \ defaults to the language configured for the agreement sender"
+      message:
+        type: "string"
+        description: "An optional message to the participants, describing what is\
+          \ being sent or why their signature is required"
+      name:
+        type: "string"
+        description: "The name of the agreement that will be used to identify it,\
+          \ in emails, website and other places"
+      postSignOption:
+        description: "URL and associated properties for the success page the user\
+          \ will be taken to after completing the signing process"
+        $ref: "#/definitions/PostSignOption"
+      reminderFrequency:
+        type: "string"
+        description: "Optional parameter that sets how often you want to send reminders\
+          \ to the participants. If it is not specified, the default frequency set\
+          \ for the account will be used"
+        enum:
+        - "DAILY_UNTIL_SIGNED"
+        - "WEEKLY_UNTIL_SIGNED"
+      securityOption:
+        description: "Optional security parameters for the megasign"
+        $ref: "#/definitions/MegaSignSecurityOption"
+      senderEmail:
+        type: "string"
+        description: "Email of agreement sender. Only provided in GET. Can not be\
+          \ provided in POST/PUT request. If provided in POST/PUT, it will be ignored"
+      signatureType:
+        type: "string"
+        description: "Specifies the type of signature you would like to request -\
+          \ written or e-signature. The possible values are <br> ESIGN : Agreement\
+          \ needs to be signed electronically <br>,\nWRITTEN : Agreement will be signed\
+          \ using handwritten signature and signed document will be uploaded into\
+          \ the system"
+        enum:
+        - "ESIGN"
+        - "WRITTEN"
+      state:
+        type: "string"
+        description: "State of the Megasign"
+        enum:
+        - "IN_PROCESS"
+      status:
+        type: "string"
+        description: "Status of the Megasign"
+        enum:
+        - "AUTHORING"
+        - "IN_PROCESS"
+        - "CANCELLED"
+        - "COMPLETED"
+        - "EXPIRED"
+        - "PREFILL"
+      vaultingInfo:
+        description: "Vaulting properties that allows Adobe Sign to securely store\
+          \ documents with a vault provider"
+        $ref: "#/definitions/VaultingInfo"
+    example:
+      firstReminderDelay: 0
+      childAgreementsInfo:
+        fileInfo:
+          transientDocumentId: "transientDocumentId"
+          fileType: "CSV"
+          childAgreementsInfoFileId: "childAgreementsInfoFileId"
+      signatureType: "ESIGN"
+      externalId:
+        id: "id"
+      locale: "locale"
+      message: "message"
+      vaultingInfo:
+        enabled: true
+      securityOption:
+        externalAuthenticationMethod: "NONE"
+        internalAuthenticationMethod: "NONE"
+        externalPassword: "externalPassword"
+        internalPassword: "internalPassword"
+        openPassword: "openPassword"
+      postSignOption:
+        redirectUrl: "redirectUrl"
+        redirectDelay: 6
+      reminderFrequency: "DAILY_UNTIL_SIGNED"
+      ccs:
+      - email: "email"
+      - email: "email"
+      createdDate: "2000-01-23"
+      expirationTime: "2000-01-23"
+      senderEmail: "senderEmail"
+      name: "name"
+      fileInfos:
+      - transientDocumentId: "transientDocumentId"
+        libraryDocumentId: "libraryDocumentId"
+        label: "label"
+        urlFileInfo:
+          name: "name"
+          mimeType: "mimeType"
+          url: "url"
+      - transientDocumentId: "transientDocumentId"
+        libraryDocumentId: "libraryDocumentId"
+        label: "label"
+        urlFileInfo:
+          name: "name"
+          mimeType: "mimeType"
+          url: "url"
+      id: "id"
+      state: "IN_PROCESS"
+      status: "AUTHORING"
+  MegaSignCreationResponse:
+    required:
+    - "id"
+    properties:
+      id:
+        type: "string"
+        description: "Unique identifier of the MegaSign parent agreement"
+    description: "A JSON  that contains the id of the newly created Mega Sign"
+    example:
+      id: "id"
+  MegaSignSecurityOption:
+    required:
+    - "externalAuthenticationMethod"
+    - "internalAuthenticationMethod"
+    properties:
+      externalAuthenticationMethod:
+        type: "string"
+        description: "The authentication method for the participants to have access\
+          \ to view and sign the document."
+        enum:
+        - "NONE"
+        - "WEB_IDENTITY"
+        - "KBA"
+        - "PASSWORD"
+      externalPassword:
+        type: "string"
+        description: "The secondary password that will be used to protect signing\
+          \ the document for internal signers. Note that Adobe Sign will never show\
+          \ this password to anyone, so you will need to separately communicate it\
+          \ to any relevant parties. This password is applied only if password protection\
+          \ is specified for internal signers or all signers"
+      internalAuthenticationMethod:
+        type: "string"
+        description: "The authentication method for the participants to have access\
+          \ to view and sign the document."
+        enum:
+        - "NONE"
+        - "WEB_IDENTITY"
+        - "KBA"
+        - "PASSWORD"
+      internalPassword:
+        type: "string"
+        description: "The secondary password that will be used to protect signing\
+          \ the document for external signers. Note that Adobe Sign will never show\
+          \ this password to anyone, so you will need to separately communicate it\
+          \ to any relevant parties. This password is applied only if password protection\
+          \ is specified for external signers or all signers"
+      openPassword:
+        type: "string"
+        description: "The secondary password that will be used to secure the PDF document.\
+          \ Note that AdobeSign will never show this password to anyone, so you will\
+          \ need to separately communicate it to any relevant parties"
+    example:
+      externalAuthenticationMethod: "NONE"
+      internalAuthenticationMethod: "NONE"
+      externalPassword: "externalPassword"
+      internalPassword: "internalPassword"
+      openPassword: "openPassword"
+  MegaSignStateInfo:
+    required:
+    - "state"
+    properties:
+      megaSignCancellationInfo:
+        description: "Cancellation information for the agreement. Mandatory while\
+          \ cancelling a megaSign"
+        $ref: "#/definitions/AgreementCancellationInfo"
+      state:
+        type: "string"
+        description: "The state to which the megaSign is to be updated. The only valid\
+          \ state for this variable is currently, CANCELLED"
+        enum:
+        - "CANCELLED"
+  MegaSignView:
+    required:
+    - "isCurrent"
+    properties:
+      embeddedCode:
+        type: "string"
+        description: "Embedded code of url of resource "
+      expiration:
+        type: "string"
+        format: "date"
+        description: "Expiration of user url "
+      isCurrent:
+        type: "boolean"
+        description: "True if this view is the current view"
+      url:
+        type: "string"
+        description: "Url of resource location"
+    example:
+      isCurrent: true
+      embeddedCode: "embeddedCode"
+      expiration: "2000-01-23"
+      url: "url"
+  MegaSignViewInfo:
+    required:
+    - "name"
+    properties:
+      commonViewConfiguration:
+        description: "Common view configuration for all the available views"
+        $ref: "#/definitions/CommonViewConfiguration"
+      name:
+        type: "string"
+        description: "Name of the requested mega sign view"
+        enum:
+        - "AUTHORING"
+        - "DOCUMENT"
+        - "MANAGE"
+        - "POST_CREATE"
+        - "PREFILL"
+        - "ALL"
+  MegaSignViewResponse:
+    required:
+    - "megaSignViewList"
+    properties:
+      megaSignViewList:
+        type: "array"
+        description: "List of mega sign views"
+        items:
+          $ref: "#/definitions/MegaSignView"
+    example:
+      megaSignViewList:
+      - isCurrent: true
+        embeddedCode: "embeddedCode"
+        expiration: "2000-01-23"
+        url: "url"
+      - isCurrent: true
+        embeddedCode: "embeddedCode"
+        expiration: "2000-01-23"
+        url: "url"
+  MegaSigns:
+    required:
+    - "megaSignList"
+    - "page"
+    properties:
+      megaSignList:
+        type: "array"
+        description: "An array of MegaSign parent agreements"
+        items:
+          $ref: "#/definitions/MegaSign"
+      page:
+        description: "Pagination information for navigating through the response"
+        $ref: "#/definitions/PageInfo"
+    example:
+      megaSignList:
+      - displayDate: "2000-01-23"
+        esign: true
+        name: "name"
+        id: "id"
+        status: "WAITING_FOR_MY_SIGNATURE"
+      - displayDate: "2000-01-23"
+        esign: true
+        name: "name"
+        id: "id"
+        status: "WAITING_FOR_MY_SIGNATURE"
+      page:
+        nextCursor: "nextCursor"
+  MegasignEvent:
+    required:
+    - "actingUserEmail"
+    - "actingUserIpAddress"
+    - "actingUserName"
+    - "date"
+    - "description"
+    - "deviceLocation"
+    - "devicePhoneNumber"
+    - "digitalSignatureInfo"
+    - "initiatingUserEmail"
+    - "initiatingUserName"
+    - "participantEmail"
+    - "participantId"
+    - "participantRole"
+    - "synchronizationId"
+    - "type"
+    - "vaultEventId"
+    - "vaultProviderName"
+    - "versionId"
+    properties:
+      actingUserEmail:
+        type: "string"
+        description: "Email address of the user that created the event"
+      actingUserIpAddress:
+        type: "string"
+        description: "The IP address of the user that created the event"
+      actingUserName:
+        type: "string"
+        description: "The name of the acting user"
+      comment:
+        type: "string"
+        description: "The event comment. For RECALLED or REJECTED, the reason given\
+          \ by the user that initiates the event. For DELEGATE or SHARE, the message\
+          \ from the acting user to the participant"
+      date:
+        type: "string"
+        format: "date"
+        description: "The date of the audit event. Format would be yyyy-MM-dd'T'HH:mm:ssZ.\
+          \ For example, e.g 2016-02-25T18:46:19Z represents UTC time"
+      description:
+        type: "string"
+        description: "A description of the audit event"
+      deviceLocation:
+        description: "Location of the device that generated the event (This value\
+          \ may be null due to limited privileges)"
+        $ref: "#/definitions/DeviceLocation"
+      devicePhoneNumber:
+        type: "string"
+        description: "Phone number from the device used when the participation is\
+          \ completed on a mobile phone"
+      digitalSignatureInfo:
+        description: "This is present for ESIGNED events when the participation is\
+          \ signed digitally"
+        $ref: "#/definitions/DigitalSignatureInfo"
+      initiatingUserEmail:
+        type: "string"
+        description: "Email address of the user that initiated the event on behalf\
+          \ of the acting user when the account is shared. Will be empty if there\
+          \ is no account sharing in effect"
+      initiatingUserName:
+        type: "string"
+        description: "Full name of the user that initiated the event on behalf of\
+          \ the acting user when the account is shared. Will be empty if there is\
+          \ no account sharing in effect"
+      participantEmail:
+        type: "string"
+        description: "Email address of the user that is the participant for the event.\
+          \ This may be different than the acting user for certain event types. For\
+          \ example, for a DELEGATION event, this is the user who was delegated to"
+      participantId:
+        type: "string"
+        description: "The unique identifier of the participant for the event. This\
+          \ may be different than the acting user for certain event types. For example,\
+          \ for a DELEGATION event, this is the user who was delegated to"
+      participantRole:
+        type: "string"
+        description: "Role assumed by all participants in the participant set the\
+          \ participant belongs to (signer, approver etc.)."
+        enum:
+        - "SIGNER"
+        - "DELEGATE_TO_SIGNER"
+        - "APPROVER"
+        - "DELEGATE_TO_APPROVER"
+        - "ACCEPTOR"
+        - "DELEGATE_TO_ACCEPTOR"
+        - "FORM_FILLER"
+        - "DELEGATE_TO_FORM_FILLER"
+        - "CERTIFIED_RECIPIENT"
+        - "DELEGATE_TO_CERTIFIED_RECIPIENT"
+        - "SHARE"
+        - "SENDER"
+      synchronizationId:
+        type: "string"
+        description: "A unique identifier linking offline events to synchronization\
+          \ events (specified for offline signing events and synchronization events,\
+          \ else null)"
+      type:
+        type: "string"
+        description: "Type of MegaSign event"
+        enum:
+        - "AUTO_CANCELLED_CONVERSION_PROBLEM"
+        - "CREATED"
+        - "EXPIRED"
+        - "EMAIL_BOUNCED"
+        - "RECALLED"
+        - "SHARED"
+        - "VAULTED"
+      vaultEventId:
+        type: "string"
+        description: "The identifier assigned by the vault provider for the vault\
+          \ event (if vaulted, otherwise null)"
+      vaultProviderName:
+        type: "string"
+        description: "Name of the vault provider for the vault event (if vaulted,\
+          \ otherwise null)"
+      versionId:
+        type: "string"
+        description: "An ID which uniquely identifies the version of the document\
+          \ associated with this audit event"
+    example:
+      date: "2000-01-23"
+      initiatingUserName: "initiatingUserName"
+      description: "description"
+      actingUserName: "actingUserName"
+      actingUserIpAddress: "actingUserIpAddress"
+      participantEmail: "participantEmail"
+      type: "AUTO_CANCELLED_CONVERSION_PROBLEM"
+      participantRole: "SIGNER"
+      vaultEventId: "vaultEventId"
+      participantId: "participantId"
+      versionId: "versionId"
+      actingUserEmail: "actingUserEmail"
+      devicePhoneNumber: "devicePhoneNumber"
+      initiatingUserEmail: "initiatingUserEmail"
+      digitalSignatureInfo:
+        name: "name"
+        company: "company"
+        email: "email"
+      vaultProviderName: "vaultProviderName"
+      comment: "comment"
+      synchronizationId: "synchronizationId"
+      deviceLocation:
+        latitude: 0.8008282
+        longitude: 6.0274563
+  MegasignEventList:
+    required:
+    - "events"
+    properties:
+      events:
+        type: "array"
+        description: "An array of event objects."
+        items:
+          $ref: "#/definitions/MegasignEvent"
+    example:
+      events:
+      - date: "2000-01-23"
+        initiatingUserName: "initiatingUserName"
+        description: "description"
+        actingUserName: "actingUserName"
+        actingUserIpAddress: "actingUserIpAddress"
+        participantEmail: "participantEmail"
+        type: "AUTO_CANCELLED_CONVERSION_PROBLEM"
+        participantRole: "SIGNER"
+        vaultEventId: "vaultEventId"
+        participantId: "participantId"
+        versionId: "versionId"
+        actingUserEmail: "actingUserEmail"
+        devicePhoneNumber: "devicePhoneNumber"
+        initiatingUserEmail: "initiatingUserEmail"
+        digitalSignatureInfo:
+          name: "name"
+          company: "company"
+          email: "email"
+        vaultProviderName: "vaultProviderName"
+        comment: "comment"
+        synchronizationId: "synchronizationId"
+        deviceLocation:
+          latitude: 0.8008282
+          longitude: 6.0274563
+      - date: "2000-01-23"
+        initiatingUserName: "initiatingUserName"
+        description: "description"
+        actingUserName: "actingUserName"
+        actingUserIpAddress: "actingUserIpAddress"
+        participantEmail: "participantEmail"
+        type: "AUTO_CANCELLED_CONVERSION_PROBLEM"
+        participantRole: "SIGNER"
+        vaultEventId: "vaultEventId"
+        participantId: "participantId"
+        versionId: "versionId"
+        actingUserEmail: "actingUserEmail"
+        devicePhoneNumber: "devicePhoneNumber"
+        initiatingUserEmail: "initiatingUserEmail"
+        digitalSignatureInfo:
+          name: "name"
+          company: "company"
+          email: "email"
+        vaultProviderName: "vaultProviderName"
+        comment: "comment"
+        synchronizationId: "synchronizationId"
+        deviceLocation:
+          latitude: 0.8008282
+          longitude: 6.0274563
+  PageInfo:
+    required:
+    - "nextCursor"
+    properties:
+      nextCursor:
+        type: "string"
+        description: "Used to navigate to the next page. If not\_returned, there are\
+          \ no further pages."
+    example:
+      nextCursor: "nextCursor"
+  PostSignOption:
+    properties:
+      redirectDelay:
+        type: "integer"
+        description: "The delay (in seconds) before the user is taken to the success\
+          \ page. If this value is greater than 0, the user will first see the standard\
+          \ Adobe Sign success message, and then after a delay will be redirected\
+          \ to your success page"
+      redirectUrl:
+        type: "string"
+        description: "A publicly accessible url to which the user will be sent after\
+          \ successfully completing the signing process"
+    example:
+      redirectUrl: "redirectUrl"
+      redirectDelay: 6
+  URLFileInfo:
+    required:
+    - "mimeType"
+    - "name"
+    - "url"
+    properties:
+      mimeType:
+        type: "string"
+        description: "The mime type of the referenced file, used to determine if the\
+          \ file can be accepted and the necessary conversion steps can be performed"
+      name:
+        type: "string"
+        description: "The original system file name of the document being sent"
+      url:
+        type: "string"
+        description: "A publicly accessible URL for retrieving the raw file content"
+    example:
+      name: "name"
+      mimeType: "mimeType"
+      url: "url"
+  VaultingInfo:
+    properties:
+      enabled:
+        type: "boolean"
+        description: "For accounts set up for document vaulting and the option to\
+          \ enable per agreement, this determines whether the document is to be vaulted"
+    example:
+      enabled: true

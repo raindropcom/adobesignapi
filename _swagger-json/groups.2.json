@@ -1,0 +1,301 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "6.0.0",
+    "title": "AdobeSign Group APIs"
+  },
+  "basePath": "/api/rest/v6",
+  "paths": {
+    "/groups": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_read')\" oncontextmenu=\"this.href=oauthDoc('user_read')\" target=\"oauthDoc\">user_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Used to navigate through the pages. If not provided, returns the first page.",
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Number of intended items in the response page.",
+            "in": "query",
+            "name": "pageSize",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/GroupsInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "user_read"
+            ]
+          }
+        ],
+        "operationId": "getGroups",
+        "summary": "Retrieves all the groups in an account."
+      }
+    },
+    "/groups/{groupId}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_read')\" oncontextmenu=\"this.href=oauthDoc('user_read')\" target=\"oauthDoc\">user_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "The group identifier, as returned by the group creation API or retrieved from the API to fetch groups",
+            "in": "path",
+            "name": "groupId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/DetailedGroupInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "user_read"
+            ]
+          }
+        ],
+        "operationId": "getGroupDetails",
+        "summary": "Retrieves detailed information about the group."
+      }
+    },
+    "/groups/{groupId}/users": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "An <a href=\"#\" onclick=\"this.href=oauthDoc()\" oncontextmenu=\"this.href=oauthDoc()\" target=\"oauthDoc\">OAuth Access Token</a> with scopes:<ul><li style='list-style-type: square'><a href=\"#\" onclick=\"this.href=oauthDoc('user_read')\" oncontextmenu=\"this.href=oauthDoc('user_read')\" target=\"oauthDoc\">user_read</a></li></ul>in the format <b>'Bearer {accessToken}'.",
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "The userId or email of API caller using the account or group token in the format <b>userid:{userId} OR email:{email}.</b> If it is not specified, then the caller is inferred from the token.",
+            "in": "header",
+            "name": "x-api-user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Used to navigate through the pages. If not provided, returns the first page.",
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Number of intended items in the response page.",
+            "in": "query",
+            "name": "pageSize",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "description": "The group identifier, as returned by the group creation API or retrieved from the API to fetch groups",
+            "in": "path",
+            "name": "groupId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No response was specified",
+            "schema": {
+              "$ref": "#/definitions/GroupUsersInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "user_read"
+            ]
+          }
+        ],
+        "operationId": "getUsersInGroup",
+        "summary": "Retrieves all the users in a group."
+      }
+    }
+  },
+  "definitions": {
+    "DetailedGroupInfo": {
+      "properties": {
+        "created": {
+          "description": "Date of creation of the group. Format would be yyyy-MM-dd'T'HH:mm:ssZ. For example, e.g 2016-02-25T18:46:19Z represents UTC time",
+          "format": "date",
+          "type": "string"
+        },
+        "id": {
+          "description": "The unique identifier of the Group. This will be returned as part of GET call but is not mandatory to be passed as part of PUT/POST call for groups/{groupId}",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the group",
+          "type": "string"
+        }
+      },
+      "required": [
+        "created",
+        "name"
+      ]
+    },
+    "GroupInfo": {
+      "properties": {
+        "groupId": {
+          "description": "Unique identifier of the group",
+          "type": "string"
+        },
+        "groupName": {
+          "description": "Name of the group",
+          "type": "string"
+        }
+      },
+      "required": [
+        "groupId",
+        "groupName"
+      ]
+    },
+    "GroupUserInfo": {
+      "properties": {
+        "company": {
+          "description": "The name of company of the user",
+          "type": "string"
+        },
+        "email": {
+          "description": "The email address of the user",
+          "type": "string"
+        },
+        "firstName": {
+          "description": "The first name of the user",
+          "type": "string"
+        },
+        "id": {
+          "description": "A unique identifier of the user resource for REST APIs. This identifier can not be used in SOAP APIs",
+          "type": "string"
+        },
+        "isGroupAdmin": {
+          "description": "True if user is group admin",
+          "type": "boolean"
+        },
+        "lastName": {
+          "description": "The last name of the user",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "id",
+        "isGroupAdmin"
+      ]
+    },
+    "GroupUsersInfo": {
+      "properties": {
+        "page": {
+          "$ref": "#/definitions/PageInfo",
+          "description": "Pagination information for navigating through the response",
+          "items": {
+            "$ref": "#/definitions/PageInfo"
+          },
+          "type": "array"
+        },
+        "userInfoList": {
+          "description": "The list of users in the account.",
+          "items": {
+            "$ref": "#/definitions/GroupUserInfo"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "page",
+        "userInfoList"
+      ]
+    },
+    "GroupsInfo": {
+      "properties": {
+        "groupInfoList": {
+          "description": "The list of groups in the account.",
+          "items": {
+            "$ref": "#/definitions/GroupInfo"
+          },
+          "type": "array"
+        },
+        "page": {
+          "$ref": "#/definitions/PageInfo",
+          "description": "Pagination information for navigating through the response",
+          "items": {
+            "$ref": "#/definitions/PageInfo"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "groupInfoList",
+        "page"
+      ]
+    },
+    "PageInfo": {
+      "properties": {
+        "nextCursor": {
+          "description": "Used to navigate to the next page. If not returned, there are no further pages.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "nextCursor"
+      ]
+    }
+  }
+}
