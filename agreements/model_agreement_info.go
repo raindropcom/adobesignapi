@@ -9,6 +9,33 @@
 
 package agreements
 
+type fileInfo struct {
+	DefaultValue string `json:"defaultValue"`
+	FieldName    string `json:"fieldName"`
+}
+
+type document struct {
+	ID       string `json:"id"`
+	Label    string `json:"label"`
+	NumPages int    `json:"numPages"`
+	MimeType string `json:"mimeType"`
+	Name     string `json:"name"`
+}
+
+type URLFileInfo struct {
+	MimeType string `json:"mimeType"`
+	Name     string `json:"name"`
+	URL      string `json:"url"`
+}
+
+type formFieldLayerTemplates struct {
+	Document            document
+	Label               string      `json:"label"`
+	LibraryDocumentID   string      `json:"libraryDocumentId"`
+	TransientDocumentID string      `json:"transientDocumentId"`
+	URLFileInfo         URLFileInfo `json:"urlFileInfo"`
+}
+
 type AgreementInfo struct {
 	// A list of one or more CCs that will be copied in the agreement transaction. The CCs will each receive an email at the beginning of the transaction and also when the final document is signed. The email addresses will also receive a copy of the document, attached as a PDF file. Should not be provided in offline agreement creation.
 	Ccs []AgreementCcInfo `json:"ccs,omitempty"`
@@ -55,5 +82,7 @@ type AgreementInfo struct {
 	// Vaulting properties that allows Adobe Sign to securely store documents with a vault provider
 	VaultingInfo *VaultingInfo `json:"vaultingInfo,omitempty"`
 	// The identifier of custom workflow which defines the routing path of an agreement. Should not be provided in offline agreement creation.
-	WorkflowId string `json:"workflowId,omitempty"`
+	WorkflowId              string `json:"workflowId,omitempty"`
+	MergeFileInfo           []fileInfo
+	FormFieldLayerTemplates formFieldLayerTemplates
 }
